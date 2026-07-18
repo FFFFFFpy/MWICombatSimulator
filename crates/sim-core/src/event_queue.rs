@@ -211,7 +211,10 @@ mod tests {
         let second = queue.schedule(time(2.0), "second");
 
         assert_eq!(queue.pop_next().unwrap().handle, first);
-        assert!(matches!(queue.cancel(first), Err(SimError::StaleEventHandle)));
+        assert!(matches!(
+            queue.cancel(first),
+            Err(SimError::StaleEventHandle)
+        ));
         queue.cancel(second).unwrap();
         assert!(queue.pop_next().is_none());
     }
