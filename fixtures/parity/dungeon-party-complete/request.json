@@ -99,7 +99,7 @@
     "zoneHrid": "/actions/combat/chimerical_den",
     "difficultyTier": 0
   },
-  "simulationTimeLimit": 600000000000,
+  "simulationTimeLimit": 720000000000,
   "random": {
     "type": "seeded",
     "seed": "dungeon-party-complete-v1"
