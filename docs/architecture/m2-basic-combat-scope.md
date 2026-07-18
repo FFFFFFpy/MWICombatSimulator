@@ -3,7 +3,7 @@
 ## 状态
 
 - 基线：`agent/rust-core-foundation`
-- 实施状态：首轮验证仅发现派生攻击间隔的 1 ULP 数据表达差异；已改为保存基础间隔和攻击等级并按 reference 公式计算。
+- 实施状态：1 ULP 数据表达问题已改为基础参数计算，正在执行最终 Rust 与 JavaScript 全链路验证。
 - 目标：建立一个可执行、可拒绝越界输入、可与 JavaScript reference engine 对照的最小普通攻击闭环。
 - 非目标：完整 `SimResult`、技能、Buff、Trigger、消耗品、副本、迷宫和 UI 接入。
 
@@ -73,6 +73,8 @@ M2 只接受满足以下条件的请求：
 - 14 个 Rust 请求 DTO；
 - WASM target；
 - JavaScript 全量测试、14 组黄金、基准与生产构建。
+
+派生攻击间隔现已不再以十进制结果存储。数据切片保存 `baseAttackInterval` 和 `attackLevel`，Rust 运行时执行与 reference engine 相同的除法。
 
 ## 验证
 
