@@ -3,9 +3,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use crate::{
-    BASIC_FLY_MONSTER_HRID, BASIC_FLY_ZONE_HRID, BasicGameData, Result, SimError, SimTime,
-};
+use crate::{Result, SimError, SimTime};
+
+#[cfg(test)]
+use crate::{BASIC_FLY_MONSTER_HRID, BASIC_FLY_ZONE_HRID, BasicGameData};
 
 pub const COMBAT_ZONE_DATA_SCHEMA_VERSION: u32 = 1;
 pub const COMBAT_ZONE_DATA_VERSION: &str = "repository-v1.0.28";
@@ -318,6 +319,7 @@ fn finite_positive(location: &str, value: f64) -> Result<()> {
     Ok(())
 }
 
+#[cfg(test)]
 fn stat(monster: &CombatMonsterDataV1, name: &str) -> f64 {
     monster
         .combat_stats
