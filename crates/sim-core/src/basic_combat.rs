@@ -162,7 +162,11 @@ impl BasicPlayerDto {
         if !self.extensions.is_empty() {
             return Err(unsupported(format!(
                 "unsupported player fields: {}",
-                self.extensions.keys().cloned().collect::<Vec<_>>().join(", ")
+                self.extensions
+                    .keys()
+                    .cloned()
+                    .collect::<Vec<_>>()
+                    .join(", ")
             )));
         }
         Ok(())
@@ -221,9 +225,7 @@ impl BasicUnit {
     fn player(dto: BasicPlayerDto) -> Result<Self> {
         let max_hitpoints = (10.0 * (10.0 + dto.stamina_level)).floor();
         let max_manapoints = (10.0 * (10.0 + dto.intelligence_level)).floor();
-        let attack_interval = SimTime::new(
-            3_000_000_000.0 / (1.0 + dto.attack_level / 2_000.0),
-        )?;
+        let attack_interval = SimTime::new(3_000_000_000.0 / (1.0 + dto.attack_level / 2_000.0))?;
         Ok(Self {
             hrid: dto.hrid,
             current_hitpoints: max_hitpoints,
@@ -265,7 +267,7 @@ impl BasicUnit {
             physical_amplify: 0.0,
             task_damage: 0.0,
             damage_taken: 0.0,
-            auto_attack_damage: 0.0,
+            auto_attack_damage: data.monster.auto_attack_damage,
             pierce: 0.0,
             mayhem: 0.0,
             hp_regen_per_10: 0.0,
@@ -432,11 +434,12 @@ impl BasicCombatEngine {
     fn schedule_attack(&mut self, side: Side) -> Result<()> {
         let interval = match side {
             Side::Player => self.player.attack_interval,
-            Side::Enemy => self
-                .enemy
-                .as_ref()
-                .ok_or_else(|| unsupported("cannot schedule an enemy attack without an enemy"))?
-                .attack_interval,
+            Side::Enemy => {
+                self.enemy
+                    .as_ref()
+                    .ok_or_else(|| unsupported("cannot schedule an enemy attack without an enemy"))?
+                    .attack_interval
+            }
         };
         let handle = self.schedule_event_after(interval.get(), BasicEvent::AutoAttack(side));
         match side {
@@ -525,8 +528,7 @@ impl BasicCombatEngine {
         let player_hrid = self.player.hrid.clone();
         self.result.record_death(&player_hrid);
         self.cancel_attack_handles();
-        let handle =
-            self.schedule_event_after(PLAYER_RESPAWN_INTERVAL, BasicEvent::PlayerRespawn);
+        let handle = self.schedule_event_after(PLAYER_RESPAWN_INTERVAL, BasicEvent::PlayerRespawn);
         self.player_respawn = Some(handle);
         Ok(())
     }
@@ -642,9 +644,7 @@ fn random_int(minimum: f64, maximum: f64, random: &mut BasicRandom) -> Result<f6
     }
 
     if maximum_tail > minimum_tail {
-        Ok((minimum
-            + random.next()? * (maximum_floor + minimum_tail - minimum + 1.0))
-            .floor())
+        Ok((minimum + random.next()? * (maximum_floor + minimum_tail - minimum + 1.0)).floor())
     } else {
         let lower = minimum_ceil - maximum_tail;
         Ok((lower + random.next()? * (maximum - lower + 1.0)).floor())
@@ -666,9 +666,8 @@ fn validate_request_scope(request: &SimulationRequestV1, data: &BasicGameData) -
             zone_hrid,
             difficulty_tier,
             extensions,
-        } if zone_hrid == BASIC_FLY_ZONE_HRID
-            && *difficulty_tier == 0
-            && extensions.is_empty() => {}
+        } if zone_hrid == BASIC_FLY_ZONE_HRID && *difficulty_tier == 0 && extensions.is_empty() => {
+        }
         _ => {
             return Err(unsupported(
                 "M2 supports only the tier-0 /actions/combat/fly Zone",
@@ -715,8 +714,7 @@ mod tests {
     const REQUEST: &str = include_str!("../../../fixtures/parity/zone-solo-basic/request.json");
     const EXPECTED: &str =
         include_str!("../../../fixtures/parity/zone-solo-basic/expected-result.json");
-    const METADATA: &str =
-        include_str!("../../../fixtures/parity/zone-solo-basic/metadata.json");
+    const METADATA: &str = include_str!("../../../fixtures/parity/zone-solo-basic/metadata.json");
 
     #[test]
     fn matches_the_reference_basic_result_subset() {
@@ -726,8 +724,14 @@ mod tests {
         let metadata: Value = serde_json::from_str(METADATA).unwrap();
 
         assert_eq!(result.encounters, expected["encounters"]);
-        assert_eq!(serde_json::to_value(&result.deaths).unwrap(), expected["deaths"]);
-        assert_eq!(serde_json::to_value(&result.attacks).unwrap(), expected["attacks"]);
+        assert_eq!(
+            serde_json::to_value(&result.deaths).unwrap(),
+            expected["deaths"]
+        );
+        assert_eq!(
+            serde_json::to_value(&result.attacks).unwrap(),
+            expected["attacks"]
+        );
         assert_eq!(result.simulated_time.get(), expected["simulatedTime"]);
         assert_eq!(
             result.last_encounter_finish_time.get(),
@@ -739,7 +743,10 @@ mod tests {
     #[test]
     fn deterministic_replay_is_exact() {
         let request = SimulationRequestV1::from_json(REQUEST).unwrap();
-        assert_eq!(simulate_basic(&request).unwrap(), simulate_basic(&request).unwrap());
+        assert_eq!(
+            simulate_basic(&request).unwrap(),
+            simulate_basic(&request).unwrap()
+        );
     }
 
     #[test]

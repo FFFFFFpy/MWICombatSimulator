@@ -74,7 +74,10 @@ mod tests {
         assert_eq!(capabilities["combatSimulation"], true);
         assert_eq!(capabilities["fullSimulationResult"], false);
         assert_eq!(capabilities["contractVersion"], CONTRACT_VERSION);
-        assert_eq!(capabilities["targets"][0]["zoneHrids"][0], BASIC_FLY_ZONE_HRID);
+        assert_eq!(
+            capabilities["targets"][0]["zoneHrids"][0],
+            BASIC_FLY_ZONE_HRID
+        );
     }
 
     #[test]
@@ -87,6 +90,9 @@ mod tests {
         let result = simulate_basic_request_json(request).unwrap();
         let value: serde_json::Value = serde_json::from_str(&result).unwrap();
         assert_eq!(value["type"], "basic_combat_result");
-        assert_eq!(value["compatibilityLevel"], BASIC_COMBAT_COMPATIBILITY_LEVEL);
+        assert_eq!(
+            value["compatibilityLevel"],
+            BASIC_COMBAT_COMPATIBILITY_LEVEL
+        );
     }
 }

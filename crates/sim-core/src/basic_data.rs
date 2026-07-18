@@ -103,9 +103,7 @@ impl BasicGameData {
             ("monster.autoAttackDamage", self.monster.auto_attack_damage),
         ] {
             if !value.is_finite() {
-                return Err(SimError::InvalidGameData(format!(
-                    "{name} must be finite"
-                )));
+                return Err(SimError::InvalidGameData(format!("{name} must be finite")));
             }
         }
         Ok(())
@@ -135,7 +133,10 @@ mod tests {
         let defense_level = number(&details["defenseLevel"]);
 
         assert_eq!(data.monster.max_hitpoints, number(&details["maxHitpoints"]));
-        assert_eq!(data.monster.max_manapoints, number(&details["maxManapoints"]));
+        assert_eq!(
+            data.monster.max_manapoints,
+            number(&details["maxManapoints"])
+        );
         assert_eq!(
             data.monster.attack_interval.get(),
             number(&stats["attackInterval"]) / (1.0 + attack_level / 2_000.0)
