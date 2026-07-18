@@ -43,8 +43,7 @@ mod tests {
 
     #[test]
     fn reports_foundation_capabilities_without_claiming_combat_support() {
-        let capabilities: serde_json::Value =
-            serde_json::from_str(&capabilities_json()).unwrap();
+        let capabilities: serde_json::Value = serde_json::from_str(&capabilities_json()).unwrap();
         assert_eq!(capabilities["combatSimulation"], false);
         assert_eq!(capabilities["contractVersion"], CONTRACT_VERSION);
     }
