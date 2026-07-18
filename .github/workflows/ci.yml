@@ -30,7 +30,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
+      - name: Test random sources
+        run: npx vitest run src/shared/__tests__/randomSource.test.js
+
+      - name: Test simulation contracts
+        run: npx vitest run src/contracts/__tests__/simulationContracts.test.js
+
+      - name: Test combat trace
+        run: npx vitest run src/services/__tests__/combatTrace.test.js
+
+      - name: Test deterministic combat fixture
+        run: npx vitest run src/combatsimulator/__tests__/deterministicSimulation.test.js
+
+      - name: Run full test suite
         run: npm test
 
       - name: Smoke-test combat benchmark
