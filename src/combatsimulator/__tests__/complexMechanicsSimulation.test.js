@@ -2,6 +2,12 @@ import { describe, expect, it } from "vitest";
 import { runReferenceSimulation } from "../../services/referenceSimulationRunner.js";
 
 const ONE_SECOND = 1e9;
+const DURABLE_LABYRINTH_TARGET = {
+    kind: "labyrinth",
+    labyrinthHrid: "/monsters/crystal_colossus",
+    roomLevel: 100,
+    crates: [],
+};
 
 function trigger(dependencyHrid, conditionHrid, comparatorHrid, value = 0) {
     return { dependencyHrid, conditionHrid, comparatorHrid, value };
@@ -108,13 +114,13 @@ describe("complex deterministic combat mechanics", () => {
             requestId: "complex-dot-control-sequence",
             dataVersion: "repository-v1.0.28",
             players: [playerDto({
-                staminaLevel: 300,
+                staminaLevel: 2_000,
                 intelligenceLevel: 300,
-                defenseLevel: 300,
-                attackLevel: 20,
-                meleeLevel: 20,
-                rangedLevel: 20,
-                magicLevel: 20,
+                defenseLevel: 2_000,
+                attackLevel: 10,
+                meleeLevel: 10,
+                rangedLevel: 10,
+                magicLevel: 10,
                 abilities: [
                     ability("/abilities/firestorm"),
                     ability("/abilities/natures_veil"),
@@ -122,12 +128,7 @@ describe("complex deterministic combat mechanics", () => {
                     ability("/abilities/stunning_blow"),
                 ],
             })],
-            target: {
-                kind: "labyrinth",
-                labyrinthHrid: "/monsters/fly",
-                roomLevel: 250,
-                crates: [],
-            },
+            target: DURABLE_LABYRINTH_TARGET,
             simulationTimeLimit: 30 * ONE_SECOND,
             random: { type: "sequence", values: [0], loop: true },
             options: detailedTraceOptions(),
@@ -163,25 +164,20 @@ describe("complex deterministic combat mechanics", () => {
             requestId: "complex-oom-yogurt-recovery",
             dataVersion: "repository-v1.0.28",
             players: [playerDto({
-                staminaLevel: 300,
+                staminaLevel: 2_000,
                 intelligenceLevel: 2,
-                defenseLevel: 300,
-                attackLevel: 20,
-                meleeLevel: 20,
-                rangedLevel: 20,
-                magicLevel: 20,
+                defenseLevel: 2_000,
+                attackLevel: 10,
+                meleeLevel: 10,
+                rangedLevel: 10,
+                magicLevel: 10,
                 abilities: [
                     ability("/abilities/firestorm"),
                     ability("/abilities/natures_veil"),
                 ],
                 food: [consumable("/items/yogurt", [missingMpTrigger])],
             })],
-            target: {
-                kind: "labyrinth",
-                labyrinthHrid: "/monsters/fly",
-                roomLevel: 200,
-                crates: [],
-            },
+            target: DURABLE_LABYRINTH_TARGET,
             simulationTimeLimit: 50 * ONE_SECOND,
             random: { type: "sequence", values: [0], loop: true },
             options: detailedTraceOptions(),
@@ -189,7 +185,7 @@ describe("complex deterministic combat mechanics", () => {
 
         expect(execution.result.playerRanOutOfMana.player1).toBe(true);
         expect(execution.result.consumablesUsed.player1?.["/items/yogurt"]).toBeGreaterThan(0);
-        expect(execution.result.manapointsGained.player1?.["/items/yogurt"]).toBeGreaterThan(0);
+        expect(execution.result.manapointsGained.player1?.["/items/yogurt"] ?? 0).toBeGreaterThan(0);
         expect(eventTypeCount(execution.trace, "consumableTick")).toBeGreaterThan(0);
         expect(consumableEventCount(execution.trace, "/items/yogurt")).toBeGreaterThan(0);
         expect(abilityEventCount(execution.trace, "/abilities/firestorm")).toBeGreaterThan(1);
@@ -201,7 +197,7 @@ describe("complex deterministic combat mechanics", () => {
         expect(Math.max(...manaValues)).toBeGreaterThan(Math.min(...manaValues));
     });
 
-    it("covers parry, fury, weaken, thorns, and retaliation in a party fight", async () => {
+    it("covers fury, weaken, thorns, and retaliation without parry stealing the hit", async () => {
         const execution = await runReferenceSimulation({
             contractVersion: 1,
             requestId: "complex-equipment-passives",
@@ -209,11 +205,11 @@ describe("complex deterministic combat mechanics", () => {
             players: [
                 playerDto({
                     hrid: "player1",
-                    staminaLevel: 300,
+                    staminaLevel: 500,
                     intelligenceLevel: 300,
-                    defenseLevel: 300,
+                    defenseLevel: 500,
                     equipment: {
-                        "/equipment_types/main_hand": equipment("/items/regal_sword"),
+                        "/equipment_types/two_hand": equipment("/items/griffin_bulwark"),
                     },
                     abilities: [
                         ability("/abilities/spike_shell"),
@@ -222,21 +218,18 @@ describe("complex deterministic combat mechanics", () => {
                 }),
                 playerDto({
                     hrid: "player2",
-                    staminaLevel: 300,
+                    staminaLevel: 500,
                     intelligenceLevel: 300,
-                    defenseLevel: 300,
+                    defenseLevel: 500,
                     equipment: {
                         "/equipment_types/main_hand": equipment("/items/furious_spear"),
                     },
                 }),
                 playerDto({
                     hrid: "player3",
-                    staminaLevel: 300,
+                    staminaLevel: 500,
                     intelligenceLevel: 300,
-                    defenseLevel: 300,
-                    equipment: {
-                        "/equipment_types/two_hand": equipment("/items/griffin_bulwark"),
-                    },
+                    defenseLevel: 500,
                 }),
             ],
             target: {
@@ -258,8 +251,40 @@ describe("complex deterministic combat mechanics", () => {
         expect(buffs.has("/buff_uniques/weaken")).toBe(true);
         expect(recursiveHasKey(execution.result.attacks, "physicalThorns")).toBe(true);
         expect(recursiveHasKey(execution.result.attacks, "retaliation")).toBe(true);
-        expect(execution.trace.events.some((entry) => entry.changes?.players?.some(
-            (change) => change.hrid === "player1" && change.changes?.hitpoints,
-        ))).toBe(true);
+    });
+
+    it("records a successful parry as enemy damage during an enemy auto-attack event", async () => {
+        const execution = await runReferenceSimulation({
+            contractVersion: 1,
+            requestId: "complex-regal-sword-parry",
+            dataVersion: "repository-v1.0.28",
+            players: [playerDto({
+                staminaLevel: 2_000,
+                intelligenceLevel: 300,
+                defenseLevel: 2_000,
+                attackLevel: 10,
+                meleeLevel: 10,
+                rangedLevel: 10,
+                magicLevel: 10,
+                equipment: {
+                    "/equipment_types/main_hand": equipment("/items/regal_sword"),
+                },
+            })],
+            target: DURABLE_LABYRINTH_TARGET,
+            simulationTimeLimit: 15 * ONE_SECOND,
+            random: { type: "sequence", values: [0], loop: true },
+            options: detailedTraceOptions(),
+        });
+
+        const parriedEnemyAttack = execution.trace.events.find((entry) => {
+            if (entry.event?.type !== "autoAttack" || !entry.event?.source?.startsWith("/monsters/")) {
+                return false;
+            }
+            const enemyLostHp = entry.changes?.enemies?.some((change) => change.changes?.hitpoints);
+            const playerLostHp = entry.changes?.players?.some((change) => change.changes?.hitpoints);
+            return enemyLostHp && !playerLostHp;
+        });
+
+        expect(parriedEnemyAttack).toBeTruthy();
     });
 });
