@@ -1,0 +1,81 @@
+name: Rust
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - agent/rust-core-foundation
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rust-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-rust:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain and WASM target
+        shell: bash
+        run: |
+          rustup toolchain install 1.85.0 --profile minimal --component rustfmt,clippy
+          rustup default 1.85.0
+          rustup target add wasm32-unknown-unknown
+          rustc --version
+          cargo --version
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Test workspace
+        id: rust-tests
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          cargo test --workspace --locked > tmp/ci/rust-tests.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          cat tmp/ci/rust-tests.log
+          exit "$status"
+
+      - name: Upload Rust test diagnostics
+        if: steps.rust-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-test-diagnostics
+          path: tmp/ci/rust-tests.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after Rust test diagnostics
+        if: steps.rust-tests.outcome == 'failure'
+        run: exit 1
+
+      - name: Run Clippy
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+      - name: Validate committed request fixtures
+        run: cargo run --locked -p mwi-sim-cli -- validate-fixtures fixtures/parity
+
+      - name: Check WASM boundary
+        run: cargo check --locked -p mwi-sim-wasm --target wasm32-unknown-unknown
+
+      - name: Verify honest capability report
+        shell: bash
+        run: |
+          cargo run --locked -p mwi-sim-cli -- capabilities > tmp/ci/rust-capabilities.json
+          node -e '
+            const fs = require("fs");
+            const value = JSON.parse(fs.readFileSync("tmp/ci/rust-capabilities.json", "utf8"));
+            if (value.combatSimulation !== false) process.exit(1);
+            if (!Array.isArray(value.targets) || value.targets.length !== 0) process.exit(1);
+          '
