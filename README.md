@@ -16,6 +16,8 @@
 
 架构计划见 [`docs/architecture/platform-overview.md`](docs/architecture/platform-overview.md)。
 
+当前 JavaScript reference engine 已建立版本化协议、确定性随机源、基础/详细事件轨迹、可执行基准和 14 组黄金差分场景。兼容策略与已覆盖机制见 [`docs/architecture/parity-strategy.md`](docs/architecture/parity-strategy.md)。
+
 ## 主要功能
 
 - **Home**：配置角色、目标、难度和时长，运行模拟并查看关键指标与构建快照。
@@ -24,24 +26,13 @@
 - **Enhancement**：比较保护阈值、贤者之镜、分解价值、成本分位和预算成功率。
 - **Skilling**：结合角色经验、库存、装备、Buff 和市场价格规划生活技能逐级路线。
 - **Multi Results**：汇总多轮结果并支持导出 Excel。
-- **Import/Export**：支持配置导入导出，并可配合 Tampermonkey 脚本导入当前角色数据。
-- **官方中英游戏词条 + Web Workers**：发布前同步官网词条快照，运行时离线加载；Worker 用于批量计算。
+- **Import/Export**：支持导入导出；可配合 Tampermonkey 脚本从主站导入战斗、强化或生活技能所需的当前角色数据。
+- **官方中英游戏词条 + Web Workers**：发布前同步官网词条快照，运行时离线加载；Worker 并行计算批量任务。
 
-## 在线部署
-
-本仓库目前没有承诺长期可用的官方托管地址。第三方镜像可能存在版本差异，应以本仓库源码、Release 和提交记录为准。
-
-## 快速开始
-
-安装依赖：
+## 本地开发
 
 ```bash
 npm install
-```
-
-启动开发环境：
-
-```bash
 npm run dev
 ```
 
@@ -51,34 +42,47 @@ npm run dev
 npm run build
 ```
 
-本地预览：
-
-```bash
-npm run preview
-```
-
 运行测试：
 
 ```bash
 npm test
 ```
 
-## 常用文档
+只读验证全部黄金场景：
 
-- [`docs/architecture/platform-overview.md`](docs/architecture/platform-overview.md)：长期平台架构与迁移边界。
-- [`docs/architecture/parity-strategy.md`](docs/architecture/parity-strategy.md)：固定随机源、事件轨迹和差分验证策略。
-- [`docs/architecture/simulation-contracts.md`](docs/architecture/simulation-contracts.md)：模拟协议与版本管理原则。
-- [`docs/architecture/benchmarking.md`](docs/architecture/benchmarking.md)：性能基准原则与报告口径。
-- [`docs/game-data.md`](docs/game-data.md)：游戏数据、官方词条来源和刷新流程。
-- [`docs/init-client-data-key-reference.md`](docs/init-client-data-key-reference.md)：`initClientData` 顶层 key 对照表。
-- [`scripts/mwi-main-site-import.README.md`](scripts/mwi-main-site-import.README.md)：Tampermonkey 导入脚本说明。
+```bash
+npm run check:parity
+```
 
-## Fork 来源与致谢
+显式重新生成黄金场景：
 
-本项目 fork 自 [shykai/MWICombatSimulatorTest](https://github.com/shykai/MWICombatSimulatorTest)，并继承了多个社区 fork 的长期维护成果。具体历史可通过 Git 提交记录追溯。
+```bash
+npm run generate:parity
+```
 
-独立维护不等于抹掉来源。保留可追溯的上游历史，是工程责任，不是装饰品。
+运行 reference engine 基准：
 
-## 开源协议
+```bash
+npm run benchmark:combat
+```
 
-本项目以 MIT License 开源，详见 [LICENSE](LICENSE)。游戏数据、名称、美术与相关知识产权归 Milky Way Idle 官方及其权利方所有。
+检查当前战斗目标和机制数据：
+
+```bash
+npm run inspect:combat-targets
+npm run inspect:combat-mechanics
+```
+
+## 部署
+
+本项目使用 Vite 构建，可部署到任意静态站点平台。仓库尚未声明固定官方部署地址时，请以当前仓库 Release、Pages 配置或 README 后续更新为准，不沿用上游 fork 的部署地址。
+
+## 游戏数据
+
+游戏数据来源、免责声明、快照生成与同步流程见 [`docs/game-data.md`](docs/game-data.md)。实时市场价格不属于不可变游戏数据快照，应作为独立输入或价格快照管理。
+
+## 上游与许可证
+
+本仓库基于社区 MWI Combat Simulator 项目及后续 fork 演进而来。感谢原作者与社区维护者提供的基础实现。
+
+项目使用 MIT License。复制、修改、分发或发布时须保留许可证与版权声明。详见 [`LICENSE`](LICENSE)。
