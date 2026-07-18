@@ -1,0 +1,31 @@
+{
+  "fixtureVersion": 1,
+  "scenarioId": "ability-dot-control-sequence",
+  "description": "A low-damage, high-survivability caster uses Firestorm, Nature's Veil, Silencing Shot, and Stunning Blow against Crystal Colossus with a looping zero random sequence.",
+  "contractVersion": 1,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "dataVersion": "repository-v1.0.28",
+  "status": "request-baseline",
+  "assertions": {
+    "resultEquals": {
+      "numberOfPlayers": 1,
+      "isDungeon": false,
+      "isLabyrinth": true
+    },
+    "minimumRandomDraws": 20,
+    "minimumTraceEvents": 20,
+    "requiredTraceEventTypes": [
+      "abilityCastEnd",
+      "damageOverTime",
+      "blindExpiration",
+      "silenceExpiration",
+      "stunExpiration"
+    ]
+  },
+  "expectedFiles": ["request.json"],
+  "notes": [
+    "The looping zero sequence makes every positive status chance succeed and provides a cross-language deterministic fixture.",
+    "Combat-detail trace is required to preserve control states, buffs, cooldowns, and derived stats."
+  ]
+}
