@@ -55,12 +55,13 @@ async function loadModules() {
         server: { middlewareMode: true },
     });
     try {
-        const [combatModule, playerModule, zoneModule, randomModule, contractModule] = await Promise.all([
+        const [combatModule, playerModule, zoneModule, randomModule, contractModule, extraBuffModule] = await Promise.all([
             vite.ssrLoadModule("/src/combatsimulator/combatSimulator.js"),
             vite.ssrLoadModule("/src/combatsimulator/player.js"),
             vite.ssrLoadModule("/src/combatsimulator/zone.js"),
             vite.ssrLoadModule("/src/shared/randomSource.js"),
             vite.ssrLoadModule("/src/contracts/simulationContracts.js"),
+            vite.ssrLoadModule("/src/shared/simulationExtraBuffs.js"),
         ]);
         return {
             vite,
@@ -70,6 +71,7 @@ async function loadModules() {
             createSeededRandomSource: randomModule.createSeededRandomSource,
             withPatchedMathRandom: randomModule.withPatchedMathRandom,
             normalizeSimulationRequestV1: contractModule.normalizeSimulationRequestV1,
+            buildSimulationExtraBuffs: extraBuffModule.buildSimulationExtraBuffs,
         };
     } catch (error) {
         await vite.close();
@@ -78,10 +80,17 @@ async function loadModules() {
 }
 
 async function runScenario(modules, request, options, iteration) {
-    const players = request.players.map((player) => modules.Player.createFromDTO(structuredClone(player)));
+    const zone = new modules.Zone(request.target.zoneHrid, request.target.difficultyTier);
+    const extraBuffs = modules.buildSimulationExtraBuffs(request.options.extra);
+    const players = request.players.map((player) => {
+        const preparedPlayer = modules.Player.createFromDTO(structuredClone(player));
+        preparedPlayer.zoneBuffs = zone.buffs || [];
+        preparedPlayer.extraBuffs = extraBuffs;
+        return preparedPlayer;
+    });
     const simulator = new modules.CombatSimulator(
         players,
-        new modules.Zone(request.target.zoneHrid, request.target.difficultyTier),
+        zone,
         null,
         { enableHpMpVisualization: request.options.enableHpMpVisualization },
     );
