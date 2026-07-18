@@ -16,7 +16,7 @@
     "minimumRandomDraws": 20,
     "minimumTraceEvents": 20,
     "requiredTraceEventTypes": [
-      "abilityCastEnd",
+      "abilityCastEndEvent",
       "damageOverTime",
       "blindExpiration",
       "silenceExpiration",
