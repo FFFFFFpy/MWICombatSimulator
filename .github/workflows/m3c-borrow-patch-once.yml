@@ -23,38 +23,22 @@ jobs:
 
           path = Path("crates/sim-core/src/ability_data.rs")
           text = path.read_text(encoding="utf-8")
-          old = '''        let mut ability = snapshot.ability(AQUA_ARROW_HRID).unwrap().clone();
-          let effect = &mut ability.ability_effects[0];
-          effect
-              .extensions
-              .insert("futureZero".into(), Value::from(0));
-          assert!(direct_damage_issues(&ability).is_empty());
+          marker = "    fn unknown_zero_extensions_do_not_reject_but_non_zero_extensions_do() {"
+          if text.count(marker) != 1:
+              raise SystemExit(f"expected one target test, found {text.count(marker)}")
+          head, tail = text.split(marker, 1)
 
-          effect
-              .extensions
-              .insert("futureFeature".into(), Value::from(1));
-          assert!(
-              direct_damage_issues(&ability)
-                  .iter()
-                  .any(|issue| issue.code == "unknown_effect_extension")
-          );'''
-          new = '''        let mut ability = snapshot.ability(AQUA_ARROW_HRID).unwrap().clone();
-          ability.ability_effects[0]
-              .extensions
-              .insert("futureZero".into(), Value::from(0));
-          assert!(direct_damage_issues(&ability).is_empty());
+          declaration = "        let effect = &mut ability.ability_effects[0];\n"
+          if tail.count(declaration) != 1:
+              raise SystemExit(f"expected one borrowed effect declaration in target test, found {tail.count(declaration)}")
+          tail = tail.replace(declaration, "", 1)
 
-          ability.ability_effects[0]
-              .extensions
-              .insert("futureFeature".into(), Value::from(1));
-          assert!(
-              direct_damage_issues(&ability)
-                  .iter()
-                  .any(|issue| issue.code == "unknown_effect_extension")
-          );'''
-          if text.count(old) != 1:
-              raise SystemExit(f"expected one borrow test block, found {text.count(old)}")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          borrowed = "        effect\n            .extensions"
+          owned = "        ability.ability_effects[0]\n            .extensions"
+          if tail.count(borrowed) != 2:
+              raise SystemExit(f"expected two borrowed extension writes, found {tail.count(borrowed)}")
+          tail = tail.replace(borrowed, owned)
+          path.write_text(head + marker + tail, encoding="utf-8")
 
       - name: Install and run rustfmt
         run: |
