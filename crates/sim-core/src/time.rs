@@ -67,8 +67,14 @@ mod tests {
 
     #[test]
     fn rejects_invalid_times_and_normalizes_negative_zero() {
-        assert!(matches!(SimTime::new(f64::NAN), Err(SimError::InvalidTime(_))));
-        assert!(matches!(SimTime::new(-1.0), Err(SimError::InvalidTime(-1.0))));
+        assert!(matches!(
+            SimTime::new(f64::NAN),
+            Err(SimError::InvalidTime(_))
+        ));
+        assert!(matches!(
+            SimTime::new(-1.0),
+            Err(SimError::InvalidTime(-1.0))
+        ));
         assert_eq!(SimTime::new(-0.0).unwrap(), SimTime::ZERO);
     }
 
