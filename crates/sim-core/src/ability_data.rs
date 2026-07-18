@@ -533,13 +533,12 @@ mod tests {
     fn unknown_zero_extensions_do_not_reject_but_non_zero_extensions_do() {
         let snapshot = AbilityDataSnapshotV1::embedded().unwrap();
         let mut ability = snapshot.ability(AQUA_ARROW_HRID).unwrap().clone();
-        let effect = &mut ability.ability_effects[0];
-        effect
+        ability.ability_effects[0]
             .extensions
             .insert("futureZero".into(), Value::from(0));
         assert!(direct_damage_issues(&ability).is_empty());
 
-        effect
+        ability.ability_effects[0]
             .extensions
             .insert("futureFeature".into(), Value::from(1));
         assert!(
