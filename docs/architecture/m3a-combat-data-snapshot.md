@@ -3,7 +3,7 @@
 ## 状态
 
 - 基线：`agent/rust-basic-combat`
-- 实施状态：生成器与 Rust DTO 已接通，正在生成并校验首个通用普通区快照。
+- 实施状态：55 个普通区与 54 个引用怪物已生成并通过 Rust 校验；正在收口 Clippy 的测试作用域问题。
 - 本阶段只建立数据边界，不扩大 Rust 模拟能力。
 
 ## 目标
@@ -23,9 +23,9 @@
 
 - schema 与游戏数据版本；
 - 两个源文件的 SHA-256；
-- 所有非 Dungeon Combat Zone；
+- 55 个非 Dungeon Combat Zone；
 - Zone 的人数上限、难度、Buff、加权随机出生规则和 Boss 出生规则；
-- 所有被普通区引用的怪物；
+- 54 个被普通区引用的怪物；
 - 怪物基础等级、基础 combat stats、能力 DTO、经验、狂暴时间和掉落 DTO；
 - 确定排序和规范 JSON 表示。
 
