@@ -125,11 +125,9 @@ impl SimulationTargetV1 {
             Self::Zone { zone_hrid, .. } if zone_hrid.trim().is_empty() => {
                 Err(SimError::InvalidTarget("zoneHrid must not be empty".into()))
             }
-            Self::Labyrinth {
-                labyrinth_hrid, ..
-            } if labyrinth_hrid.trim().is_empty() => Err(SimError::InvalidTarget(
-                "labyrinthHrid must not be empty".into(),
-            )),
+            Self::Labyrinth { labyrinth_hrid, .. } if labyrinth_hrid.trim().is_empty() => Err(
+                SimError::InvalidTarget("labyrinthHrid must not be empty".into()),
+            ),
             Self::Labyrinth { room_level: 0, .. } => Err(SimError::InvalidTarget(
                 "roomLevel must be greater than zero".into(),
             )),
