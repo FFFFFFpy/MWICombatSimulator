@@ -1,16 +1,7 @@
 import { describe, expect, it } from "vitest";
 import requestFixture from "../../../fixtures/parity/zone-solo-basic/request.json";
-import CombatSimulator from "../combatSimulator.js";
-import Player from "../player.js";
-import Zone from "../zone.js";
 import { normalizeSimulationRequestV1 } from "../../contracts/simulationContracts.js";
-import { attachCombatTrace } from "../../services/combatTrace.js";
-import { buildSimulationExtraBuffs } from "../../shared/simulationExtraBuffs.js";
-import {
-    createRandomSourceFromConfig,
-    createTracingRandomSource,
-    withPatchedMathRandom,
-} from "../../shared/randomSource.js";
+import { runReferenceSimulation } from "../../services/referenceSimulationRunner.js";
 
 function firstDifference(first, second, path = "result") {
     if (Object.is(first, second)) return null;
@@ -71,39 +62,13 @@ async function runFixture({ seed = requestFixture.random.seed, trace = false } =
             trace: { ...requestFixture.options.trace, enabled: trace },
         },
     });
-    const zone = new Zone(request.target.zoneHrid, request.target.difficultyTier);
-    const extraBuffs = buildSimulationExtraBuffs(request.options.extra);
-    const players = request.players.map((player) => {
-        const preparedPlayer = Player.createFromDTO(structuredClone(player));
-        preparedPlayer.zoneBuffs = zone.buffs || [];
-        preparedPlayer.extraBuffs = extraBuffs;
-        return preparedPlayer;
-    });
-    const simulator = new CombatSimulator(
-        players,
-        zone,
-        null,
-        { enableHpMpVisualization: request.options.enableHpMpVisualization },
-    );
-    const traceController = trace
-        ? attachCombatTrace(simulator, { maxEntries: request.options.trace.maxEntries })
-        : null;
-    let randomSource = createRandomSourceFromConfig(request.random);
-    if (traceController) {
-        randomSource = createTracingRandomSource(
-            randomSource,
-            (draw) => traceController.recordRandomDraw(draw),
-        );
-    }
-    const result = await withPatchedMathRandom(
-        randomSource,
-        () => simulator.simulate(request.simulationTimeLimit),
-    );
-    const serializedResult = JSON.parse(JSON.stringify(result));
-    const serializedTrace = traceController ? JSON.parse(JSON.stringify(traceController.getTrace())) : null;
-    const randomDraws = randomSource?.drawCount || 0;
-    traceController?.detach();
-    return { request, result: serializedResult, trace: serializedTrace, randomDraws };
+    const execution = await runReferenceSimulation(request);
+    return {
+        request,
+        result: JSON.parse(JSON.stringify(execution.result)),
+        trace: execution.trace ? JSON.parse(JSON.stringify(execution.trace)) : null,
+        randomDraws: execution.randomDraws,
+    };
 }
 
 describe("deterministic reference simulation", () => {
