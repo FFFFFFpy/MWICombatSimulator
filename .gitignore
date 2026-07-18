@@ -1,6 +1,7 @@
 .prettierrc
 node_modules/
 dist/
+target/
 .worktrees/
 .idea
 .vscode
