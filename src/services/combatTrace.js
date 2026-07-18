@@ -1,7 +1,10 @@
-function unitSnapshot(unit) {
+function unitSnapshot(unit, index, group) {
     if (!unit) return null;
+    const hrid = String(unit.hrid || "");
     return {
-        hrid: String(unit.hrid || ""),
+        key: `${group}:${index}:${hrid}`,
+        hrid,
+        index,
         isPlayer: unit.isPlayer === true,
         hitpoints: Number(unit.combatDetails?.currentHitpoints || 0),
         maxHitpoints: Number(unit.combatDetails?.maxHitpoints || 0),
@@ -26,14 +29,28 @@ function eventSnapshot(event) {
     };
 }
 
+function eventQueueSize(simulator) {
+    const heap = simulator?.eventQueue?.minHeap;
+    if (Number.isFinite(Number(heap?.length))) {
+        return Number(heap.length);
+    }
+    if (typeof heap?.size === "function") {
+        return Number(heap.size()) || 0;
+    }
+    if (Number.isFinite(Number(heap?.size))) {
+        return Number(heap.size);
+    }
+    return heap?.toArray?.().length || 0;
+}
+
 function simulationSnapshot(simulator) {
     const players = Array.isArray(simulator?.players) ? simulator.players : [];
     const enemies = Array.isArray(simulator?.enemies) ? simulator.enemies : [];
     return {
         simulationTime: Number(simulator?.simulationTime || 0),
-        players: players.map(unitSnapshot),
-        enemies: enemies.map(unitSnapshot),
-        eventQueueSize: Number(simulator?.eventQueue?.minHeap?.length || simulator?.eventQueue?.minHeap?.size || 0),
+        players: players.map((unit, index) => unitSnapshot(unit, index, "player")),
+        enemies: enemies.map((unit, index) => unitSnapshot(unit, index, "enemy")),
+        eventQueueSize: eventQueueSize(simulator),
         encountersKilled: Number(simulator?.zone?.encountersKilled || 0),
         dungeonsCompleted: Number(simulator?.zone?.dungeonsCompleted || 0),
         dungeonsFailed: Number(simulator?.zone?.dungeonsFailed || 0),
@@ -41,19 +58,20 @@ function simulationSnapshot(simulator) {
 }
 
 function diffUnits(beforeUnits, afterUnits) {
-    const beforeMap = new Map((beforeUnits || []).map((unit) => [unit.hrid, unit]));
-    const afterMap = new Map((afterUnits || []).map((unit) => [unit.hrid, unit]));
+    const beforeMap = new Map((beforeUnits || []).filter(Boolean).map((unit) => [unit.key, unit]));
+    const afterMap = new Map((afterUnits || []).filter(Boolean).map((unit) => [unit.key, unit]));
     const changes = [];
 
-    for (const hrid of new Set([...beforeMap.keys(), ...afterMap.keys()])) {
-        const before = beforeMap.get(hrid) || null;
-        const after = afterMap.get(hrid) || null;
+    for (const key of new Set([...beforeMap.keys(), ...afterMap.keys()])) {
+        const before = beforeMap.get(key) || null;
+        const after = afterMap.get(key) || null;
+        const hrid = after?.hrid || before?.hrid || "";
         if (!before || !after) {
-            changes.push({ hrid, before, after });
+            changes.push({ key, hrid, before, after });
             continue;
         }
         const patch = {};
-        for (const key of [
+        for (const field of [
             "hitpoints",
             "maxHitpoints",
             "manapoints",
@@ -62,12 +80,12 @@ function diffUnits(beforeUnits, afterUnits) {
             "blinded",
             "silenced",
         ]) {
-            if (before[key] !== after[key]) {
-                patch[key] = { before: before[key], after: after[key] };
+            if (before[field] !== after[field]) {
+                patch[field] = { before: before[field], after: after[field] };
             }
         }
         if (Object.keys(patch).length > 0) {
-            changes.push({ hrid, changes: patch });
+            changes.push({ key, hrid, changes: patch });
         }
     }
 
