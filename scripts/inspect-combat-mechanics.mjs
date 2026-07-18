@@ -68,20 +68,22 @@ function summarizeAbility(ability) {
     if (Number(ability.manaCost || 0) > 0) features.push("mana");
     if (targetTypes.some((target) => String(target).toLowerCase().includes("all"))) features.push("multi_target");
 
-    return compactObject({
-        hrid: ability.hrid,
-        name: ability.name,
-        description: ability.description,
-        manaCost: ability.manaCost,
-        cooldownDuration: ability.cooldownDuration,
-        castDuration: ability.castDuration,
-        isSpecialAbility: ability.isSpecialAbility === true,
-        effectTypes,
-        targetTypes,
+    return {
+        ...compactObject({
+            hrid: ability.hrid,
+            name: ability.name,
+            description: ability.description,
+            manaCost: ability.manaCost,
+            cooldownDuration: ability.cooldownDuration,
+            castDuration: ability.castDuration,
+            isSpecialAbility: ability.isSpecialAbility === true,
+            effectTypes,
+            targetTypes,
+            buffs,
+            defaultCombatTriggers: (ability.defaultCombatTriggers || []).map(summarizeTrigger),
+        }),
         features,
-        buffs,
-        defaultCombatTriggers: (ability.defaultCombatTriggers || []).map(summarizeTrigger),
-    });
+    };
 }
 
 function summarizeConsumable(item) {
@@ -92,18 +94,20 @@ function summarizeConsumable(item) {
     if (nonZero(detail.recoveryDuration)) features.push("recovery");
     if (Array.isArray(detail.buffs) && detail.buffs.length > 0) features.push("buff");
 
-    return compactObject({
-        hrid: item.hrid,
-        name: item.name,
-        categoryHrid: item.categoryHrid,
-        cooldownDuration: detail.cooldownDuration,
-        hitpointRestore: detail.hitpointRestore,
-        manapointRestore: detail.manapointRestore,
-        recoveryDuration: detail.recoveryDuration,
+    return {
+        ...compactObject({
+            hrid: item.hrid,
+            name: item.name,
+            categoryHrid: item.categoryHrid,
+            cooldownDuration: detail.cooldownDuration,
+            hitpointRestore: detail.hitpointRestore,
+            manapointRestore: detail.manapointRestore,
+            recoveryDuration: detail.recoveryDuration,
+            buffs: (detail.buffs || []).map(summarizeBuff),
+            defaultCombatTriggers: (detail.defaultCombatTriggers || []).map(summarizeTrigger),
+        }),
         features,
-        buffs: (detail.buffs || []).map(summarizeBuff),
-        defaultCombatTriggers: (detail.defaultCombatTriggers || []).map(summarizeTrigger),
-    });
+    };
 }
 
 function summarizeEquipment(item) {
@@ -141,14 +145,16 @@ function summarizeEquipment(item) {
     ];
     const features = interestingStatNames.filter((name) => nonZero(stats[name]));
 
-    return compactObject({
-        hrid: item.hrid,
-        name: item.name,
-        categoryHrid: item.categoryHrid,
-        equipmentTypeHrid: detail.typeHrid || detail.equipmentTypeHrid,
+    return {
+        ...compactObject({
+            hrid: item.hrid,
+            name: item.name,
+            categoryHrid: item.categoryHrid,
+            equipmentTypeHrid: detail.typeHrid || detail.equipmentTypeHrid,
+            combatStats: nonZeroStats,
+        }),
         features,
-        combatStats: nonZeroStats,
-    });
+    };
 }
 
 function groupAbilities(abilities) {
@@ -167,14 +173,14 @@ function groupAbilities(abilities) {
         "multi_target",
     ];
     return Object.fromEntries(
-        featureNames.map((feature) => [feature, abilities.filter((ability) => ability.features.includes(feature))]),
+        featureNames.map((feature) => [feature, abilities.filter((ability) => (ability.features || []).includes(feature))]),
     );
 }
 
 function groupEquipment(equipment) {
-    const featureNames = [...new Set(equipment.flatMap((item) => item.features))].sort();
+    const featureNames = [...new Set(equipment.flatMap((item) => item.features || []))].sort();
     return Object.fromEntries(
-        featureNames.map((feature) => [feature, equipment.filter((item) => item.features.includes(feature))]),
+        featureNames.map((feature) => [feature, equipment.filter((item) => (item.features || []).includes(feature))]),
     );
 }
 
@@ -188,6 +194,22 @@ function collectTriggerVocabulary(abilities, consumables) {
         conditions: [...new Set(triggers.map((trigger) => trigger.conditionHrid).filter(Boolean))].sort(),
         comparators: [...new Set(triggers.map((trigger) => trigger.comparatorHrid).filter(Boolean))].sort(),
     };
+}
+
+function validateReport(report) {
+    if (report.counts.abilities <= 0 || report.counts.consumables <= 0 || report.counts.equipment <= 0) {
+        throw new Error(`Combat mechanics inventory is unexpectedly empty: ${JSON.stringify(report.counts)}`);
+    }
+    for (const [feature, abilities] of Object.entries(report.abilitiesByFeature)) {
+        if (!Array.isArray(abilities)) {
+            throw new Error(`Ability feature group ${feature} is not an array.`);
+        }
+    }
+    for (const [feature, equipment] of Object.entries(report.equipmentByFeature)) {
+        if (!feature || !Array.isArray(equipment)) {
+            throw new Error(`Equipment feature group ${String(feature)} is invalid.`);
+        }
+    }
 }
 
 async function main() {
@@ -223,6 +245,7 @@ async function main() {
         equipmentByFeature: groupEquipment(equipment),
     };
 
+    validateReport(report);
     process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
 }
 
