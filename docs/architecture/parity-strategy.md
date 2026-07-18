@@ -52,7 +52,7 @@
 - OOM 状态；
 - 控制状态到期时间；
 - 关键基础属性、派生战斗值和装备被动；
-- 威胁、反伤、招架、狂怒、削弱、穿透等运行时状态。
+- 威胁、反伤、招架、狂怒、削弱、诅咒、穿透等运行时状态。
 
 详细轨迹仅用于黄金校验与诊断。普通模拟默认使用基础模式或完全关闭 trace，避免让诊断结构污染生产热路径。
 
@@ -76,7 +76,7 @@
 
 ## 黄金场景规划
 
-`fixtures/parity` 最终至少覆盖：
+`fixtures/parity` 至少覆盖：
 
 1. 单人普通 Zone，无装备和技能；
 2. 三人普通组队 Zone；
@@ -139,7 +139,7 @@ metadata.json
 
 ## 当前黄金基线
 
-当前已提交九个确定性场景：
+当前已提交十四个确定性场景：
 
 | 场景 | 保护的主要路径 |
 |---|---|
@@ -152,19 +152,30 @@ metadata.json
 | `oom-yogurt-recovery` | OOM 统计、缺蓝 Trigger、Yogurt 持续回蓝与重新施法 |
 | `equipment-passives-reflect` | Griffin Bulwark 削弱、Furious Spear 狂怒、Spike Shell 反伤与 Retribution |
 | `regal-sword-parry` | Regal Sword 招架重定向及敌方攻击事件中的反击伤害 |
+| `healing-hot-party` | Quick Aid、Rejuvenate、Blueberry Cake 与最低血量治疗目标选择 |
+| `ability-pierce-multi-target` | Penetrating Shot 的继续穿透与 Sweep 的全体敌人伤害 |
+| `cursed-bow-stacking` | Cursed Bow 诅咒叠层、旧到期事件取消与新事件重排 |
+| `revive-dead-ally` | 死亡统计、deadAlly Trigger、Revive 恢复与攻击事件重新调度 |
+| `speed-aura-simultaneous-expiration` | 同次施法产生的两个 Buff 在同时间点连续到期及稳定队列顺序 |
 
-其中四个复杂场景使用 `random.type = "sequence"` 与循环零值：
+其中九个机制场景使用 `random.type = "sequence"` 与循环零值：
 
 - 所有正概率状态稳定触发；
 - 不依赖 JavaScript seeded RNG 的实现细节；
 - Rust 引擎可使用完全相同的显式随机流；
 - 轨迹会固定每次随机消费所在的事件。
 
+基础五场景保留 seeded RNG，用于锁定当前 JavaScript reference engine 的随机实现和现实运行形态。跨语言首轮差分应优先从显式数列场景开始。
+
 当前 reference 数据中：
 
 - `dungeon-party-complete` 完成 Chimerical Den 1 次，最高波次 50；
 - `dungeon-wipe-restart` 在 120 秒内记录 13 次团灭与失败重启；
-- 所有基础与复杂轨迹均未截断。
+- `ability-dot-control-sequence` 稳定触发 DOT、致盲、沉默与眩晕；
+- `oom-yogurt-recovery` 实际进入 OOM，执行持续回蓝并再次施法；
+- `healing-hot-party` 实际产生主动治疗和 HP 恢复 Tick；
+- `revive-dead-ally` 实际把零 HP 队友恢复为正 HP；
+- 所有基础、复杂和高级轨迹均未截断。
 
 ## 黄金文件命令
 
@@ -240,7 +251,8 @@ M0 当前基础设施包括：
 - `scripts/parity-fixtures.mjs`：语义断言、黄金生成、分片归档和只读校验；
 - `scripts/inspect-combat-targets.mjs`：普通区、副本、队伍上限和迷宫怪物候选；
 - `scripts/inspect-combat-mechanics.mjs`：技能效果、装备槽位、消耗品和 Trigger 候选；
-- `src/combatsimulator/__tests__/complexMechanicsSimulation.test.js`：直接读取复杂 fixture 请求的机制级断言；
-- `fixtures/parity/*`：九个已锁定的确定性场景。
+- `src/combatsimulator/__tests__/complexMechanicsSimulation.test.js`：直接读取四个复杂 fixture 请求的机制级断言；
+- `src/combatsimulator/__tests__/advancedMechanicsSimulation.test.js`：直接读取五个高级 fixture 请求的治疗、群攻、诅咒、复活与顺序断言；
+- `fixtures/parity/*`：十四个已锁定的确定性场景。
 
-下一批继续覆盖主动治疗、生命恢复 HOT、诅咒、穿透、多重攻击、复活和同时间 Buff 到期顺序，然后由 Rust 引擎接入同一套校验器。
+当前行为基线已经覆盖 Rust 核心第一阶段所需的主要事件、状态、随机消费和最终统计路径。后续仍可追加新机制场景，但不再阻塞 Rust workspace、数据模型、RNG 与稳定事件队列的建立。
