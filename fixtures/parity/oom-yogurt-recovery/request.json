@@ -1,0 +1,62 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-oom-yogurt-recovery-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 2,
+      "attackLevel": 10,
+      "meleeLevel": 10,
+      "defenseLevel": 2000,
+      "rangedLevel": 10,
+      "magicLevel": 10,
+      "equipment": {},
+      "food": [
+        {
+          "hrid": "/items/yogurt",
+          "triggers": [
+            {
+              "dependencyHrid": "/combat_trigger_dependencies/self",
+              "conditionHrid": "/combat_trigger_conditions/missing_mp",
+              "comparatorHrid": "/combat_trigger_comparators/greater_than_equal",
+              "value": 50
+            }
+          ]
+        }
+      ],
+      "drinks": [],
+      "abilities": [
+        { "hrid": "/abilities/firestorm", "level": 1, "triggers": [] },
+        { "hrid": "/abilities/natures_veil", "level": 1, "triggers": [] }
+      ],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "labyrinth",
+    "labyrinthHrid": "/monsters/crystal_colossus",
+    "roomLevel": 100,
+    "crates": []
+  },
+  "simulationTimeLimit": 50000000000,
+  "random": {
+    "type": "sequence",
+    "values": [0],
+    "loop": true
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 20000,
+      "detailLevel": "combat"
+    },
+    "extra": {}
+  }
+}
