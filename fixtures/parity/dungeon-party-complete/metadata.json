@@ -1,7 +1,7 @@
 {
   "fixtureVersion": 1,
   "scenarioId": "dungeon-party-complete",
-  "description": "Five level-300 unarmed players run Sorcerer's Tower at difficulty 0 for 600 simulated seconds, requiring at least one completed dungeon.",
+  "description": "Five level-300 unarmed players run Chimerical Den at difficulty 0 for 600 simulated seconds, requiring at least one completed dungeon.",
   "contractVersion": 1,
   "referenceEngine": "reference-js",
   "referenceEngineVersion": "1.0.28",
