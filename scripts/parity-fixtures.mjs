@@ -3,10 +3,12 @@ import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { gunzipSync, gzipSync } from "node:zlib";
 import { createServer } from "vite";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIXTURES_ROOT = path.join(REPOSITORY_ROOT, "fixtures", "parity");
+const TRACE_ARCHIVE_NAME = "expected-trace.json.gz.b64";
 
 function parseArguments(argv) {
     const options = {
@@ -74,8 +76,17 @@ function formatJson(value) {
     return `${JSON.stringify(value, null, 2)}\n`;
 }
 
-function sha256(text) {
-    return createHash("sha256").update(text).digest("hex");
+function encodeTraceArchive(traceText) {
+    return `${gzipSync(Buffer.from(traceText, "utf8"), { level: 9 }).toString("base64")}\n`;
+}
+
+function decodeTraceArchive(encodedText) {
+    const compressed = Buffer.from(String(encodedText || "").trim(), "base64");
+    return JSON.parse(gunzipSync(compressed).toString("utf8"));
+}
+
+function sha256(value) {
+    return createHash("sha256").update(value).digest("hex");
 }
 
 function firstDifference(first, second, location = "root") {
@@ -174,6 +185,7 @@ async function generateFixture(modules, fixtureId, options, packageJson) {
 
     const resultText = formatJson(execution.result);
     const traceText = formatJson(execution.trace);
+    const traceArchiveText = encodeTraceArchive(traceText);
     const existingMetadata = await readFile(path.join(execution.fixtureDir, "metadata.json"), "utf8")
         .then(JSON.parse)
         .catch(() => ({}));
@@ -187,16 +199,18 @@ async function generateFixture(modules, fixtureId, options, packageJson) {
         dataVersion: execution.request.dataVersion,
         status: "golden",
         randomDraws: execution.randomDraws,
-        expectedFiles: ["request.json", "expected-result.json", "expected-trace.json"],
+        expectedFiles: ["request.json", "expected-result.json", TRACE_ARCHIVE_NAME],
+        traceEncoding: "gzip+base64",
         hashes: {
             expectedResultSha256: sha256(resultText),
             expectedTraceSha256: sha256(traceText),
+            expectedTraceArchiveSha256: sha256(traceArchiveText),
         },
     });
 
     await Promise.all([
         writeFile(path.join(destination, "expected-result.json"), resultText, "utf8"),
-        writeFile(path.join(destination, "expected-trace.json"), traceText, "utf8"),
+        writeFile(path.join(destination, TRACE_ARCHIVE_NAME), traceArchiveText, "utf8"),
         writeFile(path.join(destination, "metadata.json"), formatJson(metadata), "utf8"),
     ]);
     console.log(`Generated parity fixture: ${fixtureId}`);
@@ -206,7 +220,7 @@ async function checkFixture(modules, fixtureId) {
     const execution = await executeFixture(modules, fixtureId);
     const [expectedResult, expectedTrace, metadata] = await Promise.all([
         readFile(path.join(execution.fixtureDir, "expected-result.json"), "utf8").then(JSON.parse),
-        readFile(path.join(execution.fixtureDir, "expected-trace.json"), "utf8").then(JSON.parse),
+        readFile(path.join(execution.fixtureDir, TRACE_ARCHIVE_NAME), "utf8").then(decodeTraceArchive),
         readFile(path.join(execution.fixtureDir, "metadata.json"), "utf8").then(JSON.parse),
     ]);
     const resultDifference = firstDifference(canonicalize(expectedResult), execution.result, "result");
