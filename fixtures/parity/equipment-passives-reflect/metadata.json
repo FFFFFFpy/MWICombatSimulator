@@ -1,0 +1,29 @@
+{
+  "fixtureVersion": 1,
+  "scenarioId": "equipment-passives-reflect",
+  "description": "A three-player Sorcerer's Tower party combines Griffin Bulwark weaken, Furious Spear fury, Spike Shell thorns, and Retribution.",
+  "contractVersion": 1,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "dataVersion": "repository-v1.0.28",
+  "status": "request-baseline",
+  "assertions": {
+    "resultEquals": {
+      "numberOfPlayers": 3,
+      "isDungeon": false,
+      "isLabyrinth": false
+    },
+    "minimumRandomDraws": 50,
+    "minimumTraceEvents": 40,
+    "requiredTraceEventTypes": [
+      "combatStart",
+      "abilityCastEnd",
+      "autoAttack"
+    ]
+  },
+  "expectedFiles": ["request.json"],
+  "notes": [
+    "Regal Sword is deliberately excluded because a successful parry redirects the hit and can prevent Griffin Bulwark weaken from applying.",
+    "The detailed trace protects active buffs and derived passive stats; final attacks protect thorns and retaliation damage."
+  ]
+}
