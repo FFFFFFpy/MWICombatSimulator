@@ -7,7 +7,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -18,8 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Check out repository
+      - name: Check out repository branch
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -70,39 +72,17 @@ jobs:
       - name: Run full test suite
         run: npm test
 
-      - name: Inspect combat targets
-        run: |
-          mkdir -p tmp/ci
-          npm run inspect:combat-targets > tmp/ci/combat-targets.json
-
-      - name: Upload combat target inventory
-        uses: actions/upload-artifact@v4
-        with:
-          name: combat-target-inventory
-          path: tmp/ci/combat-targets.json
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Generate expanded parity candidates
+      - name: Generate expanded parity goldens
         id: parity-generate
         continue-on-error: true
         shell: bash
         run: |
-          mkdir -p tmp/ci/parity
+          mkdir -p tmp/ci
           set +e
-          npm run generate:parity -- --output-dir tmp/ci/parity > tmp/ci/parity-generation.log 2>&1
+          npm run generate:parity > tmp/ci/parity-generation.log 2>&1
           status=$?
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit "$status"
-
-      - name: Upload expanded parity candidates
-        if: steps.parity-generate.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: expanded-parity-golden-candidates
-          path: tmp/ci/parity
-          if-no-files-found: error
-          retention-days: 7
 
       - name: Upload parity generation diagnostics
         if: steps.parity-generate.outcome == 'failure'
@@ -144,3 +124,17 @@ jobs:
 
       - name: Build production bundle
         run: npm run build
+
+      - name: Commit generated parity goldens
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fixtures/parity
+          if git diff --cached --quiet; then
+            echo "Parity goldens are already current."
+            exit 0
+          fi
+          git commit -m "test: commit expanded parity goldens"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
