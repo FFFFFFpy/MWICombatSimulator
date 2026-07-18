@@ -3,7 +3,7 @@
 ## 状态
 
 - 基线：`agent/rust-core-foundation`
-- 实施状态：代码已接通，正在执行编译与 reference golden 差分验证。
+- 实施状态：代码已接通，受控验证将生成 `m2-validation-report.md` 并在提交报告后自删除临时工作流。
 - 目标：建立一个可执行、可拒绝越界输入、可与 JavaScript reference engine 对照的最小普通攻击闭环。
 - 非目标：完整 `SimResult`、技能、Buff、Trigger、消耗品、副本、迷宫和 UI 接入。
 
