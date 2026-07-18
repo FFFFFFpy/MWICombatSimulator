@@ -137,7 +137,10 @@ mod tests {
     fn seed_hash_uses_javascript_utf16_code_units() {
         let mut left = SeededRandom::from_seed_text("fixture-😀");
         let mut right = SeededRandom::from_seed(&Value::String("fixture-😀".into())).unwrap();
-        assert_eq!(left.next_unit_f64().unwrap(), right.next_unit_f64().unwrap());
+        assert_eq!(
+            left.next_unit_f64().unwrap(),
+            right.next_unit_f64().unwrap()
+        );
     }
 
     #[test]
