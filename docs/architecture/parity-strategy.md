@@ -84,13 +84,36 @@
 
 ```text
 request.json
-random.json
 expected-result.json
-expected-trace.json
+expected-trace.json.gz.b64
 metadata.json
 ```
 
-`metadata.json` 记录生成时的引擎版本、数据版本、协议版本和提交 SHA。
+随机配置直接包含在 `request.json` 中。`expected-trace.json.gz.b64` 是规范化事件轨迹 JSON 的 gzip+base64 文本归档，避免完整状态轨迹在普通 Git diff 中制造十几万行噪声。校验命令会自动解压，并在失败时输出第一个不同字段。
+
+`metadata.json` 记录引擎版本、数据版本、协议版本、随机消费数量以及结果和轨迹的 SHA-256。
+
+## 黄金文件命令
+
+显式生成：
+
+```bash
+npm run generate:parity
+```
+
+只生成一个场景：
+
+```bash
+npm run generate:parity -- --fixture zone-solo-basic
+```
+
+只读校验：
+
+```bash
+npm run check:parity
+```
+
+普通测试和 CI 最终只执行校验，不会自动覆盖仓库中的黄金文件。
 
 ## 黄金文件更新规则
 
@@ -98,7 +121,9 @@ metadata.json
 - 必须通过单独命令显式重新生成；
 - 更新黄金文件的 PR 必须说明行为变化原因；
 - 如果公式没有计划变更，而黄金结果大量变化，应视为回归而不是“顺手接受”；
-- 数据快照升级与引擎逻辑升级尽量分开提交。
+- 数据快照升级与引擎逻辑升级尽量分开提交；
+- 生成前必须确认 trace 未截断；
+- wall-clock 字段必须规范化，不能让当前时间污染黄金结果。
 
 ## Trace 的生产约束
 
@@ -108,6 +133,7 @@ metadata.json
 - 开启 trace 不得改变模拟结果；
 - trace 有明确最大条数并报告截断数量；
 - trace 只保留 JSON 安全字段，不序列化 class 实例或循环引用；
+- 同 HRID 的多个单位必须通过队伍位置键区分；
 - 超长批量模拟不应默认开启完整 trace。
 
 ## 差分失败输出
@@ -127,10 +153,13 @@ metadata.json
 
 ## 当前实现
 
-M0 首批基础设施包括：
+M0 当前基础设施包括：
 
 - `src/shared/randomSource.js`：原生、seeded、固定数列和 tracing 随机源；
 - `src/services/combatTrace.js`：默认关闭的事件与状态轨迹；
-- `src/contracts/simulationContracts.js`：版本化协议与旧 Worker 消息适配器。
+- `src/contracts/simulationContracts.js`：版本化协议与旧 Worker 消息适配器；
+- `src/services/referenceSimulationRunner.js`：统一装配目标、角色 Buff、随机源、trace 和进度的 reference engine 边界；
+- `scripts/parity-fixtures.mjs`：黄金文件生成与只读校验；
+- `fixtures/parity/zone-solo-basic`：首个确定性普通 Zone 场景。
 
-完整黄金场景和双引擎差分工具将在后续 M0/M1 提交中补齐。
+后续继续补齐五人队、Dungeon、团灭重开、Labyrinth 和复杂状态场景，再由 Rust 引擎接入同一套校验器。
