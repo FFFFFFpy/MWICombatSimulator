@@ -70,6 +70,19 @@ jobs:
       - name: Run full test suite
         run: npm test
 
+      - name: Inspect combat targets
+        run: |
+          mkdir -p tmp/ci
+          npm run inspect:combat-targets > tmp/ci/combat-targets.json
+
+      - name: Upload combat target inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: combat-target-inventory
+          path: tmp/ci/combat-targets.json
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Generate expanded parity candidates
         id: parity-generate
         continue-on-error: true
