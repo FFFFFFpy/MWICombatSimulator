@@ -1,28 +1,40 @@
 {
-  "fixtureVersion": 1,
-  "scenarioId": "speed-aura-simultaneous-expiration",
-  "description": "Speed Aura applies attack-speed and cast-speed Buffs in one cast; both schedule player-owned expiration checks at the same timestamp and are removed in a stable event order.",
-  "contractVersion": 1,
-  "referenceEngine": "reference-js",
-  "referenceEngineVersion": "1.0.28",
-  "dataVersion": "repository-v1.0.28",
-  "status": "request-baseline",
   "assertions": {
-    "resultEquals": {
-      "numberOfPlayers": 1,
-      "isDungeon": false,
-      "isLabyrinth": true
-    },
     "minimumRandomDraws": 50,
     "minimumTraceEvents": 50,
     "requiredTraceEventTypes": [
       "abilityCastEndEvent",
       "checkBuffExpiration"
-    ]
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": true,
+      "numberOfPlayers": 1
+    }
   },
-  "expectedFiles": ["request.json"],
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "Speed Aura applies attack-speed and cast-speed Buffs in one cast; both schedule player-owned expiration checks at the same timestamp and are removed in a stable event order.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "e33657196ccf0fce45c1b2889b86d0ff7fa3e3cd59574404426db43c78aaef6d",
+    "expectedTraceArchiveSha256": "2d2a1dcccd2c461f07e79c0695bcc6c37543080dc07010bfd7591b539072128f",
+    "expectedTraceSha256": "6ca6d3a7f836fd69f021327c5942806898a4ab14bf69593c814784f3aebbf146"
+  },
   "notes": [
     "Enemy Impale also creates same-time expiration groups, so the integration test explicitly scopes ordering to checkBuffExpiration events whose source is player1.",
     "The detailed trace requires two Speed Aura Buffs before the first player expiration event and zero immediately after one event in the consecutive pair."
-  ]
+  ],
+  "randomDraws": 561,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "speed-aura-simultaneous-expiration",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
 }

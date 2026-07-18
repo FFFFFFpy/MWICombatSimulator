@@ -1,0 +1,139 @@
+{
+  "attacks": {
+    "/monsters/crystal_colossus": {
+      "player1": {
+        "/abilities/puncture": {
+          "107": 1
+        },
+        "autoAttack": {
+          "1": 7
+        },
+        "physicalThorns": {
+          "5": 1,
+          "47": 2
+        }
+      },
+      "player2": {
+        "/abilities/impale": {
+          "46": 1
+        },
+        "/abilities/puncture": {
+          "48": 1
+        },
+        "autoAttack": {
+          "1": 4
+        },
+        "physicalThorns": {
+          "6": 6
+        }
+      }
+    },
+    "player1": {
+      "/monsters/crystal_colossus": {
+        "autoAttack": {
+          "1": 10
+        }
+      }
+    },
+    "player2": {
+      "/monsters/crystal_colossus": {
+        "autoAttack": {
+          "1": 11
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0,
+    "player2": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {
+    "player1": 2
+  },
+  "debuffOnLevelGap": {
+    "player1": 0,
+    "player2": 0
+  },
+  "dropRateMultiplier": {
+    "player1": 1,
+    "player2": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 0,
+  "experienceGained": {},
+  "hitpointsGained": {
+    "player1": {
+      "/abilities/revive": 101,
+      "regen": 2
+    },
+    "player2": {
+      "regen": 72
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": true,
+  "labyrinthName": "/monsters/crystal_colossus",
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 0,
+  "manaUsed": {
+    "player1": {},
+    "player2": {
+      "/abilities/revive": 200
+    }
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 0
+    },
+    "player2": {
+      "regen": 200
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 2,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {
+    "player1": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    },
+    "player2": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    }
+  },
+  "rareFindMultiplier": {
+    "player1": 1,
+    "player2": 1
+  },
+  "roomLevel": 100,
+  "simulatedTime": 35087719298.2456,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/crystal_colossus",
+      "spawnedAt": 0,
+      "timeSpentAlive": 0
+    }
+  ],
+  "wipeEvents": []
+}

@@ -1,28 +1,42 @@
 {
-  "fixtureVersion": 1,
-  "scenarioId": "healing-hot-party",
-  "description": "A three-player Sorcerer's Tower party uses Quick Aid, Rejuvenate, and Blueberry Cake recovery ticks after deterministic incoming damage.",
-  "contractVersion": 1,
-  "referenceEngine": "reference-js",
-  "referenceEngineVersion": "1.0.28",
-  "dataVersion": "repository-v1.0.28",
-  "status": "request-baseline",
   "assertions": {
-    "resultEquals": {
-      "numberOfPlayers": 3,
-      "isDungeon": false,
-      "isLabyrinth": false
-    },
     "minimumRandomDraws": 50,
     "minimumTraceEvents": 50,
     "requiredTraceEventTypes": [
       "abilityCastEndEvent",
       "consumableTick"
-    ]
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": false,
+      "numberOfPlayers": 3
+    }
   },
-  "expectedFiles": ["request.json"],
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "A three-player Sorcerer's Tower party uses Quick Aid, Rejuvenate, and Blueberry Cake recovery ticks after deterministic incoming damage.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64.part-000",
+    "expected-trace.json.gz.b64.part-001",
+    "expected-trace.json.gz.b64.part-002"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "269ee188a97592e77c7a9e3327347999db31ad05afd2a675b8ecd64151668f97",
+    "expectedTraceArchiveSha256": "29f78ebc17e1fd36fdb7a4578aa6808c9ef271b818091b87cc8456537497a99a",
+    "expectedTraceSha256": "15960e89ebab61ab130129869d848d151ceaa6a2b0655a241554e4a5785fc9c9"
+  },
   "notes": [
     "The integration test additionally requires actual non-zero healing from Quick Aid, Rejuvenate, and Blueberry Cake.",
     "The looping zero sequence keeps incoming damage and healing selection deterministic."
-  ]
+  ],
+  "randomDraws": 788,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "healing-hot-party",
+  "status": "golden",
+  "traceArchiveParts": 3,
+  "traceEncoding": "gzip+base64"
 }
