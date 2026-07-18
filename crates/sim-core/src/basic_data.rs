@@ -117,7 +117,9 @@ impl BasicGameData {
             ("monster.autoAttackDamage", self.monster.auto_attack_damage),
         ] {
             if !value.is_finite() {
-                return Err(SimError::InvalidGameData(format!("{name} must be finite")));
+                return Err(SimError::InvalidGameData(format!(
+                    "{name} must be finite"
+                )));
             }
         }
         if self.monster.base_attack_interval == SimTime::ZERO {
@@ -136,6 +138,10 @@ mod tests {
 
     fn number(value: &Value) -> f64 {
         value.as_f64().unwrap()
+    }
+
+    fn optional_number(value: Option<&Value>) -> f64 {
+        value.and_then(Value::as_f64).unwrap_or(0.0)
     }
 
     #[test]
@@ -178,7 +184,7 @@ mod tests {
         assert_eq!(data.monster.total_armor, 0.2 * defense_level);
         assert_eq!(
             data.monster.auto_attack_damage,
-            number(&stats["autoAttackDamage"])
+            optional_number(stats.get("autoAttackDamage"))
         );
         assert_eq!(data.monster.experience, number(&fly["experience"]));
         assert_eq!(data.monster.enrage_time.get(), number(&fly["enrageTime"]));
