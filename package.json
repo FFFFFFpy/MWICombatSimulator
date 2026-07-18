@@ -1,7 +1,7 @@
 {
     "name": "mwicombatsimulator",
     "version": "1.0.28",
-    "description": "",
+    "description": "Independent simulation and planning platform for Milky Way Idle.",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
@@ -17,15 +17,20 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/AmVoidGuy/MWICombatSimulator.git"
+        "url": "git+https://github.com/FFFFFFpy/MWICombatSimulator.git"
     },
-    "keywords": [],
+    "keywords": [
+        "milky-way-idle",
+        "combat-simulator",
+        "simulation",
+        "planning"
+    ],
     "author": "",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/AmVoidGuy/MWICombatSimulator/issues"
+        "url": "https://github.com/FFFFFFpy/MWICombatSimulator/issues"
     },
-    "homepage": "https://github.com/AmVoidGuy/MWICombatSimulator#readme",
+    "homepage": "https://github.com/FFFFFFpy/MWICombatSimulator#readme",
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.2.4",
         "acorn": "^8.12.1",
