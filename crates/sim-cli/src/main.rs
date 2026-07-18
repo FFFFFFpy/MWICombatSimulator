@@ -9,8 +9,8 @@ use std::{
 };
 
 use mwi_sim_core::{
-    CONTRACT_VERSION, ENGINE_ID, RandomConfigV1, RandomSource, SeededRandom,
-    SimulationRequestV1, SimulationTargetV1,
+    CONTRACT_VERSION, ENGINE_ID, RandomConfigV1, RandomSource, SeededRandom, SimulationRequestV1,
+    SimulationTargetV1,
 };
 use serde_json::{Value, json};
 
@@ -50,9 +50,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             }))
         }
         Some("rng-seeded") => {
-            let seed = args
-                .next()
-                .ok_or("usage: rng-seeded <seed> <count>")?;
+            let seed = args.next().ok_or("usage: rng-seeded <seed> <count>")?;
             let count = args
                 .next()
                 .ok_or("usage: rng-seeded <seed> <count>")?
@@ -90,7 +88,9 @@ fn capabilities() -> Value {
 }
 
 fn required_path(value: Option<String>, usage: &str) -> Result<PathBuf, Box<dyn Error>> {
-    value.map(PathBuf::from).ok_or_else(|| usage.to_owned().into())
+    value
+        .map(PathBuf::from)
+        .ok_or_else(|| usage.to_owned().into())
 }
 
 fn load_request(path: &Path) -> Result<SimulationRequestV1, Box<dyn Error>> {
