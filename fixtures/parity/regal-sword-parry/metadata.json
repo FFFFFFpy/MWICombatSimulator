@@ -1,0 +1,28 @@
+{
+  "fixtureVersion": 1,
+  "scenarioId": "regal-sword-parry",
+  "description": "A high-survivability Regal Sword user fights Crystal Colossus with a looping zero sequence so every eligible parry succeeds.",
+  "contractVersion": 1,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "dataVersion": "repository-v1.0.28",
+  "status": "request-baseline",
+  "assertions": {
+    "resultEquals": {
+      "numberOfPlayers": 1,
+      "isDungeon": false,
+      "isLabyrinth": true
+    },
+    "minimumRandomDraws": 10,
+    "minimumTraceEvents": 10,
+    "requiredTraceEventTypes": [
+      "combatStart",
+      "autoAttack"
+    ]
+  },
+  "expectedFiles": ["request.json"],
+  "notes": [
+    "A successful parry appears as enemy HP loss during an AutoAttack event whose original source is the enemy.",
+    "This fixture is separate from weaken because parry redirection changes the original target path."
+  ]
+}
