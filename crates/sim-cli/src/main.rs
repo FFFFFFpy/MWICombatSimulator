@@ -32,7 +32,9 @@ fn run() -> Result<(), Box<dyn Error>> {
         Some("capabilities") => print_json(&capabilities()),
         Some("inspect-auto-attack-zones") => {
             let snapshot = CombatZoneDataSnapshotV1::embedded()?;
-            print_json(&serde_json::to_value(classify_auto_attack_zones(&snapshot)?)?)
+            print_json(&serde_json::to_value(classify_auto_attack_zones(
+                &snapshot,
+            )?)?)
         }
         Some("validate-request") => {
             let path = required_path(args.next(), "validate-request <request.json>")?;

@@ -4,8 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::{
-    BASIC_FLY_ZONE_HRID, CombatMonsterDataV1, CombatZoneDataSnapshotV1, CombatZoneDataV1,
-    Result,
+    BASIC_FLY_ZONE_HRID, CombatMonsterDataV1, CombatZoneDataSnapshotV1, CombatZoneDataV1, Result,
 };
 
 pub const AUTO_ATTACK_CAPABILITY_REPORT_VERSION: u32 = 1;
@@ -230,10 +229,7 @@ fn classify_zone(
     issues
 }
 
-fn classify_monster(
-    monster: &CombatMonsterDataV1,
-    issues: &mut Vec<AutoAttackCapabilityIssueV1>,
-) {
+fn classify_monster(monster: &CombatMonsterDataV1, issues: &mut Vec<AutoAttackCapabilityIssueV1>) {
     let tier_zero_abilities = monster
         .abilities
         .iter()
@@ -265,7 +261,10 @@ fn classify_monster(
             issues,
             "combat_style_count",
             Some(monster.hrid.clone()),
-            format!("Monster has {} combat styles; exactly one is required", styles.len()),
+            format!(
+                "Monster has {} combat styles; exactly one is required",
+                styles.len()
+            ),
         );
     } else if !SUPPORTED_COMBAT_STYLES.contains(&styles[0]) {
         push_issue(
@@ -387,7 +386,12 @@ mod tests {
 
         let report = classify_auto_attack_zones(&snapshot).unwrap();
         let rejection = report.rejected.get(BASIC_FLY_ZONE_HRID).unwrap();
-        assert!(rejection.issues.iter().any(|issue| issue.code == "zone_buffs"));
+        assert!(
+            rejection
+                .issues
+                .iter()
+                .any(|issue| issue.code == "zone_buffs")
+        );
         assert!(
             rejection
                 .issues
