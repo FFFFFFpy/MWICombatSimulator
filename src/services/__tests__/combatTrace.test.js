@@ -32,11 +32,28 @@ function createUnit(hrid, isPlayer, hitpoints) {
     return {
         hrid,
         isPlayer,
+        isOutOfMana: false,
+        isStunned: false,
+        isBlinded: false,
+        isSilenced: false,
+        stunExpireTime: null,
+        blindExpireTime: null,
+        silenceExpireTime: null,
+        combatBuffs: {},
+        abilities: [],
+        food: [],
+        drinks: [],
         combatDetails: {
             currentHitpoints: hitpoints,
             maxHitpoints: hitpoints,
             currentManapoints: isPlayer ? 50 : 0,
             maxManapoints: isPlayer ? 50 : 0,
+            totalArmor: 10,
+            combatStats: {
+                attackInterval: 3_000_000_000,
+                fury: 0,
+                damageTaken: 0,
+            },
         },
     };
 }
@@ -78,7 +95,9 @@ describe("combatTrace", () => {
 
         const trace = controller.getTrace();
         expect(trace.version).toBe(1);
+        expect(trace.detailLevel).toBeUndefined();
         expect(trace.events).toHaveLength(1);
+        expect(trace.events[0].before.players[0].combatState).toBeUndefined();
         expect(trace.events[0].event).toMatchObject({
             type: "auto_attack",
             time: 10,
@@ -94,6 +113,46 @@ describe("combatTrace", () => {
         ]);
         expect(trace.events[0].randomDraws).toEqual([{ index: 0, value: 0.25 }]);
         expect(trace.events[0].queueOperations.map((entry) => entry.operation)).toEqual(["add", "cancel"]);
+    });
+
+    it("records buffs, cooldowns, OOM, and derived stats in combat detail mode", async () => {
+        const simulator = createSimulator();
+        const player = simulator.players[0];
+        player.abilities = [{ hrid: "/abilities/test", lastUsed: -1, manaCost: 25 }];
+        simulator.processEvent = async function processDetailedEvent(event) {
+            this.simulationTime = event.time;
+            player.isOutOfMana = true;
+            player.combatDetails.currentManapoints = 0;
+            player.combatDetails.combatStats.fury = 0.03;
+            player.abilities[0].lastUsed = event.time;
+            player.combatBuffs["/buff_uniques/test"] = {
+                uniqueHrid: "/buff_uniques/test",
+                typeHrid: "/buff_types/damage",
+                ratioBoost: 0.2,
+                flatBoost: 0,
+                startTime: event.time,
+                duration: 20,
+            };
+        };
+
+        const controller = attachCombatTrace(simulator, { detailLevel: "combat" });
+        await simulator.processEvent({ type: "abilityCastEnd", time: 10, source: player, ability: player.abilities[0] });
+
+        const trace = controller.getTrace();
+        const event = trace.events[0];
+        expect(trace.detailLevel).toBe("combat");
+        expect(event.before.players[0].combatState).toMatchObject({
+            outOfMana: false,
+            buffs: [],
+            abilities: [{ hrid: "/abilities/test", lastUsed: -1, manaCost: 25 }],
+        });
+        expect(event.after.players[0].combatState).toMatchObject({
+            outOfMana: true,
+            stats: { fury: 0.03 },
+            buffs: [{ uniqueHrid: "/buff_uniques/test", typeHrid: "/buff_types/damage" }],
+            abilities: [{ hrid: "/abilities/test", lastUsed: 10, manaCost: 25 }],
+        });
+        expect(event.changes.players[0].changes.combatState).toBeTruthy();
     });
 
     it("keeps duplicate monster HRIDs as separate trace units", async () => {
