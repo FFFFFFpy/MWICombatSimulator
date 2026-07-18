@@ -98,12 +98,7 @@ function recursiveHasKey(value, expectedKey) {
 
 function speedBuffs(snapshot) {
     return (snapshot?.players?.[0]?.combatState?.buffs || [])
-        .filter((buff) => buff.uniqueHrid.startsWith("/buff_uniques/speed_aura"))
-        .map((buff) => ({
-            uniqueHrid: buff.uniqueHrid,
-            startTime: buff.startTime,
-            duration: buff.duration,
-        }));
+        .filter((buff) => buff.uniqueHrid.startsWith("/buff_uniques/speed_aura"));
 }
 
 describe("advanced deterministic combat mechanics", () => {
@@ -327,7 +322,9 @@ describe("advanced deterministic combat mechanics", () => {
             options: traceOptions(200_000),
         });
 
-        const expirationEvents = execution.trace.events.filter((entry) => entry.event?.type === "checkBuffExpiration");
+        const expirationEvents = execution.trace.events.filter((entry) =>
+            entry.event?.type === "checkBuffExpiration" && entry.event?.source === "player1",
+        );
         const groups = new Map();
         for (const entry of expirationEvents) {
             const group = groups.get(entry.event.time) || [];
@@ -338,24 +335,8 @@ describe("advanced deterministic combat mechanics", () => {
 
         expect(simultaneous).toBeTruthy();
         expect(simultaneous[0].sequence + 1).toBe(simultaneous[1].sequence);
-
-        const removedTogether = simultaneous.some((entry) => {
-            const beforeSpeed = speedBuffs(entry.before);
-            const afterSpeed = speedBuffs(entry.after);
-            return beforeSpeed.length === 2 && afterSpeed.length === 0;
-        });
-        if (!removedTogether) {
-            const timestamp = simultaneous[0].event.time;
-            const nearby = execution.trace.events
-                .filter((entry) => Math.abs(Number(entry.event?.time || 0) - timestamp) <= ONE_SECOND)
-                .map((entry) => ({
-                    sequence: entry.sequence,
-                    event: entry.event,
-                    beforeSpeed: speedBuffs(entry.before),
-                    afterSpeed: speedBuffs(entry.after),
-                    playerChanges: entry.changes?.players || [],
-                }));
-            throw new Error(JSON.stringify({ timestamp, simultaneous: nearby }, null, 2));
-        }
+        expect(
+            simultaneous.some((entry) => speedBuffs(entry.before).length === 2 && speedBuffs(entry.after).length === 0),
+        ).toBe(true);
     });
 });
