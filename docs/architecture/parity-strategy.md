@@ -33,7 +33,7 @@
 
 ### L3：事件轨迹兼容
 
-每条事件轨迹至少记录：
+每条基础事件轨迹至少记录：
 
 - 顺序号；
 - 模拟时间；
@@ -44,6 +44,17 @@
 - 事件队列新增和取消；
 - 波次和地下城状态变化；
 - 处理异常。
+
+复杂机制场景使用 `trace.detailLevel = "combat"`，额外记录：
+
+- active Buff 及起止时间；
+- 技能、食物与饮料冷却；
+- OOM 状态；
+- 控制状态到期时间；
+- 关键基础属性、派生战斗值和装备被动；
+- 威胁、反伤、招架、狂怒、削弱、穿透等运行时状态。
+
+详细轨迹仅用于黄金校验与诊断。普通模拟默认使用基础模式或完全关闭 trace，避免让诊断结构污染生产热路径。
 
 差分比较在第一个不一致事件处停止，并输出该事件前后的最小状态差异。
 
@@ -63,21 +74,21 @@
 
 浮点字段只有在公式本身不可避免地产生跨语言舍入差异时才允许显式容差。容差必须按字段定义，禁止全局使用宽松百分比。
 
-## 黄金场景
+## 黄金场景规划
 
 `fixtures/parity` 最终至少覆盖：
 
 1. 单人普通 Zone，无装备和技能；
-2. 单人普通 Zone，含装备、技能、食物和饮料；
-3. 三人普通组队 Zone，含威胁和治疗；
-4. 五人 Dungeon，正常通关；
-5. 五人 Dungeon，团灭和重开；
-6. Labyrinth，不同房间等级和宝箱配置；
-7. DOT/HOT；
-8. 眩晕、致盲、沉默；
-9. 诅咒、削弱、狂怒；
-10. 反伤、反击、招架、穿透和多重攻击；
-11. OOM 与恢复后重新施法；
+2. 三人普通组队 Zone；
+3. 五人 Dungeon，正常通关；
+4. 五人 Dungeon，团灭和重开；
+5. Labyrinth 与房间等级缩放；
+6. DOT、HOT 与恢复 Tick；
+7. 眩晕、致盲、沉默；
+8. 诅咒、削弱、狂怒；
+9. 反伤、反击、招架、穿透和多重攻击；
+10. OOM 与恢复后重新施法；
+11. 主动治疗与复活；
 12. Buff 在同一时间点到期的稳定排序场景。
 
 官方数据快照中，普通组队 Zone 的最大队伍人数为 3；五人队场景应使用 Dungeon。场景人数和目标类型不得仅凭页面名称推断，可运行：
@@ -85,6 +96,14 @@
 ```bash
 npm run inspect:combat-targets
 ```
+
+技能、装备、消耗品、默认 Trigger 与关键效果参数可运行：
+
+```bash
+npm run inspect:combat-mechanics
+```
+
+## 黄金文件结构
 
 每个场景包含：
 
@@ -120,21 +139,32 @@ metadata.json
 
 ## 当前黄金基线
 
-当前已提交五个确定性场景：
+当前已提交九个确定性场景：
 
 | 场景 | 保护的主要路径 |
 |---|---|
 | `zone-solo-basic` | 单人普通区、基础攻击、重生、经验与结果聚合 |
 | `zone-party-three` | 普通组队区合法最大人数、多人目标选择与结果聚合 |
-| `dungeon-party-complete` | 五人副本、50 波推进、完成结算与下一轮初始化 |
+| `dungeon-party-complete` | 五人 Chimerical Den、50 波推进、完成结算与下一轮初始化 |
 | `dungeon-wipe-restart` | 团灭日志、事件选择性清理、三秒重启与失败计数 |
 | `labyrinth-fly-room-100` | Labyrinth DTO、房间等级缩放及迷宫特有结果字段 |
+| `ability-dot-control-sequence` | Firestorm DOT、致盲、沉默、眩晕及对应到期事件 |
+| `oom-yogurt-recovery` | OOM 统计、缺蓝 Trigger、Yogurt 持续回蓝与重新施法 |
+| `equipment-passives-reflect` | Griffin Bulwark 削弱、Furious Spear 狂怒、Spike Shell 反伤与 Retribution |
+| `regal-sword-parry` | Regal Sword 招架重定向及敌方攻击事件中的反击伤害 |
+
+其中四个复杂场景使用 `random.type = "sequence"` 与循环零值：
+
+- 所有正概率状态稳定触发；
+- 不依赖 JavaScript seeded RNG 的实现细节；
+- Rust 引擎可使用完全相同的显式随机流；
+- 轨迹会固定每次随机消费所在的事件。
 
 当前 reference 数据中：
 
 - `dungeon-party-complete` 完成 Chimerical Den 1 次，最高波次 50；
 - `dungeon-wipe-restart` 在 120 秒内记录 13 次团灭与失败重启；
-- 所有轨迹均未截断。
+- 所有基础与复杂轨迹均未截断。
 
 ## 黄金文件命令
 
@@ -147,7 +177,7 @@ npm run generate:parity
 只生成一个场景：
 
 ```bash
-npm run generate:parity -- --fixture zone-solo-basic
+npm run generate:parity -- --fixture ability-dot-control-sequence
 ```
 
 只读校验：
@@ -156,7 +186,7 @@ npm run generate:parity -- --fixture zone-solo-basic
 npm run check:parity
 ```
 
-普通测试和 CI 只执行校验，不会自动覆盖仓库中的黄金文件。
+普通测试和永久 CI 只执行校验，不会自动覆盖仓库中的黄金文件。
 
 ## 黄金文件更新规则
 
@@ -167,8 +197,9 @@ npm run check:parity
 - 数据快照升级与引擎逻辑升级尽量分开提交；
 - 生成前必须确认 trace 未截断；
 - wall-clock 字段必须规范化，不能让当前时间污染黄金结果；
-- 场景语义断言必须先通过，才能写出黄金文件；
-- 轨迹分片缺失、顺序错误或内容改变均视为校验失败。
+- 场景语义断言和对应集成测试必须先通过；
+- 轨迹分片缺失、顺序错误或内容改变均视为校验失败；
+- 临时 CI 写权限只用于受控生成，产物提交后必须恢复 `contents: read`。
 
 ## Trace 的生产约束
 
@@ -179,6 +210,8 @@ npm run check:parity
 - trace 有明确最大条数并报告截断数量；
 - trace 只保留 JSON 安全字段，不序列化 class 实例或循环引用；
 - 同 HRID 的多个单位必须通过队伍位置键区分；
+- `basic` 模式保护基础事件和单位状态；
+- `combat` 模式保护 Buff、冷却、OOM、派生属性和装备被动；
 - 超长批量模拟不应默认开启完整 trace。
 
 ## 差分失败输出
@@ -201,11 +234,13 @@ npm run check:parity
 M0 当前基础设施包括：
 
 - `src/shared/randomSource.js`：原生、seeded、固定数列和 tracing 随机源；
-- `src/services/combatTrace.js`：默认关闭的事件与状态轨迹；
-- `src/contracts/simulationContracts.js`：版本化协议与旧 Worker 消息适配器；
+- `src/services/combatTrace.js`：默认关闭的基础与详细战斗态轨迹；
+- `src/contracts/simulationContracts.js`：版本化协议、trace detail level 与旧 Worker 消息适配器；
 - `src/services/referenceSimulationRunner.js`：统一装配目标、角色 Buff、随机源、trace 和进度的 reference engine 边界；
 - `scripts/parity-fixtures.mjs`：语义断言、黄金生成、分片归档和只读校验；
-- `scripts/inspect-combat-targets.mjs`：从当前数据快照列出普通区、副本、队伍上限和迷宫怪物候选；
-- `fixtures/parity/*`：五个已锁定的确定性基础场景。
+- `scripts/inspect-combat-targets.mjs`：普通区、副本、队伍上限和迷宫怪物候选；
+- `scripts/inspect-combat-mechanics.mjs`：技能效果、装备槽位、消耗品和 Trigger 候选；
+- `src/combatsimulator/__tests__/complexMechanicsSimulation.test.js`：直接读取复杂 fixture 请求的机制级断言；
+- `fixtures/parity/*`：九个已锁定的确定性场景。
 
-后续继续补齐技能、装备、消耗品、Trigger、DOT/HOT、控制状态、反伤和 OOM 场景，再由 Rust 引擎接入同一套校验器。
+下一批继续覆盖主动治疗、生命恢复 HOT、诅咒、穿透、多重攻击、复活和同时间 Buff 到期顺序，然后由 Rust 引擎接入同一套校验器。
