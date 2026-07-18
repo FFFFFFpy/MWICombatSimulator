@@ -3,9 +3,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use crate::{
-    BASIC_FLY_ZONE_HRID, CombatMonsterDataV1, CombatZoneDataSnapshotV1, CombatZoneDataV1, Result,
-};
+use crate::{CombatMonsterDataV1, CombatZoneDataSnapshotV1, CombatZoneDataV1, Result};
+
+#[cfg(test)]
+use crate::BASIC_FLY_ZONE_HRID;
 
 pub const AUTO_ATTACK_CAPABILITY_REPORT_VERSION: u32 = 1;
 
