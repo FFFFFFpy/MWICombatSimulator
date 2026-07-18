@@ -1,0 +1,55 @@
+name: M3A Test Scope Patch Once
+
+on:
+  push:
+    branches:
+      - agent/rust-combat-data-snapshot
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/rust-combat-data-snapshot
+
+      - name: Scope Fly comparison helpers to tests
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("crates/sim-core/src/combat_data.rs")
+          text = path.read_text(encoding="utf-8")
+          old_import = """use crate::{\n    BASIC_FLY_MONSTER_HRID, BASIC_FLY_ZONE_HRID, BasicGameData, Result, SimError, SimTime,\n};"""
+          new_import = """use crate::{Result, SimError, SimTime};\n\n#[cfg(test)]\nuse crate::{BASIC_FLY_MONSTER_HRID, BASIC_FLY_ZONE_HRID, BasicGameData};"""
+          if text.count(old_import) != 1:
+              raise SystemExit(f"expected one production import block, found {text.count(old_import)}")
+          text = text.replace(old_import, new_import, 1)
+
+          old_stat = "fn stat(monster: &CombatMonsterDataV1, name: &str) -> f64 {"
+          new_stat = "#[cfg(test)]\nfn stat(monster: &CombatMonsterDataV1, name: &str) -> f64 {"
+          if text.count(old_stat) != 1:
+              raise SystemExit(f"expected one stat helper, found {text.count(old_stat)}")
+          path.write_text(text.replace(old_stat, new_stat, 1), encoding="utf-8")
+
+      - name: Install Rust formatter
+        run: |
+          rustup toolchain install 1.85.0 --profile minimal --component rustfmt
+          rustup default 1.85.0
+
+      - name: Format Rust sources
+        run: cargo fmt --all
+
+      - name: Remove one-time workflow
+        run: rm .github/workflows/m3a-test-scope-patch-once.yml
+
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates/sim-core/src/combat_data.rs .github/workflows/m3a-test-scope-patch-once.yml
+          git commit -m "rust: scope Combat Zone comparison helpers to tests"
+          git push origin HEAD:agent/rust-combat-data-snapshot
