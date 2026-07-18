@@ -3,6 +3,7 @@
 ## 状态
 
 - 基线：`agent/rust-core-foundation`
+- 实施状态：代码已接通，正在执行编译与 reference golden 差分验证。
 - 目标：建立一个可执行、可拒绝越界输入、可与 JavaScript reference engine 对照的最小普通攻击闭环。
 - 非目标：完整 `SimResult`、技能、Buff、Trigger、消耗品、副本、迷宫和 UI 接入。
 
@@ -36,6 +37,8 @@ M2 只接受满足以下条件的请求：
 → 输出 BasicCombatResultV1
 ```
 
+当前实现还包括玩家 150 秒复活与每 10 秒基础 HP/MP 恢复 Tick，以保持普通 Zone 的最小时间线完整。
+
 ## BasicCombatResultV1
 
 结果只声明当前已实现字段：
@@ -52,6 +55,14 @@ M2 只接受满足以下条件的请求：
 
 它不是 `SimulationResultV1`，不得传给依赖完整 `SimResult` 的现有 UI。
 
+## 已接通边界
+
+- `mwi-sim-core::simulate_basic`；
+- `mwi-sim-core::simulate_basic_json`；
+- CLI：`simulate-basic <request.json>`；
+- WASM：`simulateBasicJson`；
+- 机器可读能力报告只声明单人 tier-0 Fly 与 `basic_combat_result`。
+
 ## 验证
 
 1. 单次攻击的命中、暴击、伤害和减伤使用与 reference JS 相同公式。
@@ -60,5 +71,6 @@ M2 只接受满足以下条件的请求：
 4. `zone-solo-basic` 的基础结果子集与 reference golden 一致。
 5. 不支持的请求逐类有拒绝测试。
 6. CLI 能运行该 fixture，但 capability report 只声明这一受限能力。
+7. M0 JavaScript 测试、14 组黄金校验、基准与生产构建继续通过。
 
 达到以上标准后停止，不开始技能或 Buff 迁移。
