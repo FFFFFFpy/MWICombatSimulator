@@ -8,7 +8,7 @@
 - 目标正式战斗引擎：Rust core
 - 浏览器目标：Rust/WASM
 - 原生批处理目标：Rust CLI
-- M0 行为基线：Completed
+- M0 行为基线：Completed / Frozen
 
 ## 背景
 
@@ -118,7 +118,7 @@ docs/architecture/
 
 ### M0：行为基线
 
-**状态：完成。**
+**状态：完成并冻结。**
 
 已完成：
 
@@ -145,6 +145,8 @@ docs/architecture/
 - 反伤、反击、招架、穿透和多目标；
 - Revive；
 - 同时间 Buff 到期的稳定事件顺序。
+
+除修复 M0 自身回归或上游数据升级适配外，后续 Rust 实现不得继续堆入 M0 PR。
 
 ### M1：Rust 基础核心
 
