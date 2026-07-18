@@ -56,23 +56,14 @@ async function loadModules() {
         ssr: { noExternal: ["heap-js"] },
     });
     try {
-        const [combatModule, playerModule, zoneModule, randomModule, contractModule, extraBuffModule] = await Promise.all([
-            vite.ssrLoadModule("/src/combatsimulator/combatSimulator.js"),
-            vite.ssrLoadModule("/src/combatsimulator/player.js"),
-            vite.ssrLoadModule("/src/combatsimulator/zone.js"),
-            vite.ssrLoadModule("/src/shared/randomSource.js"),
+        const [runnerModule, contractModule] = await Promise.all([
+            vite.ssrLoadModule("/src/services/referenceSimulationRunner.js"),
             vite.ssrLoadModule("/src/contracts/simulationContracts.js"),
-            vite.ssrLoadModule("/src/shared/simulationExtraBuffs.js"),
         ]);
         return {
             vite,
-            CombatSimulator: combatModule.default,
-            Player: playerModule.default,
-            Zone: zoneModule.default,
-            createSeededRandomSource: randomModule.createSeededRandomSource,
-            withPatchedMathRandom: randomModule.withPatchedMathRandom,
+            runReferenceSimulation: runnerModule.runReferenceSimulation,
             normalizeSimulationRequestV1: contractModule.normalizeSimulationRequestV1,
-            buildSimulationExtraBuffs: extraBuffModule.buildSimulationExtraBuffs,
         };
     } catch (error) {
         await vite.close();
@@ -80,41 +71,25 @@ async function loadModules() {
     }
 }
 
-async function runScenario(modules, request, options, iteration) {
-    const zone = new modules.Zone(request.target.zoneHrid, request.target.difficultyTier);
-    const extraBuffs = modules.buildSimulationExtraBuffs(request.options.extra);
-    const players = request.players.map((player) => {
-        const preparedPlayer = modules.Player.createFromDTO(structuredClone(player));
-        preparedPlayer.zoneBuffs = zone.buffs || [];
-        preparedPlayer.extraBuffs = extraBuffs;
-        return preparedPlayer;
-    });
-    const simulator = new modules.CombatSimulator(
-        players,
-        zone,
-        null,
-        { enableHpMpVisualization: request.options.enableHpMpVisualization },
-    );
-
+async function runScenario(modules, request, iteration) {
     let processedEvents = 0;
     let peakEventQueueLength = 0;
-    const eventQueue = simulator.eventQueue;
-    const originalGetNextEvent = eventQueue.getNextEvent.bind(eventQueue);
-    eventQueue.getNextEvent = () => {
-        const queueLength = Number(eventQueue.minHeap?.length || 0);
-        peakEventQueueLength = Math.max(peakEventQueueLength, queueLength);
-        const event = originalGetNextEvent();
-        if (event) processedEvents += 1;
-        return event;
-    };
-
-    const randomSource = modules.createSeededRandomSource(options.seed);
     const startedAt = performance.now();
-    const result = await modules.withPatchedMathRandom(
-        randomSource,
-        () => simulator.simulate(options.simulationSeconds * ONE_SECOND),
-    );
+    const execution = await modules.runReferenceSimulation(request, {
+        configureSimulator(simulator) {
+            const eventQueue = simulator.eventQueue;
+            const originalGetNextEvent = eventQueue.getNextEvent.bind(eventQueue);
+            eventQueue.getNextEvent = () => {
+                const queueLength = Number(eventQueue.minHeap?.length || 0);
+                peakEventQueueLength = Math.max(peakEventQueueLength, queueLength);
+                const event = originalGetNextEvent();
+                if (event) processedEvents += 1;
+                return event;
+            };
+        },
+    });
     const elapsedMs = performance.now() - startedAt;
+    const result = execution.result;
     const resultSummary = {
         simulatedTime: Number(result.simulatedTime || 0),
         encounters: Number(result.encounters || 0),
@@ -123,7 +98,7 @@ async function runScenario(modules, request, options, iteration) {
     };
     const workloadFingerprint = JSON.stringify({
         processedEvents,
-        randomDraws: randomSource.drawCount,
+        randomDraws: execution.randomDraws,
         resultSummary,
     });
 
@@ -131,7 +106,7 @@ async function runScenario(modules, request, options, iteration) {
         iteration,
         elapsedMs,
         processedEvents,
-        randomDraws: randomSource.drawCount,
+        randomDraws: execution.randomDraws,
         eventsPerSecond: elapsedMs > 0 ? processedEvents / (elapsedMs / 1000) : 0,
         peakEventQueueLength,
         resultSummary,
@@ -163,12 +138,12 @@ async function main() {
         });
 
         for (let index = 0; index < options.warmup; index++) {
-            await runScenario(modules, request, options, `warmup-${index}`);
+            await runScenario(modules, request, `warmup-${index}`);
         }
 
         const runs = [];
         for (let index = 0; index < options.iterations; index++) {
-            runs.push(await runScenario(modules, request, options, index));
+            runs.push(await runScenario(modules, request, index));
         }
 
         const fingerprints = new Set(runs.map((run) => run.workloadFingerprint));
