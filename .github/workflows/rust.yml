@@ -9,6 +9,7 @@ on:
       - agent/rust-basic-combat
       - agent/rust-combat-data-snapshot
       - agent/rust-auto-attack-capabilities
+      - agent/rust-ability-data
 
 permissions:
   contents: read
@@ -36,6 +37,18 @@ jobs:
           first=$(sha256sum crates/sim-core/data/combat-zone-data-v1.json | cut -d' ' -f1)
           npm run build-rust-combat-data
           second=$(sha256sum crates/sim-core/data/combat-zone-data-v1.json | cut -d' ' -f1)
+          test "$first" = "$second"
+
+      - name: Verify deterministic ability snapshot
+        shell: bash
+        run: |
+          npm run check-rust-ability-data
+          cp crates/sim-core/data/ability-data-v1.json tmp/ci/ability-data-committed.json
+          npm run build-rust-ability-data
+          cmp tmp/ci/ability-data-committed.json crates/sim-core/data/ability-data-v1.json
+          first=$(sha256sum crates/sim-core/data/ability-data-v1.json | cut -d' ' -f1)
+          npm run build-rust-ability-data
+          second=$(sha256sum crates/sim-core/data/ability-data-v1.json | cut -d' ' -f1)
           test "$first" = "$second"
 
       - name: Install Rust toolchain and WASM target
@@ -151,6 +164,29 @@ jobs:
         with:
           name: auto-attack-capability-report
           path: tmp/ci/auto-attack-capabilities.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Inspect direct-damage ability candidates
+        shell: bash
+        run: |
+          cargo run --locked -p mwi-sim-cli -- inspect-direct-damage-abilities \
+            > tmp/ci/direct-damage-abilities.json
+          node -e '
+            const fs = require("fs");
+            const value = JSON.parse(fs.readFileSync("tmp/ci/direct-damage-abilities.json", "utf8"));
+            if ((value.counts?.totalAbilities ?? 0) < 1) process.exit(1);
+            if ((value.counts?.candidates ?? 0) < 1) process.exit(1);
+            if (!value.candidates?.["/abilities/aqua_arrow"]) process.exit(1);
+            if ((value.counts?.candidates ?? 0) + (value.counts?.rejected ?? 0) !== value.counts.totalAbilities) process.exit(1);
+            if (Object.values(value.rejected ?? {}).some(entry => !Array.isArray(entry.issues) || entry.issues.length === 0)) process.exit(1);
+          '
+
+      - name: Upload direct-damage ability report
+        uses: actions/upload-artifact@v4
+        with:
+          name: direct-damage-ability-report
+          path: tmp/ci/direct-damage-abilities.json
           if-no-files-found: error
           retention-days: 7
 
