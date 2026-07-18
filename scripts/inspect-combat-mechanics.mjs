@@ -48,22 +48,52 @@ function summarizeBuff(buff) {
     });
 }
 
+function summarizeEffect(effect) {
+    return compactObject({
+        targetType: effect.targetType,
+        effectType: effect.effectType,
+        combatStyleHrid: effect.combatStyleHrid,
+        damageType: effect.damageType,
+        baseDamageFlat: effect.baseDamageFlat,
+        baseDamageFlatLevelBonus: effect.baseDamageFlatLevelBonus,
+        baseDamageRatio: effect.baseDamageRatio,
+        baseDamageRatioLevelBonus: effect.baseDamageRatioLevelBonus,
+        bonusAccuracyRatio: effect.bonusAccuracyRatio,
+        bonusAccuracyRatioLevelBonus: effect.bonusAccuracyRatioLevelBonus,
+        damageOverTimeRatio: effect.damageOverTimeRatio,
+        damageOverTimeDuration: effect.damageOverTimeDuration,
+        armorDamageRatio: effect.armorDamageRatio,
+        armorDamageRatioLevelBonus: effect.armorDamageRatioLevelBonus,
+        hpDrainRatio: effect.hpDrainRatio,
+        pierceChance: effect.pierceChance,
+        blindChance: effect.blindChance,
+        blindDuration: effect.blindDuration,
+        silenceChance: effect.silenceChance,
+        silenceDuration: effect.silenceDuration,
+        stunChance: effect.stunChance,
+        stunDuration: effect.stunDuration,
+        spendHpRatio: effect.spendHpRatio,
+        buffs: (effect.buffs || []).map(summarizeBuff),
+    });
+}
+
 function summarizeAbility(ability) {
-    const effects = Array.isArray(ability.abilityEffects) ? ability.abilityEffects : [];
-    const effectTypes = [...new Set(effects.map((effect) => effect.effectType).filter(Boolean))];
-    const targetTypes = [...new Set(effects.map((effect) => effect.targetType).filter(Boolean))];
-    const buffs = effects.flatMap((effect) => Array.isArray(effect.buffs) ? effect.buffs : []).map(summarizeBuff);
+    const rawEffects = Array.isArray(ability.abilityEffects) ? ability.abilityEffects : [];
+    const effects = rawEffects.map(summarizeEffect);
+    const effectTypes = [...new Set(rawEffects.map((effect) => effect.effectType).filter(Boolean))];
+    const targetTypes = [...new Set(rawEffects.map((effect) => effect.targetType).filter(Boolean))];
+    const buffs = rawEffects.flatMap((effect) => Array.isArray(effect.buffs) ? effect.buffs : []).map(summarizeBuff);
     const features = [];
 
-    if (effects.some((effect) => nonZero(effect.damageOverTimeRatio) || nonZero(effect.damageOverTimeDuration))) features.push("dot");
-    if (effects.some((effect) => String(effect.effectType || "").includes("heal"))) features.push("heal");
-    if (effects.some((effect) => nonZero(effect.blindChance) || nonZero(effect.blindDuration))) features.push("blind");
-    if (effects.some((effect) => nonZero(effect.silenceChance) || nonZero(effect.silenceDuration))) features.push("silence");
-    if (effects.some((effect) => nonZero(effect.stunChance) || nonZero(effect.stunDuration))) features.push("stun");
-    if (effects.some((effect) => nonZero(effect.pierceChance))) features.push("pierce");
-    if (effects.some((effect) => nonZero(effect.armorDamageRatio))) features.push("armor_damage");
-    if (effects.some((effect) => nonZero(effect.hpDrainRatio))) features.push("hp_drain");
-    if (effects.some((effect) => nonZero(effect.spendHpRatio))) features.push("spend_hp");
+    if (rawEffects.some((effect) => nonZero(effect.damageOverTimeRatio) || nonZero(effect.damageOverTimeDuration))) features.push("dot");
+    if (rawEffects.some((effect) => String(effect.effectType || "").includes("heal"))) features.push("heal");
+    if (rawEffects.some((effect) => nonZero(effect.blindChance) || nonZero(effect.blindDuration))) features.push("blind");
+    if (rawEffects.some((effect) => nonZero(effect.silenceChance) || nonZero(effect.silenceDuration))) features.push("silence");
+    if (rawEffects.some((effect) => nonZero(effect.stunChance) || nonZero(effect.stunDuration))) features.push("stun");
+    if (rawEffects.some((effect) => nonZero(effect.pierceChance))) features.push("pierce");
+    if (rawEffects.some((effect) => nonZero(effect.armorDamageRatio))) features.push("armor_damage");
+    if (rawEffects.some((effect) => nonZero(effect.hpDrainRatio))) features.push("hp_drain");
+    if (rawEffects.some((effect) => nonZero(effect.spendHpRatio))) features.push("spend_hp");
     if (buffs.length > 0) features.push("buff");
     if (Number(ability.manaCost || 0) > 0) features.push("mana");
     if (targetTypes.some((target) => String(target).toLowerCase().includes("all"))) features.push("multi_target");
@@ -79,6 +109,7 @@ function summarizeAbility(ability) {
             isSpecialAbility: ability.isSpecialAbility === true,
             effectTypes,
             targetTypes,
+            effects,
             buffs,
             defaultCombatTriggers: (ability.defaultCombatTriggers || []).map(summarizeTrigger),
         }),
@@ -108,6 +139,21 @@ function summarizeConsumable(item) {
         }),
         features,
     };
+}
+
+function directLocationFields(item, detail) {
+    const fields = {};
+    for (const [prefix, source] of [["item", item], ["equipment", detail]]) {
+        for (const [key, value] of Object.entries(source || {})) {
+            if (!/(type|slot|location)/i.test(key)) continue;
+            if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+                fields[`${prefix}.${key}`] = value;
+            } else if (Array.isArray(value) && value.every((entry) => ["string", "number", "boolean"].includes(typeof entry))) {
+                fields[`${prefix}.${key}`] = value;
+            }
+        }
+    }
+    return fields;
 }
 
 function summarizeEquipment(item) {
@@ -150,7 +196,7 @@ function summarizeEquipment(item) {
             hrid: item.hrid,
             name: item.name,
             categoryHrid: item.categoryHrid,
-            equipmentTypeHrid: detail.typeHrid || detail.equipmentTypeHrid,
+            locationFields: directLocationFields(item, detail),
             combatStats: nonZeroStats,
         }),
         features,
@@ -220,12 +266,12 @@ async function main() {
 
     const abilities = Object.values(abilityMap).map(summarizeAbility).sort((left, right) => left.hrid.localeCompare(right.hrid));
     const items = Object.values(itemMap);
-    const consumables = items
-        .filter((item) => item?.consumableDetail)
+    const rawConsumables = items.filter((item) => item?.consumableDetail);
+    const rawEquipment = items.filter((item) => item?.equipmentDetail);
+    const consumables = rawConsumables
         .map(summarizeConsumable)
         .sort((left, right) => left.hrid.localeCompare(right.hrid));
-    const equipment = items
-        .filter((item) => item?.equipmentDetail)
+    const equipment = rawEquipment
         .map(summarizeEquipment)
         .sort((left, right) => left.hrid.localeCompare(right.hrid));
 
@@ -238,6 +284,13 @@ async function main() {
             abilities: abilities.length,
             consumables: consumables.length,
             equipment: equipment.length,
+        },
+        schemaSamples: {
+            abilityKeys: Object.keys(Object.values(abilityMap)[0] || {}).sort(),
+            abilityEffectKeys: Object.keys(Object.values(abilityMap)[0]?.abilityEffects?.[0] || {}).sort(),
+            itemKeys: Object.keys(items[0] || {}).sort(),
+            consumableDetailKeys: Object.keys(rawConsumables[0]?.consumableDetail || {}).sort(),
+            equipmentDetailKeys: Object.keys(rawEquipment[0]?.equipmentDetail || {}).sort(),
         },
         triggerVocabulary: collectTriggerVocabulary(abilities, consumables),
         abilitiesByFeature: groupAbilities(abilities),
