@@ -3,7 +3,7 @@
 ## 状态
 
 - 基线：`agent/rust-core-foundation`
-- 实施状态：攻击间隔改为基础参数计算，缺失 `autoAttackDamage` 按 reference 默认 0 处理，正在执行最终全链路验证。
+- 实施状态：功能与全链路验证均已通过，仅完成 rustfmt 后的最终 Rust 收口检查。
 - 目标：建立一个可执行、可拒绝越界输入、可与 JavaScript reference engine 对照的最小普通攻击闭环。
 - 非目标：完整 `SimResult`、技能、Buff、Trigger、消耗品、副本、迷宫和 UI 接入。
 
@@ -63,9 +63,9 @@ M2 只接受满足以下条件的请求：
 - WASM：`simulateBasicJson`；
 - 机器可读能力报告只声明单人 tier-0 Fly 与 `basic_combat_result`。
 
-## 前两轮验证结果
+## 验证过程
 
-除 Fly 数据切片的两个表达问题外，其余检查均已通过，包括：
+前两轮只发现 Fly 数据切片的两个表达问题，其余功能检查始终通过：
 
 - `zone-solo-basic` 的 encounters、deaths、攻击直方图、时间字段和 145 次随机消费；
 - 确定性重放；
@@ -79,7 +79,9 @@ M2 只接受满足以下条件的请求：
 1. 派生攻击间隔不再以十进制结果存储。数据切片保存 `baseAttackInterval` 和 `attackLevel`，运行时执行与 reference engine 相同的除法。
 2. Fly 数据中不存在 `autoAttackDamage`，按 `Monster.updateCombatDetails()` 的规则补为 0，而不是误读 `smashDamage`。
 
-## 验证
+最后一轮完整验证除 rustfmt 单行排版外全部通过；该排版已修正，正在执行最终 Rust 检查。
+
+## 验证标准
 
 1. 单次攻击的命中、暴击、伤害和减伤使用与 reference JS 相同公式。
 2. 玩家与 Fly 的攻击间隔一致。
