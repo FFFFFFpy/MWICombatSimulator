@@ -28,27 +28,22 @@ function createQueue() {
     };
 }
 
+function createUnit(hrid, isPlayer, hitpoints) {
+    return {
+        hrid,
+        isPlayer,
+        combatDetails: {
+            currentHitpoints: hitpoints,
+            maxHitpoints: hitpoints,
+            currentManapoints: isPlayer ? 50 : 0,
+            maxManapoints: isPlayer ? 50 : 0,
+        },
+    };
+}
+
 function createSimulator() {
-    const player = {
-        hrid: "player1",
-        isPlayer: true,
-        combatDetails: {
-            currentHitpoints: 100,
-            maxHitpoints: 100,
-            currentManapoints: 50,
-            maxManapoints: 50,
-        },
-    };
-    const enemy = {
-        hrid: "/monsters/test",
-        isPlayer: false,
-        combatDetails: {
-            currentHitpoints: 80,
-            maxHitpoints: 80,
-            currentManapoints: 0,
-            maxManapoints: 0,
-        },
-    };
+    const player = createUnit("player1", true, 100);
+    const enemy = createUnit("/monsters/test", false, 80);
     const eventQueue = createQueue();
     const simulator = {
         players: [player],
@@ -92,12 +87,29 @@ describe("combatTrace", () => {
         });
         expect(trace.events[0].changes.enemies).toEqual([
             {
+                key: "enemy:0:/monsters/test",
                 hrid: "/monsters/test",
                 changes: { hitpoints: { before: 80, after: 68 } },
             },
         ]);
         expect(trace.events[0].randomDraws).toEqual([{ index: 0, value: 0.25 }]);
         expect(trace.events[0].queueOperations.map((entry) => entry.operation)).toEqual(["add", "cancel"]);
+    });
+
+    it("keeps duplicate monster HRIDs as separate trace units", async () => {
+        const simulator = createSimulator();
+        simulator.enemies.push(createUnit("/monsters/test", false, 60));
+        const controller = attachCombatTrace(simulator);
+
+        await simulator.processEvent({ type: "auto_attack", time: 10 });
+
+        const event = controller.getTrace().events[0];
+        expect(event.before.enemies.map((unit) => unit.key)).toEqual([
+            "enemy:0:/monsters/test",
+            "enemy:1:/monsters/test",
+        ]);
+        expect(event.changes.enemies).toHaveLength(1);
+        expect(event.changes.enemies[0].key).toBe("enemy:0:/monsters/test");
     });
 
     it("limits retained entries and reports truncation", async () => {
