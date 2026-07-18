@@ -1,0 +1,49 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-speed-aura-simultaneous-expiration-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 10000,
+      "intelligenceLevel": 2000,
+      "attackLevel": 1,
+      "meleeLevel": 1,
+      "defenseLevel": 10000,
+      "rangedLevel": 1,
+      "magicLevel": 1,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [
+        { "hrid": "/abilities/speed_aura", "level": 1, "triggers": [] }
+      ],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "labyrinth",
+    "labyrinthHrid": "/monsters/crystal_colossus",
+    "roomLevel": 100,
+    "crates": []
+  },
+  "simulationTimeLimit": 121000000000,
+  "random": {
+    "type": "sequence",
+    "values": [0],
+    "loop": true
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 200000,
+      "detailLevel": "combat"
+    },
+    "extra": {}
+  }
+}
