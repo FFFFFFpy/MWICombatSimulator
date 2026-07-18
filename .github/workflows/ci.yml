@@ -39,8 +39,11 @@ jobs:
       - name: Test combat trace
         run: npx vitest run src/services/__tests__/combatTrace.test.js
 
-      - name: Test deterministic combat fixture
-        run: npx vitest run src/combatsimulator/__tests__/deterministicSimulation.test.js
+      - name: Test deterministic replay
+        run: npx vitest run src/combatsimulator/__tests__/deterministicSimulation.test.js -t "replays the same result"
+
+      - name: Test trace parity
+        run: npx vitest run src/combatsimulator/__tests__/deterministicSimulation.test.js -t "does not change the final result"
 
       - name: Run full test suite
         run: npm test
