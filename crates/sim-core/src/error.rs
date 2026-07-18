@@ -2,7 +2,7 @@ use thiserror::Error;
 
 pub type Result<T> = std::result::Result<T, SimError>;
 
-#[derive(Debug, Error, PartialEq)]
+#[derive(Debug, Error)]
 pub enum SimError {
     #[error("unsupported simulation contract version: {received}; expected {expected}")]
     UnsupportedContractVersion { received: u32, expected: u32 },
@@ -21,6 +21,12 @@ pub enum SimError {
 
     #[error("simulationTimeLimit must be greater than zero")]
     NonPositiveSimulationLimit,
+
+    #[error("invalid simulation target: {0}")]
+    InvalidTarget(String),
+
+    #[error("invalid trace configuration: {0}")]
+    InvalidTraceConfig(String),
 
     #[error("random values must be finite numbers in [0, 1); received {0}")]
     InvalidRandomValue(f64),
