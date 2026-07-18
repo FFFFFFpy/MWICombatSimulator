@@ -70,6 +70,40 @@ jobs:
       - name: Run full test suite
         run: npm test
 
+      - name: Generate parity golden candidate
+        id: parity-generate
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci/parity
+          set +e
+          npm run generate:parity -- --fixture zone-solo-basic --output-dir tmp/ci/parity > tmp/ci/parity-generation.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload parity golden candidate
+        if: steps.parity-generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-golden-candidate
+          path: tmp/ci/parity
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload parity generation diagnostics
+        if: steps.parity-generate.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-generation-diagnostics
+          path: tmp/ci/parity-generation.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after parity generation diagnostics
+        if: steps.parity-generate.outcome == 'failure'
+        run: exit 1
+
       - name: Smoke-test combat benchmark
         id: combat-benchmark
         continue-on-error: true
