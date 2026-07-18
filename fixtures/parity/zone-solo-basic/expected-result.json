@@ -1,0 +1,107 @@
+{
+  "attacks": {
+    "/monsters/fly": {
+      "player1": {
+        "autoAttack": {
+          "miss": 9
+        }
+      }
+    },
+    "player1": {
+      "/monsters/fly": {
+        "autoAttack": {
+          "2": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 1,
+          "10": 2,
+          "13": 3,
+          "16": 1,
+          "21": 1,
+          "25": 2,
+          "30": 1,
+          "miss": 1
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {
+    "/monsters/fly": 4
+  },
+  "debuffOnLevelGap": {
+    "player1": 0
+  },
+  "difficultyTier": 0,
+  "dropRateMultiplier": {
+    "player1": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 4,
+  "experienceGained": {
+    "player1": {
+      "attack": 5.969636963696369,
+      "defense": 5.969636963696369,
+      "intelligence": 5.969636963696369,
+      "magic": 0,
+      "melee": 18.76171617161716,
+      "ranged": 0,
+      "stamina": 5.969636963696369
+    }
+  },
+  "hitpointsGained": {
+    "player1": {
+      "regen": 0
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": false,
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 56524752475.24755,
+  "manaUsed": {
+    "player1": {}
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 0
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 1,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {},
+  "rareFindMultiplier": {
+    "player1": 1
+  },
+  "simulatedTime": 60000000000,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 4,
+      "name": "/monsters/fly",
+      "spawnedAt": 59524752475.24755,
+      "timeSpentAlive": 47524752475.24755
+    }
+  ],
+  "wipeEvents": [],
+  "zoneName": "/actions/combat/fly"
+}
