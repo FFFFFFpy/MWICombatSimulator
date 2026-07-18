@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -9,6 +9,8 @@ import { createServer } from "vite";
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIXTURES_ROOT = path.join(REPOSITORY_ROOT, "fixtures", "parity");
 const TRACE_ARCHIVE_NAME = "expected-trace.json.gz.b64";
+const TRACE_ARCHIVE_PART_PREFIX = `${TRACE_ARCHIVE_NAME}.part-`;
+const TRACE_ARCHIVE_CHUNK_SIZE = 120_000;
 
 function parseArguments(argv) {
     const options = {
@@ -83,6 +85,37 @@ function encodeTraceArchive(traceText) {
 function decodeTraceArchive(encodedText) {
     const compressed = Buffer.from(String(encodedText || "").trim(), "base64");
     return JSON.parse(gunzipSync(compressed).toString("utf8"));
+}
+
+function splitTraceArchive(encodedText) {
+    if (encodedText.length <= TRACE_ARCHIVE_CHUNK_SIZE) {
+        return [{ name: TRACE_ARCHIVE_NAME, content: encodedText }];
+    }
+    const chunks = [];
+    for (let offset = 0, index = 0; offset < encodedText.length; offset += TRACE_ARCHIVE_CHUNK_SIZE, index += 1) {
+        chunks.push({
+            name: `${TRACE_ARCHIVE_PART_PREFIX}${String(index).padStart(3, "0")}`,
+            content: encodedText.slice(offset, offset + TRACE_ARCHIVE_CHUNK_SIZE),
+        });
+    }
+    return chunks;
+}
+
+async function removeExistingTraceArchives(directory) {
+    const entries = await readdir(directory).catch(() => []);
+    await Promise.all(entries
+        .filter((name) => name === TRACE_ARCHIVE_NAME || name.startsWith(TRACE_ARCHIVE_PART_PREFIX))
+        .map((name) => rm(path.join(directory, name), { force: true })));
+}
+
+async function readTraceArchive(directory, metadata) {
+    const declaredFiles = Array.isArray(metadata?.expectedFiles) ? metadata.expectedFiles : [];
+    const archiveFiles = declaredFiles.filter(
+        (name) => name === TRACE_ARCHIVE_NAME || name.startsWith(TRACE_ARCHIVE_PART_PREFIX),
+    );
+    const orderedFiles = archiveFiles.length > 0 ? archiveFiles : [TRACE_ARCHIVE_NAME];
+    const chunks = await Promise.all(orderedFiles.map((name) => readFile(path.join(directory, name), "utf8")));
+    return chunks.join("");
 }
 
 function sha256(value) {
@@ -248,6 +281,7 @@ async function generateFixture(modules, fixtureId, options, packageJson) {
     const resultText = formatJson(execution.result);
     const traceText = formatJson(execution.trace);
     const traceArchiveText = encodeTraceArchive(traceText);
+    const traceArchiveEntries = splitTraceArchive(traceArchiveText);
     const metadata = canonicalize({
         ...execution.metadata,
         fixtureVersion: Number(execution.metadata.fixtureVersion || 1),
@@ -258,8 +292,13 @@ async function generateFixture(modules, fixtureId, options, packageJson) {
         dataVersion: execution.request.dataVersion,
         status: "golden",
         randomDraws: execution.randomDraws,
-        expectedFiles: ["request.json", "expected-result.json", TRACE_ARCHIVE_NAME],
+        expectedFiles: [
+            "request.json",
+            "expected-result.json",
+            ...traceArchiveEntries.map((entry) => entry.name),
+        ],
         traceEncoding: "gzip+base64",
+        traceArchiveParts: traceArchiveEntries.length,
         hashes: {
             expectedResultSha256: sha256(resultText),
             expectedTraceSha256: sha256(traceText),
@@ -267,20 +306,38 @@ async function generateFixture(modules, fixtureId, options, packageJson) {
         },
     });
 
+    await removeExistingTraceArchives(destination);
     await Promise.all([
         writeFile(path.join(destination, "expected-result.json"), resultText, "utf8"),
-        writeFile(path.join(destination, TRACE_ARCHIVE_NAME), traceArchiveText, "utf8"),
         writeFile(path.join(destination, "metadata.json"), formatJson(metadata), "utf8"),
+        ...traceArchiveEntries.map((entry) => writeFile(path.join(destination, entry.name), entry.content, "utf8")),
     ]);
     console.log(`Generated parity fixture: ${fixtureId}`);
 }
 
 async function checkFixture(modules, fixtureId) {
     const execution = await executeFixture(modules, fixtureId);
-    const [expectedResult, expectedTrace] = await Promise.all([
-        readFile(path.join(execution.fixtureDir, "expected-result.json"), "utf8").then(JSON.parse),
-        readFile(path.join(execution.fixtureDir, TRACE_ARCHIVE_NAME), "utf8").then(decodeTraceArchive),
+    const [expectedResultText, traceArchiveText] = await Promise.all([
+        readFile(path.join(execution.fixtureDir, "expected-result.json"), "utf8"),
+        readTraceArchive(execution.fixtureDir, execution.metadata),
     ]);
+    const expectedResult = JSON.parse(expectedResultText);
+    const expectedTrace = decodeTraceArchive(traceArchiveText);
+    const expectedTraceText = formatJson(canonicalize(expectedTrace));
+
+    if (execution.metadata.hashes?.expectedResultSha256
+        && execution.metadata.hashes.expectedResultSha256 !== sha256(expectedResultText)) {
+        throw new Error(`Parity result archive hash mismatch for ${fixtureId}.`);
+    }
+    if (execution.metadata.hashes?.expectedTraceArchiveSha256
+        && execution.metadata.hashes.expectedTraceArchiveSha256 !== sha256(traceArchiveText)) {
+        throw new Error(`Parity trace archive hash mismatch for ${fixtureId}.`);
+    }
+    if (execution.metadata.hashes?.expectedTraceSha256
+        && execution.metadata.hashes.expectedTraceSha256 !== sha256(expectedTraceText)) {
+        throw new Error(`Parity decoded trace hash mismatch for ${fixtureId}.`);
+    }
+
     const resultDifference = firstDifference(canonicalize(expectedResult), execution.result, "result");
     if (resultDifference) {
         throw new Error(`Parity result mismatch for ${fixtureId}: ${JSON.stringify(resultDifference)}`);
