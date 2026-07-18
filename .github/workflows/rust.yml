@@ -32,7 +32,33 @@ jobs:
           cargo --version
 
       - name: Check formatting
-        run: cargo fmt --all -- --check
+        id: rustfmt
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          cargo fmt --all
+          git diff --check > tmp/ci/rustfmt-check.log 2>&1
+          git diff -- crates > tmp/ci/rustfmt.patch
+          if [ -s tmp/ci/rustfmt.patch ]; then
+            cat tmp/ci/rustfmt.patch
+            exit 1
+          fi
+
+      - name: Upload rustfmt diagnostics
+        if: steps.rustfmt.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustfmt-diagnostics
+          path: |
+            tmp/ci/rustfmt.patch
+            tmp/ci/rustfmt-check.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after rustfmt diagnostics
+        if: steps.rustfmt.outcome == 'failure'
+        run: exit 1
 
       - name: Test workspace
         id: rust-tests
