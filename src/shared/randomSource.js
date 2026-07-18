@@ -18,25 +18,35 @@ function hashSeed(seed) {
 
 export function createMathRandomSource() {
     const nativeRandom = Math.random.bind(Math);
+    let drawCount = 0;
     return {
         kind: "native",
         next() {
+            drawCount += 1;
             return nativeRandom();
+        },
+        get drawCount() {
+            return drawCount;
         },
     };
 }
 
 export function createSeededRandomSource(seed = 0) {
     let state = hashSeed(seed);
+    let drawCount = 0;
     return {
         kind: "seeded",
         seed,
         next() {
+            drawCount += 1;
             state = (state + 0x6d2b79f5) >>> 0;
             let value = state;
             value = Math.imul(value ^ (value >>> 15), value | 1);
             value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
             return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+        },
+        get drawCount() {
+            return drawCount;
         },
     };
 }
@@ -47,20 +57,22 @@ export function createSequenceRandomSource(values, { loop = false } = {}) {
         throw new Error("A sequence random source requires at least one value.");
     }
 
-    let index = 0;
+    let sequenceIndex = 0;
+    let drawCount = 0;
     return {
         kind: "sequence",
         next() {
-            if (index >= sequence.length) {
+            if (sequenceIndex >= sequence.length) {
                 if (!loop) {
                     throw new Error(`Random sequence exhausted after ${sequence.length} draws.`);
                 }
-                index = 0;
+                sequenceIndex = 0;
             }
-            return sequence[index++];
+            drawCount += 1;
+            return sequence[sequenceIndex++];
         },
         get drawCount() {
-            return index;
+            return drawCount;
         },
     };
 }
