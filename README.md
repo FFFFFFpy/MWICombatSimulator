@@ -16,7 +16,7 @@
 
 架构计划见 [`docs/architecture/platform-overview.md`](docs/architecture/platform-overview.md)。
 
-当前 JavaScript reference engine 已建立版本化协议、确定性随机源、基础/详细事件轨迹、可执行基准和 14 组黄金差分场景。兼容策略与已覆盖机制见 [`docs/architecture/parity-strategy.md`](docs/architecture/parity-strategy.md)。
+M0 行为基线已经完成：JavaScript reference engine 具备版本化协议、确定性随机源、基础/详细事件轨迹、可执行基准和 14 组黄金差分场景。兼容策略与已覆盖机制见 [`docs/architecture/parity-strategy.md`](docs/architecture/parity-strategy.md)。
 
 ## 主要功能
 
