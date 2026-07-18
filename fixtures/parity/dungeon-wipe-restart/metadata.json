@@ -1,7 +1,7 @@
 {
   "fixtureVersion": 1,
   "scenarioId": "dungeon-wipe-restart",
-  "description": "Five level-1 unarmed players enter Sorcerer's Tower at difficulty 4 for 120 simulated seconds, requiring a recorded wipe and dungeon restart failure count.",
+  "description": "Five level-1 unarmed players enter Chimerical Den at difficulty 2 for 120 simulated seconds, requiring a recorded wipe and dungeon restart failure count.",
   "contractVersion": 1,
   "referenceEngine": "reference-js",
   "referenceEngineVersion": "1.0.28",
