@@ -5,6 +5,7 @@ import Player from "../player.js";
 import Zone from "../zone.js";
 import { normalizeSimulationRequestV1 } from "../../contracts/simulationContracts.js";
 import { attachCombatTrace } from "../../services/combatTrace.js";
+import { buildSimulationExtraBuffs } from "../../shared/simulationExtraBuffs.js";
 import {
     createRandomSourceFromConfig,
     createTracingRandomSource,
@@ -70,10 +71,17 @@ async function runFixture({ seed = requestFixture.random.seed, trace = false } =
             trace: { ...requestFixture.options.trace, enabled: trace },
         },
     });
-    const players = request.players.map((player) => Player.createFromDTO(structuredClone(player)));
+    const zone = new Zone(request.target.zoneHrid, request.target.difficultyTier);
+    const extraBuffs = buildSimulationExtraBuffs(request.options.extra);
+    const players = request.players.map((player) => {
+        const preparedPlayer = Player.createFromDTO(structuredClone(player));
+        preparedPlayer.zoneBuffs = zone.buffs || [];
+        preparedPlayer.extraBuffs = extraBuffs;
+        return preparedPlayer;
+    });
     const simulator = new CombatSimulator(
         players,
-        new Zone(request.target.zoneHrid, request.target.difficultyTier),
+        zone,
         null,
         { enableHpMpVisualization: request.options.enableHpMpVisualization },
     );
