@@ -17,7 +17,7 @@
     "minimumTraceEvents": 40,
     "requiredTraceEventTypes": [
       "combatStart",
-      "abilityCastEnd",
+      "abilityCastEndEvent",
       "autoAttack"
     ]
   },
