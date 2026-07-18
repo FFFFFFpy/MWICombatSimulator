@@ -10,6 +10,8 @@
         "check:parity": "node scripts/parity-fixtures.mjs --mode check",
         "inspect:combat-targets": "node scripts/inspect-combat-targets.mjs",
         "inspect:combat-mechanics": "node scripts/inspect-combat-mechanics.mjs",
+        "build-rust-combat-data": "node scripts/build-rust-combat-data.mjs",
+        "check-rust-combat-data": "node scripts/build-rust-combat-data.mjs --check",
         "build-game-data-index": "node scripts/build-game-data-index.mjs",
         "sync-official-translations": "node scripts/sync-official-translations.mjs",
         "check-official-translations": "node scripts/sync-official-translations.mjs --check",
