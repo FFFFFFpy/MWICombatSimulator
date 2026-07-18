@@ -122,6 +122,62 @@ function firstDifference(first, second, location = "root") {
     return null;
 }
 
+function getPathValue(root, fieldPath) {
+    const parts = String(fieldPath || "").split(".").filter(Boolean);
+    let value = root;
+    for (const part of parts) {
+        if (part === "length") {
+            value = value?.length;
+        } else {
+            value = value?.[part];
+        }
+    }
+    return value;
+}
+
+function validateFixtureAssertions(fixtureId, metadata, execution) {
+    const assertions = metadata?.assertions || {};
+
+    for (const [fieldPath, expected] of Object.entries(assertions.resultEquals || {})) {
+        const actual = getPathValue(execution.result, fieldPath);
+        if (!Object.is(actual, expected)) {
+            throw new Error(
+                `Fixture ${fixtureId} assertion failed: result.${fieldPath} expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}.`,
+            );
+        }
+    }
+
+    for (const [fieldPath, minimum] of Object.entries(assertions.resultMinimums || {})) {
+        const actual = Number(getPathValue(execution.result, fieldPath));
+        if (!Number.isFinite(actual) || actual < Number(minimum)) {
+            throw new Error(
+                `Fixture ${fixtureId} assertion failed: result.${fieldPath} expected >= ${minimum}, received ${String(actual)}.`,
+            );
+        }
+    }
+
+    if (assertions.minimumRandomDraws != null && execution.randomDraws < Number(assertions.minimumRandomDraws)) {
+        throw new Error(
+            `Fixture ${fixtureId} assertion failed: expected at least ${assertions.minimumRandomDraws} random draws, received ${execution.randomDraws}.`,
+        );
+    }
+
+    if (assertions.minimumTraceEvents != null && execution.trace.events.length < Number(assertions.minimumTraceEvents)) {
+        throw new Error(
+            `Fixture ${fixtureId} assertion failed: expected at least ${assertions.minimumTraceEvents} trace events, received ${execution.trace.events.length}.`,
+        );
+    }
+
+    const traceEventTypes = new Set(execution.trace.events.map((entry) => entry?.event?.type).filter(Boolean));
+    for (const eventType of assertions.requiredTraceEventTypes || []) {
+        if (!traceEventTypes.has(eventType)) {
+            throw new Error(
+                `Fixture ${fixtureId} assertion failed: required trace event type ${eventType} was not observed.`,
+            );
+        }
+    }
+}
+
 async function discoverFixtures(requestedFixture) {
     if (requestedFixture) return [requestedFixture];
     const entries = await readdir(FIXTURES_ROOT, { withFileTypes: true });
@@ -149,7 +205,10 @@ async function loadModules() {
 
 async function executeFixture(modules, fixtureId) {
     const fixtureDir = path.join(FIXTURES_ROOT, fixtureId);
-    const request = JSON.parse(await readFile(path.join(fixtureDir, "request.json"), "utf8"));
+    const [request, metadata] = await Promise.all([
+        readFile(path.join(fixtureDir, "request.json"), "utf8").then(JSON.parse),
+        readFile(path.join(fixtureDir, "metadata.json"), "utf8").then(JSON.parse).catch(() => ({})),
+    ]);
     const execution = await modules.runReferenceSimulation({
         ...request,
         options: {
@@ -167,13 +226,16 @@ async function executeFixture(modules, fixtureId) {
     if (execution.trace.truncatedEntries > 0) {
         throw new Error(`Fixture ${fixtureId} trace was truncated by ${execution.trace.truncatedEntries} entries.`);
     }
-    return {
+    const normalizedExecution = {
         fixtureDir,
         request,
+        metadata,
         result: normalizeGoldenResult(execution.result),
         trace: normalizeGoldenTrace(execution.trace),
         randomDraws: execution.randomDraws,
     };
+    validateFixtureAssertions(fixtureId, metadata, normalizedExecution);
+    return normalizedExecution;
 }
 
 async function generateFixture(modules, fixtureId, options, packageJson) {
@@ -186,12 +248,9 @@ async function generateFixture(modules, fixtureId, options, packageJson) {
     const resultText = formatJson(execution.result);
     const traceText = formatJson(execution.trace);
     const traceArchiveText = encodeTraceArchive(traceText);
-    const existingMetadata = await readFile(path.join(execution.fixtureDir, "metadata.json"), "utf8")
-        .then(JSON.parse)
-        .catch(() => ({}));
     const metadata = canonicalize({
-        ...existingMetadata,
-        fixtureVersion: Number(existingMetadata.fixtureVersion || 1),
+        ...execution.metadata,
+        fixtureVersion: Number(execution.metadata.fixtureVersion || 1),
         scenarioId: fixtureId,
         contractVersion: Number(execution.request.contractVersion || 1),
         referenceEngine: "reference-js",
@@ -218,10 +277,9 @@ async function generateFixture(modules, fixtureId, options, packageJson) {
 
 async function checkFixture(modules, fixtureId) {
     const execution = await executeFixture(modules, fixtureId);
-    const [expectedResult, expectedTrace, metadata] = await Promise.all([
+    const [expectedResult, expectedTrace] = await Promise.all([
         readFile(path.join(execution.fixtureDir, "expected-result.json"), "utf8").then(JSON.parse),
         readFile(path.join(execution.fixtureDir, TRACE_ARCHIVE_NAME), "utf8").then(decodeTraceArchive),
-        readFile(path.join(execution.fixtureDir, "metadata.json"), "utf8").then(JSON.parse),
     ]);
     const resultDifference = firstDifference(canonicalize(expectedResult), execution.result, "result");
     if (resultDifference) {
@@ -231,9 +289,9 @@ async function checkFixture(modules, fixtureId) {
     if (traceDifference) {
         throw new Error(`Parity trace mismatch for ${fixtureId}: ${JSON.stringify(traceDifference)}`);
     }
-    if (Number(metadata.randomDraws) !== execution.randomDraws) {
+    if (Number(execution.metadata.randomDraws) !== execution.randomDraws) {
         throw new Error(
-            `Parity random draw mismatch for ${fixtureId}: expected ${metadata.randomDraws}, received ${execution.randomDraws}.`,
+            `Parity random draw mismatch for ${fixtureId}: expected ${execution.metadata.randomDraws}, received ${execution.randomDraws}.`,
         );
     }
     console.log(`Verified parity fixture: ${fixtureId}`);
