@@ -1,5 +1,11 @@
 # 模拟兼容与差分验证策略
 
+## 状态
+
+- M0 行为基线：Completed / Frozen
+- JavaScript reference engine：Current
+- Rust 差分接入：M1/M2
+
 ## 目标
 
 新的 Rust 引擎必须证明自己与 JavaScript reference engine 行为一致。最终结果“差不多”不够，因为不同的事件顺序、随机消费顺序或 Buff 到期时机会在长模拟中累积成明显偏差。
@@ -74,70 +80,7 @@
 
 浮点字段只有在公式本身不可避免地产生跨语言舍入差异时才允许显式容差。容差必须按字段定义，禁止全局使用宽松百分比。
 
-## 黄金场景规划
-
-`fixtures/parity` 至少覆盖：
-
-1. 单人普通 Zone，无装备和技能；
-2. 三人普通组队 Zone；
-3. 五人 Dungeon，正常通关；
-4. 五人 Dungeon，团灭和重开；
-5. Labyrinth 与房间等级缩放；
-6. DOT、HOT 与恢复 Tick；
-7. 眩晕、致盲、沉默；
-8. 诅咒、削弱、狂怒；
-9. 反伤、反击、招架、穿透和多重攻击；
-10. OOM 与恢复后重新施法；
-11. 主动治疗与复活；
-12. Buff 在同一时间点到期的稳定排序场景。
-
-官方数据快照中，普通组队 Zone 的最大队伍人数为 3；五人队场景应使用 Dungeon。场景人数和目标类型不得仅凭页面名称推断，可运行：
-
-```bash
-npm run inspect:combat-targets
-```
-
-技能、装备、消耗品、默认 Trigger 与关键效果参数可运行：
-
-```bash
-npm run inspect:combat-mechanics
-```
-
-## 黄金文件结构
-
-每个场景包含：
-
-```text
-request.json
-expected-result.json
-expected-trace.json.gz.b64
-# 或超大轨迹：
-expected-trace.json.gz.b64.part-000
-expected-trace.json.gz.b64.part-001
-...
-metadata.json
-```
-
-随机配置直接包含在 `request.json` 中。事件轨迹采用规范化 JSON 的 gzip+base64 文本归档，避免完整状态轨迹在普通 Git diff 中制造十几万行噪声。超过 120,000 个字符的归档自动分片；校验器按照 `metadata.json.expectedFiles` 拼接，先验证完整归档 SHA-256，再解压比较第一个不同字段。
-
-`metadata.json` 记录：
-
-- 引擎、数据和协议版本；
-- 随机消费数量；
-- 结果、原始轨迹和压缩归档 SHA-256；
-- 轨迹分片数量；
-- 场景语义断言。
-
-语义断言可要求：
-
-- 结果字段精确相等；
-- 结果字段达到最小值；
-- 最少随机消费数和事件数；
-- 必须实际出现的事件类型。
-
-因此，名为“副本完成”的场景若没有产生 `dungeonsCompleted >= 1`，生成器会直接失败，而不是生成一份名字很努力、内容很敷衍的黄金文件。
-
-## 当前黄金基线
+## 黄金场景
 
 当前已提交十四个确定性场景：
 
@@ -177,6 +120,49 @@ metadata.json
 - `revive-dead-ally` 实际把零 HP 队友恢复为正 HP；
 - 所有基础、复杂和高级轨迹均未截断。
 
+## 目标与机制数据检查
+
+官方数据快照中，普通组队 Zone 的最大队伍人数为 3；五人队场景应使用 Dungeon。场景人数和目标类型不得仅凭页面名称推断。
+
+```bash
+npm run inspect:combat-targets
+npm run inspect:combat-mechanics
+```
+
+## 黄金文件结构
+
+每个场景包含：
+
+```text
+request.json
+expected-result.json
+expected-trace.json.gz.b64
+# 或超大轨迹：
+expected-trace.json.gz.b64.part-000
+expected-trace.json.gz.b64.part-001
+...
+metadata.json
+```
+
+随机配置直接包含在 `request.json` 中。事件轨迹采用规范化 JSON 的 gzip+base64 文本归档。超过 120,000 个字符的归档自动分片；校验器按照 `metadata.json.expectedFiles` 拼接，先验证完整归档 SHA-256，再解压比较第一个不同字段。
+
+`metadata.json` 记录：
+
+- 引擎、数据和协议版本；
+- 随机消费数量；
+- 结果、原始轨迹和压缩归档 SHA-256；
+- 轨迹分片数量；
+- 场景语义断言。
+
+语义断言可要求：
+
+- 结果字段精确相等；
+- 结果字段达到最小值；
+- 最少随机消费数和事件数；
+- 必须实际出现的事件类型。
+
+名为“副本完成”的场景若没有产生 `dungeonsCompleted >= 1`，生成器会直接失败。文件名不能替程序作证，人类已经有足够多这种制度了。
+
 ## 黄金文件命令
 
 显式生成：
@@ -212,6 +198,8 @@ npm run check:parity
 - 轨迹分片缺失、顺序错误或内容改变均视为校验失败；
 - 临时 CI 写权限只用于受控生成，产物提交后必须恢复 `contents: read`。
 
+M0 已冻结。后续一般功能不得通过“顺手更新黄金”写回本 PR；只有明确的 reference 行为修复或数据快照升级才允许更新，并必须单独解释差异。
+
 ## Trace 的生产约束
 
 事件 trace 默认关闭：
@@ -242,7 +230,7 @@ npm run check:parity
 
 ## 当前实现
 
-M0 当前基础设施包括：
+M0 基础设施包括：
 
 - `src/shared/randomSource.js`：原生、seeded、固定数列和 tracing 随机源；
 - `src/services/combatTrace.js`：默认关闭的基础与详细战斗态轨迹；
@@ -251,8 +239,8 @@ M0 当前基础设施包括：
 - `scripts/parity-fixtures.mjs`：语义断言、黄金生成、分片归档和只读校验；
 - `scripts/inspect-combat-targets.mjs`：普通区、副本、队伍上限和迷宫怪物候选；
 - `scripts/inspect-combat-mechanics.mjs`：技能效果、装备槽位、消耗品和 Trigger 候选；
-- `src/combatsimulator/__tests__/complexMechanicsSimulation.test.js`：直接读取四个复杂 fixture 请求的机制级断言；
-- `src/combatsimulator/__tests__/advancedMechanicsSimulation.test.js`：直接读取五个高级 fixture 请求的治疗、群攻、诅咒、复活与顺序断言；
+- `src/combatsimulator/__tests__/complexMechanicsSimulation.test.js`：四个复杂 fixture 的机制级断言；
+- `src/combatsimulator/__tests__/advancedMechanicsSimulation.test.js`：五个高级 fixture 的治疗、群攻、诅咒、复活与顺序断言；
 - `fixtures/parity/*`：十四个已锁定的确定性场景。
 
-当前行为基线已经覆盖 Rust 核心第一阶段所需的主要事件、状态、随机消费和最终统计路径。后续仍可追加新机制场景，但不再阻塞 Rust workspace、数据模型、RNG 与稳定事件队列的建立。
+当前行为基线已经覆盖 Rust 核心第一阶段所需的主要事件、状态、随机消费和最终统计路径。后续仍可在独立 PR 追加新机制，但不再阻塞 Rust workspace、数据模型、RNG 与稳定事件队列。
