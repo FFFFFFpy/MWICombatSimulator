@@ -1,0 +1,119 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-healing-hot-party-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 1000,
+      "intelligenceLevel": 500,
+      "attackLevel": 20,
+      "meleeLevel": 20,
+      "defenseLevel": 20,
+      "rangedLevel": 20,
+      "magicLevel": 20,
+      "equipment": {},
+      "food": [
+        {
+          "hrid": "/items/blueberry_cake",
+          "triggers": [
+            {
+              "dependencyHrid": "/combat_trigger_dependencies/self",
+              "conditionHrid": "/combat_trigger_conditions/missing_hp",
+              "comparatorHrid": "/combat_trigger_comparators/greater_than_equal",
+              "value": 100
+            }
+          ]
+        }
+      ],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player2",
+      "staminaLevel": 700,
+      "intelligenceLevel": 500,
+      "attackLevel": 20,
+      "meleeLevel": 20,
+      "defenseLevel": 100,
+      "rangedLevel": 20,
+      "magicLevel": 20,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player3",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 1000,
+      "attackLevel": 20,
+      "meleeLevel": 20,
+      "defenseLevel": 2000,
+      "rangedLevel": 20,
+      "magicLevel": 20,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [
+        {
+          "hrid": "/abilities/quick_aid",
+          "level": 1,
+          "triggers": [
+            {
+              "dependencyHrid": "/combat_trigger_dependencies/all_allies",
+              "conditionHrid": "/combat_trigger_conditions/lowest_hp_percentage",
+              "comparatorHrid": "/combat_trigger_comparators/less_than_equal",
+              "value": 90
+            }
+          ]
+        },
+        {
+          "hrid": "/abilities/rejuvenate",
+          "level": 1,
+          "triggers": [
+            {
+              "dependencyHrid": "/combat_trigger_dependencies/all_allies",
+              "conditionHrid": "/combat_trigger_conditions/missing_hp",
+              "comparatorHrid": "/combat_trigger_comparators/greater_than_equal",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "zone",
+    "zoneHrid": "/actions/combat/sorcerers_tower",
+    "difficultyTier": 0
+  },
+  "simulationTimeLimit": 60000000000,
+  "random": {
+    "type": "sequence",
+    "values": [0],
+    "loop": true
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 100000,
+      "detailLevel": "combat"
+    },
+    "extra": {}
+  }
+}
