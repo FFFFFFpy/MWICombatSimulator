@@ -3,50 +3,96 @@ import Player from "./combatsimulator/player";
 import Zone from "./combatsimulator/zone";
 import Labyrinth from "./combatsimulator/labyrinth";
 import { buildSimulationExtraBuffs } from "./shared/simulationExtraBuffs.js";
+import {
+    createMathRandomSource,
+    createRandomSourceFromConfig,
+    createTracingRandomSource,
+    withPatchedMathRandom,
+} from "./shared/randomSource.js";
+import { attachCombatTrace } from "./services/combatTrace.js";
 
 onmessage = async function (event) {
     switch (event.data.type) {
-        case "start_simulation":
-            let extraBuffs = buildSimulationExtraBuffs(event.data.extra);
-
-            let playersData = event.data.players;
-            let players = [];
-            let zone = null;
-            if (event.data.zone) {
-                zone = new Zone(event.data.zone.zoneHrid, event.data.zone.difficultyTier);
-            }
-            let labyrinth = null;
-            if (event.data.labyrinth) {
-                labyrinth = new Labyrinth(event.data.labyrinth.labyrinthHrid, event.data.labyrinth.roomLevel, event.data.labyrinth.crates);
-            }
-            for (let i = 0; i < playersData.length; i++) {
-                let currentPlayer = Player.createFromDTO(structuredClone(playersData[i]));
-                currentPlayer.zoneBuffs = zone?.buffs || labyrinth?.buffs || [];
-                currentPlayer.extraBuffs = extraBuffs;
-                players.push(currentPlayer);
-            }
-            let simulationTimeLimit = event.data.simulationTimeLimit;
-            let enableHpMpVisualization = event.data.extra.enableHpMpVisualization || false;
-            let combatSimulator = new CombatSimulator(players, zone, labyrinth, { enableHpMpVisualization });
-            combatSimulator.addEventListener("progress", (event) => {
-                this.postMessage({ 
-                    type: "simulation_progress", 
-                    progress: event.detail.progress, 
-                    zone: event.detail.zone, 
-                    difficultyTier: event.detail.difficultyTier,
-                    labyrinth: event.detail.labyrinth,
-                    roomLevel: event.detail.roomLevel,
-                    timeSeriesData: event.detail.timeSeriesData
-                });
-            });
-
+        case "start_simulation": {
+            let traceController = null;
             try {
-                let simResult = await combatSimulator.simulate(simulationTimeLimit);
-                this.postMessage({ type: "simulation_result", simResult: simResult });
-            } catch (e) {
-                console.log(e);
-                this.postMessage({ type: "simulation_error", error: e });
+                const extra = event.data.extra || {};
+                const extraBuffs = buildSimulationExtraBuffs(extra);
+                const playersData = Array.isArray(event.data.players) ? event.data.players : [];
+                const players = [];
+
+                let zone = null;
+                if (event.data.zone) {
+                    zone = new Zone(event.data.zone.zoneHrid, event.data.zone.difficultyTier);
+                }
+
+                let labyrinth = null;
+                if (event.data.labyrinth) {
+                    labyrinth = new Labyrinth(
+                        event.data.labyrinth.labyrinthHrid,
+                        event.data.labyrinth.roomLevel,
+                        event.data.labyrinth.crates,
+                    );
+                }
+
+                for (let index = 0; index < playersData.length; index++) {
+                    const currentPlayer = Player.createFromDTO(structuredClone(playersData[index]));
+                    currentPlayer.zoneBuffs = zone?.buffs || labyrinth?.buffs || [];
+                    currentPlayer.extraBuffs = extraBuffs;
+                    players.push(currentPlayer);
+                }
+
+                const simulationTimeLimit = event.data.simulationTimeLimit;
+                const enableHpMpVisualization = extra.enableHpMpVisualization || false;
+                const combatSimulator = new CombatSimulator(players, zone, labyrinth, { enableHpMpVisualization });
+                const traceEnabled = event.data.trace?.enabled === true;
+
+                if (traceEnabled) {
+                    traceController = attachCombatTrace(combatSimulator, {
+                        maxEntries: event.data.trace?.maxEntries,
+                    });
+                }
+
+                let randomSource = createRandomSourceFromConfig(event.data.random);
+                if (traceEnabled) {
+                    randomSource = createTracingRandomSource(
+                        randomSource || createMathRandomSource(),
+                        (draw) => traceController.recordRandomDraw(draw),
+                    );
+                }
+
+                combatSimulator.addEventListener("progress", (progressEvent) => {
+                    this.postMessage({
+                        type: "simulation_progress",
+                        progress: progressEvent.detail.progress,
+                        zone: progressEvent.detail.zone,
+                        difficultyTier: progressEvent.detail.difficultyTier,
+                        labyrinth: progressEvent.detail.labyrinth,
+                        roomLevel: progressEvent.detail.roomLevel,
+                        timeSeriesData: progressEvent.detail.timeSeriesData,
+                    });
+                });
+
+                const simResult = await withPatchedMathRandom(
+                    randomSource,
+                    () => combatSimulator.simulate(simulationTimeLimit),
+                );
+                this.postMessage({
+                    type: "simulation_result",
+                    simResult,
+                    trace: traceController?.getTrace() || null,
+                });
+            } catch (error) {
+                console.log(error);
+                this.postMessage({
+                    type: "simulation_error",
+                    error,
+                    trace: traceController?.getTrace() || null,
+                });
+            } finally {
+                traceController?.detach();
             }
             break;
+        }
     }
 };
