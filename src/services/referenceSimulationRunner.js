@@ -58,7 +58,10 @@ export async function runReferenceSimulation(requestInput, {
     const { request, simulator } = runtime;
     const traceEnabled = request.options.trace.enabled === true;
     const traceController = traceEnabled
-        ? attachCombatTrace(simulator, { maxEntries: request.options.trace.maxEntries })
+        ? attachCombatTrace(simulator, {
+            maxEntries: request.options.trace.maxEntries,
+            detailLevel: request.options.trace.detailLevel,
+        })
         : null;
 
     let randomSource = createRandomSourceFromConfig(request.random);
