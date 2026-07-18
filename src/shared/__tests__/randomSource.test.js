@@ -16,6 +16,8 @@ describe("randomSource", () => {
 
         expect(firstValues).toEqual(secondValues);
         expect(firstValues.every((value) => value >= 0 && value < 1)).toBe(true);
+        expect(first.drawCount).toBe(16);
+        expect(second.drawCount).toBe(16);
     });
 
     it("does not collapse distinct seeds to the same opening sequence", () => {
@@ -30,10 +32,13 @@ describe("randomSource", () => {
         const finite = createSequenceRandomSource([0.1, 0.2]);
         expect(finite.next()).toBe(0.1);
         expect(finite.next()).toBe(0.2);
+        expect(finite.drawCount).toBe(2);
         expect(() => finite.next()).toThrow(/exhausted/i);
+        expect(finite.drawCount).toBe(2);
 
         const looping = createSequenceRandomSource([0.3, 0.4], { loop: true });
         expect([looping.next(), looping.next(), looping.next()]).toEqual([0.3, 0.4, 0.3]);
+        expect(looping.drawCount).toBe(3);
     });
 
     it("records random consumption order without changing values", () => {
@@ -45,6 +50,7 @@ describe("randomSource", () => {
 
         expect(source.next()).toBe(0.15);
         expect(source.next()).toBe(0.75);
+        expect(source.drawCount).toBe(2);
         expect(draws).toEqual([
             { index: 0, value: 0.15 },
             { index: 1, value: 0.75 },
@@ -61,12 +67,14 @@ describe("randomSource", () => {
 
     it("patches Math.random only for the callback and restores it after success", async () => {
         const original = Math.random;
+        const source = createSequenceRandomSource([0.11, 0.22]);
         const result = await withPatchedMathRandom(
-            createSequenceRandomSource([0.11, 0.22]),
+            source,
             async () => [Math.random(), await Promise.resolve(Math.random())],
         );
 
         expect(result).toEqual([0.11, 0.22]);
+        expect(source.drawCount).toBe(2);
         expect(Math.random).toBe(original);
     });
 
