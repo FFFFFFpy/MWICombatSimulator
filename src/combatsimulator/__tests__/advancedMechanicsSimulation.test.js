@@ -96,6 +96,16 @@ function recursiveHasKey(value, expectedKey) {
     return Object.values(value).some((entry) => recursiveHasKey(entry, expectedKey));
 }
 
+function speedBuffs(snapshot) {
+    return (snapshot?.players?.[0]?.combatState?.buffs || [])
+        .filter((buff) => buff.uniqueHrid.startsWith("/buff_uniques/speed_aura"))
+        .map((buff) => ({
+            uniqueHrid: buff.uniqueHrid,
+            startTime: buff.startTime,
+            duration: buff.duration,
+        }));
+}
+
 describe("advanced deterministic combat mechanics", () => {
     it("covers lowest-HP healing, all-party healing, and HP recovery ticks", async () => {
         const quickAidTrigger = trigger(
@@ -200,7 +210,7 @@ describe("advanced deterministic combat mechanics", () => {
         expect(recursiveHasKey(execution.result.attacks.player1, "/abilities/sweep")).toBe(true);
     });
 
-    it("covers curse stacking and expiration from Cursed Bow attacks", async () => {
+    it("covers curse stacking plus expiration-event replacement from Cursed Bow attacks", async () => {
         const execution = await run({
             contractVersion: 1,
             requestId: "advanced-curse-stacking",
@@ -228,7 +238,12 @@ describe("advanced deterministic combat mechanics", () => {
         const curseBuffs = observedBuffs(execution.trace, "/buff_uniques/curse");
         expect(curseBuffs.length).toBeGreaterThan(0);
         expect(Math.max(...curseBuffs.map((buff) => Number(buff.flatBoost || 0)))).toBeGreaterThanOrEqual(0.04);
-        expect(execution.trace.events.some((entry) => entry.event?.type === "curseExpiration")).toBe(true);
+        expect(
+            execution.trace.events.some((entry) =>
+                (entry.queueOperations || []).some((operation) =>
+                    operation.operation === "add" && operation.event?.type === "curseExpiration"),
+            ),
+        ).toBe(true);
         expect(
             execution.trace.events.some((entry) =>
                 (entry.queueOperations || []).some((operation) =>
@@ -323,14 +338,24 @@ describe("advanced deterministic combat mechanics", () => {
 
         expect(simultaneous).toBeTruthy();
         expect(simultaneous[0].sequence + 1).toBe(simultaneous[1].sequence);
-        expect(
-            simultaneous.some((entry) => (entry.changes?.players || []).some((change) => {
-                const before = change.changes?.combatState?.before?.buffs || [];
-                const after = change.changes?.combatState?.after?.buffs || [];
-                const beforeSpeed = before.filter((buff) => buff.uniqueHrid.startsWith("/buff_uniques/speed_aura"));
-                const afterSpeed = after.filter((buff) => buff.uniqueHrid.startsWith("/buff_uniques/speed_aura"));
-                return beforeSpeed.length === 2 && afterSpeed.length === 0;
-            })),
-        ).toBe(true);
+
+        const removedTogether = simultaneous.some((entry) => {
+            const beforeSpeed = speedBuffs(entry.before);
+            const afterSpeed = speedBuffs(entry.after);
+            return beforeSpeed.length === 2 && afterSpeed.length === 0;
+        });
+        if (!removedTogether) {
+            const timestamp = simultaneous[0].event.time;
+            const nearby = execution.trace.events
+                .filter((entry) => Math.abs(Number(entry.event?.time || 0) - timestamp) <= ONE_SECOND)
+                .map((entry) => ({
+                    sequence: entry.sequence,
+                    event: entry.event,
+                    beforeSpeed: speedBuffs(entry.before),
+                    afterSpeed: speedBuffs(entry.after),
+                    playerChanges: entry.changes?.players || [],
+                }));
+            throw new Error(JSON.stringify({ timestamp, simultaneous: nearby }, null, 2));
+        }
     });
 });
