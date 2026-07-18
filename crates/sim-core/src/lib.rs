@@ -2,6 +2,7 @@
 
 pub mod basic_combat;
 pub mod basic_data;
+pub mod combat_data;
 pub mod contracts;
 pub mod error;
 pub mod event_queue;
@@ -15,6 +16,12 @@ pub use basic_combat::{
 pub use basic_data::{
     BASIC_DATA_SCHEMA_VERSION, BASIC_DATA_VERSION, BASIC_FLY_MONSTER_HRID, BASIC_FLY_ZONE_HRID,
     BasicGameData, BasicMonsterData, BasicZoneData,
+};
+pub use combat_data::{
+    COMBAT_ZONE_DATA_SCHEMA_VERSION, COMBAT_ZONE_DATA_VERSION, CombatBossSpawnV1,
+    CombatDataCountsV1, CombatDataSourceV1, CombatDataSourcesV1, CombatMonsterDataV1,
+    CombatMonsterLevelsV1, CombatRandomSpawnInfoV1, CombatSpawnRuleV1, CombatZoneDataSnapshotV1,
+    CombatZoneDataV1,
 };
 pub use contracts::{
     LabyrinthCrates, RandomConfigV1, SimulationOptionsV1, SimulationRequestV1, SimulationTargetV1,
