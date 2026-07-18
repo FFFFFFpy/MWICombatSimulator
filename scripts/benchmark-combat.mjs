@@ -53,6 +53,7 @@ async function loadModules() {
         appType: "custom",
         logLevel: "error",
         server: { middlewareMode: true },
+        ssr: { noExternal: ["heap-js"] },
     });
     try {
         const [combatModule, playerModule, zoneModule, randomModule, contractModule, extraBuffModule] = await Promise.all([
