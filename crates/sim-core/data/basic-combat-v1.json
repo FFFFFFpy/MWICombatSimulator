@@ -21,7 +21,7 @@
     "smashMaxDamage": 7.5,
     "smashEvasionRating": 11,
     "totalArmor": 0.2,
-    "autoAttackDamage": -0.5,
+    "autoAttackDamage": 0,
     "experience": 10,
     "enrageTime": 180000000000
   }
