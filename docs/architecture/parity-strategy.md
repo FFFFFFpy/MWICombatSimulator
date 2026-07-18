@@ -69,7 +69,7 @@
 
 1. 单人普通 Zone，无装备和技能；
 2. 单人普通 Zone，含装备、技能、食物和饮料；
-3. 五人普通 Zone，含威胁和治疗；
+3. 三人普通组队 Zone，含威胁和治疗；
 4. 五人 Dungeon，正常通关；
 5. 五人 Dungeon，团灭和重开；
 6. Labyrinth，不同房间等级和宝箱配置；
@@ -80,18 +80,61 @@
 11. OOM 与恢复后重新施法；
 12. Buff 在同一时间点到期的稳定排序场景。
 
+官方数据快照中，普通组队 Zone 的最大队伍人数为 3；五人队场景应使用 Dungeon。场景人数和目标类型不得仅凭页面名称推断，可运行：
+
+```bash
+npm run inspect:combat-targets
+```
+
 每个场景包含：
 
 ```text
 request.json
 expected-result.json
 expected-trace.json.gz.b64
+# 或超大轨迹：
+expected-trace.json.gz.b64.part-000
+expected-trace.json.gz.b64.part-001
+...
 metadata.json
 ```
 
-随机配置直接包含在 `request.json` 中。`expected-trace.json.gz.b64` 是规范化事件轨迹 JSON 的 gzip+base64 文本归档，避免完整状态轨迹在普通 Git diff 中制造十几万行噪声。校验命令会自动解压，并在失败时输出第一个不同字段。
+随机配置直接包含在 `request.json` 中。事件轨迹采用规范化 JSON 的 gzip+base64 文本归档，避免完整状态轨迹在普通 Git diff 中制造十几万行噪声。超过 120,000 个字符的归档自动分片；校验器按照 `metadata.json.expectedFiles` 拼接，先验证完整归档 SHA-256，再解压比较第一个不同字段。
 
-`metadata.json` 记录引擎版本、数据版本、协议版本、随机消费数量以及结果和轨迹的 SHA-256。
+`metadata.json` 记录：
+
+- 引擎、数据和协议版本；
+- 随机消费数量；
+- 结果、原始轨迹和压缩归档 SHA-256；
+- 轨迹分片数量；
+- 场景语义断言。
+
+语义断言可要求：
+
+- 结果字段精确相等；
+- 结果字段达到最小值；
+- 最少随机消费数和事件数；
+- 必须实际出现的事件类型。
+
+因此，名为“副本完成”的场景若没有产生 `dungeonsCompleted >= 1`，生成器会直接失败，而不是生成一份名字很努力、内容很敷衍的黄金文件。
+
+## 当前黄金基线
+
+当前已提交五个确定性场景：
+
+| 场景 | 保护的主要路径 |
+|---|---|
+| `zone-solo-basic` | 单人普通区、基础攻击、重生、经验与结果聚合 |
+| `zone-party-three` | 普通组队区合法最大人数、多人目标选择与结果聚合 |
+| `dungeon-party-complete` | 五人副本、50 波推进、完成结算与下一轮初始化 |
+| `dungeon-wipe-restart` | 团灭日志、事件选择性清理、三秒重启与失败计数 |
+| `labyrinth-fly-room-100` | Labyrinth DTO、房间等级缩放及迷宫特有结果字段 |
+
+当前 reference 数据中：
+
+- `dungeon-party-complete` 完成 Chimerical Den 1 次，最高波次 50；
+- `dungeon-wipe-restart` 在 120 秒内记录 13 次团灭与失败重启；
+- 所有轨迹均未截断。
 
 ## 黄金文件命令
 
@@ -113,7 +156,7 @@ npm run generate:parity -- --fixture zone-solo-basic
 npm run check:parity
 ```
 
-普通测试和 CI 最终只执行校验，不会自动覆盖仓库中的黄金文件。
+普通测试和 CI 只执行校验，不会自动覆盖仓库中的黄金文件。
 
 ## 黄金文件更新规则
 
@@ -123,7 +166,9 @@ npm run check:parity
 - 如果公式没有计划变更，而黄金结果大量变化，应视为回归而不是“顺手接受”；
 - 数据快照升级与引擎逻辑升级尽量分开提交；
 - 生成前必须确认 trace 未截断；
-- wall-clock 字段必须规范化，不能让当前时间污染黄金结果。
+- wall-clock 字段必须规范化，不能让当前时间污染黄金结果；
+- 场景语义断言必须先通过，才能写出黄金文件；
+- 轨迹分片缺失、顺序错误或内容改变均视为校验失败。
 
 ## Trace 的生产约束
 
@@ -159,7 +204,8 @@ M0 当前基础设施包括：
 - `src/services/combatTrace.js`：默认关闭的事件与状态轨迹；
 - `src/contracts/simulationContracts.js`：版本化协议与旧 Worker 消息适配器；
 - `src/services/referenceSimulationRunner.js`：统一装配目标、角色 Buff、随机源、trace 和进度的 reference engine 边界；
-- `scripts/parity-fixtures.mjs`：黄金文件生成与只读校验；
-- `fixtures/parity/zone-solo-basic`：首个确定性普通 Zone 场景。
+- `scripts/parity-fixtures.mjs`：语义断言、黄金生成、分片归档和只读校验；
+- `scripts/inspect-combat-targets.mjs`：从当前数据快照列出普通区、副本、队伍上限和迷宫怪物候选；
+- `fixtures/parity/*`：五个已锁定的确定性基础场景。
 
-后续继续补齐五人队、Dungeon、团灭重开、Labyrinth 和复杂状态场景，再由 Rust 引擎接入同一套校验器。
+后续继续补齐技能、装备、消耗品、Trigger、DOT/HOT、控制状态、反伤和 OOM 场景，再由 Rust 引擎接入同一套校验器。
