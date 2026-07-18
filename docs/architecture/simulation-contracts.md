@@ -38,7 +38,8 @@
     "enableHpMpVisualization": false,
     "trace": {
       "enabled": false,
-      "maxEntries": 100000
+      "maxEntries": 100000,
+      "detailLevel": "basic"
     },
     "extra": {}
   }
@@ -60,9 +61,9 @@
 ```json
 {
   "kind": "labyrinth",
-  "labyrinthHrid": "/actions/combat/labyrinth",
+  "labyrinthHrid": "/monsters/fly",
   "roomLevel": 1,
-  "crates": 0
+  "crates": []
 }
 ```
 
@@ -76,12 +77,70 @@
 
 固定数列耗尽应报错。禁止静默切换到原生随机源，否则差分结果将失去意义。
 
+当前复杂黄金场景使用循环固定数列，例如：
+
+```json
+{
+  "type": "sequence",
+  "values": [0],
+  "loop": true
+}
+```
+
+它用于稳定触发所有正概率分支，并让 JavaScript 与 Rust 消费完全相同的显式随机流。普通用户模拟不应默认使用这种配置。
+
 ### statisticsMode
 
 - `full`：兼容现有完整统计输出；
 - `fast`：为未来的大规模参数搜索预留，允许省略昂贵明细。
 
 M0 中 reference engine 仍按完整统计运行。启用 `fast` 前必须定义具体字段差异和 UI 降级行为。
+
+### trace
+
+```json
+{
+  "enabled": true,
+  "maxEntries": 100000,
+  "detailLevel": "basic"
+}
+```
+
+字段含义：
+
+- `enabled`：是否记录事件轨迹，默认 `false`；
+- `maxEntries`：最多保留的事件条数，至少为 1；
+- `detailLevel`：轨迹详细等级，可选，默认 `basic`。
+
+支持两个详细等级。
+
+#### basic
+
+用于基础行为兼容，记录：
+
+- 事件类型、时间、source、target、ability 和 consumable；
+- HP、MP；
+- 眩晕、致盲和沉默状态；
+- 事件队列新增与取消；
+- 随机值消费；
+- 遭遇、副本完成和失败计数。
+
+现有基础黄金场景使用该模式。未显式提供 `detailLevel` 的旧请求也会归一化为 `basic`。
+
+#### combat
+
+用于复杂机制黄金校验和诊断，在 `basic` 基础上额外记录：
+
+- active Buff、类型、数值、开始时间和持续时间；
+- 技能、食物和饮料的 `lastUsed` 与法力消耗；
+- OOM 状态；
+- 控制状态到期时间；
+- 等级、命中、伤害、闪避、护甲和抗性等派生属性；
+- 反伤、招架、狂怒、削弱、穿透、吸血、回蓝、威胁等装备或 Buff 状态。
+
+`combat` 模式明显更重，只应在黄金文件、差分测试和定向诊断中使用。普通网页运行、批量模拟和参数搜索不应默认启用详细轨迹。诊断工具存在的意义是抓虫，不是成为热路径里永久居住的寄生虫。
+
+未知 `detailLevel` 会在请求归一化阶段报错，不会静默降级。
 
 ## SimulationProgressV1
 
@@ -114,6 +173,8 @@ M0 中 reference engine 仍按完整统计运行。启用 `fast` 前必须定义
 ```
 
 `result` 在迁移初期可承载现有 `SimResult` 的 JSON 形态。后续字段清理必须通过新的结果协议版本完成，不能在 V1 中静默删除历史字段。
+
+`trace` 仅在请求显式开启轨迹时存在于运行结果。旧 Worker 兼容层的普通响应不会凭空增加 `trace: null` 字段。
 
 ## SimulationErrorV1
 
@@ -155,7 +216,7 @@ M0 中 reference engine 仍按完整统计运行。启用 `fast` 前必须定义
 - 是否支持事件 trace；
 - 是否支持原生批处理。
 
-UI 和任务运行时应基于能力协商，而不是通过引擎名称硬编码猜测功能。
+后续可以在兼容字段中增加支持的 trace 详细等级。UI 和任务运行时应基于能力协商，而不是通过引擎名称硬编码猜测功能。
 
 ## 旧 Worker 兼容
 
@@ -164,7 +225,7 @@ M0 提供：
 - `legacyWorkerMessageToSimulationRequestV1`；
 - `simulationRequestV1ToLegacyWorkerMessage`。
 
-旧消息仍可继续工作。后续页面和 store 应逐步改为先生成协议请求，再由 runtime 选择引擎适配器。
+旧消息仍可继续工作。`trace.detailLevel` 会通过适配器往返；未提供时默认 `basic`。后续页面和 store 应逐步改为先生成协议请求，再由 runtime 选择引擎适配器。
 
 ## 版本策略
 
@@ -175,6 +236,8 @@ M0 提供：
 - 旧消费者应能忽略；
 - 默认值必须明确；
 - 不改变已有字段含义。
+
+`trace.detailLevel` 属于兼容新增字段，因为它可选且默认保持原有基础轨迹语义。
 
 ### 不兼容改动
 
