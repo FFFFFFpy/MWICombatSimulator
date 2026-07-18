@@ -1,5 +1,6 @@
 #![forbid(unsafe_code)]
 
+pub mod ability_data;
 pub mod auto_attack_capabilities;
 pub mod basic_combat;
 pub mod basic_data;
@@ -10,6 +11,13 @@ pub mod event_queue;
 pub mod rng;
 pub mod time;
 
+pub use ability_data::{
+    ABILITY_DATA_SCHEMA_VERSION, ABILITY_DATA_VERSION, AQUA_ARROW_HRID,
+    DIRECT_DAMAGE_REPORT_VERSION, AbilityDataSnapshotV1, AbilityDataSourceV1, AbilityDataV1,
+    AbilityEffectDataV1, DirectDamageAbilityCandidateV1, DirectDamageAbilityCountsV1,
+    DirectDamageAbilityIssueV1, DirectDamageAbilityRejectionV1, DirectDamageAbilityReportV1,
+    classify_direct_damage_abilities,
+};
 pub use auto_attack_capabilities::{
     AUTO_ATTACK_CAPABILITY_REPORT_VERSION, AutoAttackCapabilityCountsV1,
     AutoAttackCapabilityIssueV1, AutoAttackCapabilityReportV1, AutoAttackZoneCandidateV1,
