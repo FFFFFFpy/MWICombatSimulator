@@ -39,6 +39,7 @@ pub struct BasicMonsterData {
     pub smash_max_damage: f64,
     pub smash_evasion_rating: f64,
     pub total_armor: f64,
+    pub auto_attack_damage: f64,
     pub experience: f64,
     pub enrage_time: SimTime,
 }
@@ -97,10 +98,15 @@ impl BasicGameData {
                 )));
             }
         }
-        if !self.monster.total_armor.is_finite() {
-            return Err(SimError::InvalidGameData(
-                "monster.totalArmor must be finite".into(),
-            ));
+        for (name, value) in [
+            ("monster.totalArmor", self.monster.total_armor),
+            ("monster.autoAttackDamage", self.monster.auto_attack_damage),
+        ] {
+            if !value.is_finite() {
+                return Err(SimError::InvalidGameData(format!(
+                    "{name} must be finite"
+                )));
+            }
         }
         Ok(())
     }
@@ -110,8 +116,12 @@ impl BasicGameData {
 mod tests {
     use super::*;
 
+    fn number(value: &Value) -> f64 {
+        value.as_f64().unwrap()
+    }
+
     #[test]
-    fn embedded_slice_matches_the_reference_fly_record() {
+    fn embedded_slice_matches_the_reference_fly_runtime_calculations() {
         let data = BasicGameData::embedded().unwrap();
         let source: Value = serde_json::from_str(include_str!(
             "../../../src/combatsimulator/data/combatMonsterDetailMap.json"
@@ -119,21 +129,32 @@ mod tests {
         .unwrap();
         let fly = &source[BASIC_FLY_MONSTER_HRID];
         let details = &fly["combatDetails"];
+        let stats = &details["combatStats"];
+        let attack_level = number(&details["attackLevel"]);
+        let melee_level = number(&details["meleeLevel"]);
+        let defense_level = number(&details["defenseLevel"]);
 
-        assert_eq!(data.monster.max_hitpoints, details["maxHitpoints"]);
-        assert_eq!(data.monster.max_manapoints, details["maxManapoints"]);
-        assert_eq!(data.monster.attack_interval.get(), details["attackInterval"]);
+        assert_eq!(data.monster.max_hitpoints, number(&details["maxHitpoints"]));
+        assert_eq!(data.monster.max_manapoints, number(&details["maxManapoints"]));
+        assert_eq!(
+            data.monster.attack_interval.get(),
+            number(&stats["attackInterval"]) / (1.0 + attack_level / 2_000.0)
+        );
         assert_eq!(
             data.monster.smash_accuracy_rating,
-            details["smashAccuracyRating"]
+            (10.0 + attack_level) * (1.0 + number(&stats["smashAccuracy"]))
         );
-        assert_eq!(data.monster.smash_max_damage, details["smashMaxDamage"]);
         assert_eq!(
-            data.monster.smash_evasion_rating,
-            details["smashEvasionRating"]
+            data.monster.smash_max_damage,
+            (10.0 + melee_level) * (1.0 + number(&stats["smashDamage"]))
         );
-        assert_eq!(data.monster.total_armor, details["totalArmor"]);
-        assert_eq!(data.monster.experience, fly["experience"]);
-        assert_eq!(data.monster.enrage_time.get(), fly["enrageTime"]);
+        assert_eq!(data.monster.smash_evasion_rating, 10.0 + defense_level);
+        assert_eq!(data.monster.total_armor, 0.2 * defense_level);
+        assert_eq!(
+            data.monster.auto_attack_damage,
+            number(&stats["autoAttackDamage"])
+        );
+        assert_eq!(data.monster.experience, number(&fly["experience"]));
+        assert_eq!(data.monster.enrage_time.get(), number(&fly["enrageTime"]));
     }
 }
