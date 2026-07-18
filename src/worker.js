@@ -77,18 +77,18 @@ onmessage = async function (event) {
                     randomSource,
                     () => combatSimulator.simulate(simulationTimeLimit),
                 );
-                this.postMessage({
-                    type: "simulation_result",
-                    simResult,
-                    trace: traceController?.getTrace() || null,
-                });
+                const response = { type: "simulation_result", simResult };
+                if (traceController) {
+                    response.trace = traceController.getTrace();
+                }
+                this.postMessage(response);
             } catch (error) {
                 console.log(error);
-                this.postMessage({
-                    type: "simulation_error",
-                    error,
-                    trace: traceController?.getTrace() || null,
-                });
+                const response = { type: "simulation_error", error };
+                if (traceController) {
+                    response.trace = traceController.getTrace();
+                }
+                this.postMessage(response);
             } finally {
                 traceController?.detach();
             }
