@@ -150,7 +150,9 @@ docs/architecture/
 
 ### M1：Rust 基础核心
 
-下一阶段范围：
+M1 在独立分支和独立 PR 中实施，基于完成的 M0 分支建立，不修改 M0 的行为基线。
+
+范围：
 
 1. 建立 Cargo workspace；
 2. 创建 `sim-core`、`sim-wasm`、`sim-cli`；
