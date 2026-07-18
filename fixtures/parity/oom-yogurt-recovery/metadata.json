@@ -1,0 +1,29 @@
+{
+  "fixtureVersion": 1,
+  "scenarioId": "oom-yogurt-recovery",
+  "description": "A 120-MP player exhausts mana with two abilities, triggers Yogurt at 50 missing MP, recovers mana over time, and resumes casting.",
+  "contractVersion": 1,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "dataVersion": "repository-v1.0.28",
+  "status": "request-baseline",
+  "assertions": {
+    "resultEquals": {
+      "numberOfPlayers": 1,
+      "isDungeon": false,
+      "isLabyrinth": true,
+      "playerRanOutOfMana.player1": true
+    },
+    "minimumRandomDraws": 20,
+    "minimumTraceEvents": 20,
+    "requiredTraceEventTypes": [
+      "abilityCastEnd",
+      "consumableTick"
+    ]
+  },
+  "expectedFiles": ["request.json"],
+  "notes": [
+    "This protects OOM accounting, missing-MP triggers, recovery-over-time ticks, and later ability reuse.",
+    "Yogurt is intentionally chosen instead of an instant restore to cover ConsumableTick scheduling."
+  ]
+}
