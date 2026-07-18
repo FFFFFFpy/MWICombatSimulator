@@ -1,0 +1,179 @@
+#![forbid(unsafe_code)]
+
+use std::{
+    env,
+    error::Error,
+    fs,
+    path::{Path, PathBuf},
+    process::ExitCode,
+};
+
+use mwi_sim_core::{
+    CONTRACT_VERSION, ENGINE_ID, RandomConfigV1, RandomSource, SeededRandom, SimulationRequestV1,
+    SimulationTargetV1,
+};
+use serde_json::{Value, json};
+
+fn main() -> ExitCode {
+    match run() {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(error) => {
+            eprintln!("{error}");
+            ExitCode::FAILURE
+        }
+    }
+}
+
+fn run() -> Result<(), Box<dyn Error>> {
+    let mut args = env::args().skip(1);
+    match args.next().as_deref() {
+        Some("capabilities") => print_json(&capabilities()),
+        Some("validate-request") => {
+            let path = required_path(args.next(), "validate-request <request.json>")?;
+            let request = load_request(&path)?;
+            print_json(&request_summary(&path, &request))
+        }
+        Some("validate-fixtures") => {
+            let root = required_path(args.next(), "validate-fixtures <fixtures/parity>")?;
+            let paths = discover_requests(&root)?;
+            if paths.is_empty() {
+                return Err(format!("no request.json files found under {}", root.display()).into());
+            }
+            let summaries = paths
+                .iter()
+                .map(|path| load_request(path).map(|request| request_summary(path, &request)))
+                .collect::<Result<Vec<_>, _>>()?;
+            print_json(&json!({
+                "engine": ENGINE_ID,
+                "validated": summaries.len(),
+                "requests": summaries,
+            }))
+        }
+        Some("rng-seeded") => {
+            let seed = args.next().ok_or("usage: rng-seeded <seed> <count>")?;
+            let count = args
+                .next()
+                .ok_or("usage: rng-seeded <seed> <count>")?
+                .parse::<usize>()?;
+            let mut rng = SeededRandom::from_seed(&Value::String(seed.clone()))?;
+            let values = (0..count)
+                .map(|_| rng.next_unit_f64())
+                .collect::<Result<Vec<_>, _>>()?;
+            print_json(&json!({
+                "seed": seed,
+                "drawCount": rng.draw_count(),
+                "values": values,
+            }))
+        }
+        Some("help") | Some("--help") | Some("-h") | None => {
+            print_help();
+            Ok(())
+        }
+        Some(command) => Err(format!("unknown command: {command}").into()),
+    }
+}
+
+fn capabilities() -> Value {
+    json!({
+        "engine": ENGINE_ID,
+        "engineVersion": env!("CARGO_PKG_VERSION"),
+        "contractVersion": CONTRACT_VERSION,
+        "implemented": ["contracts", "sequence-rng", "seeded-rng", "stable-event-queue"],
+        "combatSimulation": false,
+        "targets": [],
+        "statisticsModes": [],
+        "eventTrace": false,
+        "nativeBatch": false,
+    })
+}
+
+fn required_path(value: Option<String>, usage: &str) -> Result<PathBuf, Box<dyn Error>> {
+    value
+        .map(PathBuf::from)
+        .ok_or_else(|| usage.to_owned().into())
+}
+
+fn load_request(path: &Path) -> Result<SimulationRequestV1, Box<dyn Error>> {
+    let input = fs::read_to_string(path)?;
+    Ok(SimulationRequestV1::from_json(&input)?)
+}
+
+fn discover_requests(root: &Path) -> Result<Vec<PathBuf>, Box<dyn Error>> {
+    let mut requests = Vec::new();
+    discover_requests_recursive(root, &mut requests)?;
+    requests.sort();
+    Ok(requests)
+}
+
+fn discover_requests_recursive(
+    directory: &Path,
+    requests: &mut Vec<PathBuf>,
+) -> Result<(), Box<dyn Error>> {
+    for entry in fs::read_dir(directory)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+            discover_requests_recursive(&path, requests)?;
+        } else if path.file_name().is_some_and(|name| name == "request.json") {
+            requests.push(path);
+        }
+    }
+    Ok(())
+}
+
+fn request_summary(path: &Path, request: &SimulationRequestV1) -> Value {
+    let target = match &request.target {
+        SimulationTargetV1::Zone {
+            zone_hrid,
+            difficulty_tier,
+            ..
+        } => json!({
+            "kind": "zone",
+            "hrid": zone_hrid,
+            "difficultyTier": difficulty_tier,
+        }),
+        SimulationTargetV1::Labyrinth {
+            labyrinth_hrid,
+            room_level,
+            ..
+        } => json!({
+            "kind": "labyrinth",
+            "hrid": labyrinth_hrid,
+            "roomLevel": room_level,
+        }),
+    };
+    let random = match &request.random {
+        None | Some(RandomConfigV1::Native) => "native",
+        Some(RandomConfigV1::Seeded { .. }) => "seeded",
+        Some(RandomConfigV1::Sequence { .. }) => "sequence",
+    };
+
+    json!({
+        "path": path.to_string_lossy(),
+        "requestId": request.request_id,
+        "dataVersion": request.data_version,
+        "players": request.players.len(),
+        "simulationTimeLimit": request.simulation_time_limit.get(),
+        "target": target,
+        "random": random,
+        "traceDetailLevel": format!("{:?}", request.options.trace.detail_level).to_lowercase(),
+    })
+}
+
+fn print_json(value: &Value) -> Result<(), Box<dyn Error>> {
+    println!("{}", serde_json::to_string_pretty(value)?);
+    Ok(())
+}
+
+fn print_help() {
+    println!(
+        "mwi-sim-cli foundation\n\n\
+         Commands:\n\
+           capabilities\n\
+           validate-request <request.json>\n\
+           validate-fixtures <fixtures/parity>\n\
+           rng-seeded <seed> <count>\n\n\
+         This M1 CLI validates contracts and foundation primitives only.\n\
+         It does not run combat simulations."
+    );
+}
