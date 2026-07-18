@@ -34,7 +34,8 @@ pub struct BasicMonsterData {
     pub hrid: String,
     pub max_hitpoints: f64,
     pub max_manapoints: f64,
-    pub attack_interval: SimTime,
+    pub attack_level: f64,
+    pub base_attack_interval: SimTime,
     pub smash_accuracy_rating: f64,
     pub smash_max_damage: f64,
     pub smash_evasion_rating: f64,
@@ -42,6 +43,18 @@ pub struct BasicMonsterData {
     pub auto_attack_damage: f64,
     pub experience: f64,
     pub enrage_time: SimTime,
+}
+
+impl BasicMonsterData {
+    pub fn attack_interval(&self) -> Result<SimTime> {
+        let denominator = 1.0 + self.attack_level / 2_000.0;
+        if !denominator.is_finite() || denominator <= 0.0 {
+            return Err(SimError::InvalidGameData(
+                "monster.attackLevel produces an invalid attack interval".into(),
+            ));
+        }
+        SimTime::new(self.base_attack_interval.get() / denominator)
+    }
 }
 
 impl BasicGameData {
@@ -99,13 +112,22 @@ impl BasicGameData {
             }
         }
         for (name, value) in [
+            ("monster.attackLevel", self.monster.attack_level),
             ("monster.totalArmor", self.monster.total_armor),
             ("monster.autoAttackDamage", self.monster.auto_attack_damage),
         ] {
             if !value.is_finite() {
-                return Err(SimError::InvalidGameData(format!("{name} must be finite")));
+                return Err(SimError::InvalidGameData(format!(
+                    "{name} must be finite"
+                )));
             }
         }
+        if self.monster.base_attack_interval == SimTime::ZERO {
+            return Err(SimError::InvalidGameData(
+                "monster.baseAttackInterval must be positive".into(),
+            ));
+        }
+        self.monster.attack_interval()?;
         Ok(())
     }
 }
@@ -137,8 +159,13 @@ mod tests {
             data.monster.max_manapoints,
             number(&details["maxManapoints"])
         );
+        assert_eq!(data.monster.attack_level, attack_level);
         assert_eq!(
-            data.monster.attack_interval.get(),
+            data.monster.base_attack_interval.get(),
+            number(&stats["attackInterval"])
+        );
+        assert_eq!(
+            data.monster.attack_interval().unwrap().get(),
             number(&stats["attackInterval"]) / (1.0 + attack_level / 2_000.0)
         );
         assert_eq!(
