@@ -1,0 +1,27 @@
+{
+  "fixtureVersion": 1,
+  "scenarioId": "ability-pierce-multi-target",
+  "description": "Penetrating Shot and Sweep hit multiple enemies in the three-monster Sorcerer's Tower encounter with a looping zero sequence.",
+  "contractVersion": 1,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "dataVersion": "repository-v1.0.28",
+  "status": "request-baseline",
+  "assertions": {
+    "resultEquals": {
+      "numberOfPlayers": 1,
+      "isDungeon": false,
+      "isLabyrinth": false
+    },
+    "minimumRandomDraws": 20,
+    "minimumTraceEvents": 20,
+    "requiredTraceEventTypes": [
+      "abilityCastEndEvent"
+    ]
+  },
+  "expectedFiles": ["request.json"],
+  "notes": [
+    "The integration test requires one Penetrating Shot and one Sweep event to reduce HP on at least two enemies.",
+    "The explicit zero sequence guarantees Penetrating Shot's 100% pierce continuation branch."
+  ]
+}
