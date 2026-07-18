@@ -198,7 +198,7 @@ function normalizedMonster(monster) {
         name: String(monster.name || ""),
         levels,
         baseAttackInterval: nonNegativeNumber(
-            combatDetails.attackInterval || 0,
+            combatDetails.combatStats?.attackInterval ?? combatDetails.attackInterval ?? 0,
             `${hrid}.combatDetails.attackInterval`,
         ),
         combatStats: combatDetails.combatStats && typeof combatDetails.combatStats === "object"

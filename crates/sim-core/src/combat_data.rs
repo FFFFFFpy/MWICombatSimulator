@@ -108,9 +108,8 @@ pub struct CombatZoneDataSnapshotV1 {
 
 impl CombatZoneDataSnapshotV1 {
     pub fn embedded() -> Result<Self> {
-        let snapshot: Self = serde_json::from_str(include_str!(
-            "../data/combat-zone-data-v1.json"
-        ))?;
+        let snapshot: Self =
+            serde_json::from_str(include_str!("../data/combat-zone-data-v1.json"))?;
         snapshot.validate()?;
         Ok(snapshot)
     }
@@ -131,7 +130,9 @@ impl CombatZoneDataSnapshotV1 {
         validate_source("sources.actions", &self.sources.actions)?;
         validate_source("sources.monsters", &self.sources.monsters)?;
         if self.zones.is_empty() || self.monsters.is_empty() {
-            return Err(invalid("Combat Zone snapshot must contain zones and monsters"));
+            return Err(invalid(
+                "Combat Zone snapshot must contain zones and monsters",
+            ));
         }
         if self.counts.zones != self.zones.len() || self.counts.monsters != self.monsters.len() {
             return Err(invalid(format!(
