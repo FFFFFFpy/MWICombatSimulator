@@ -7,7 +7,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -18,10 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Check out repository branch
+      - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -42,55 +40,120 @@ jobs:
         run: npx vitest run src/services/__tests__/combatTrace.test.js
 
       - name: Test deterministic replay
-        run: npx vitest run src/combatsimulator/__tests__/deterministicSimulation.test.js
-
-      - name: Test complex combat mechanics
-        run: npx vitest run src/combatsimulator/__tests__/complexMechanicsSimulation.test.js
-
-      - name: Run full test suite
-        run: npm test
-
-      - name: Generate complex parity goldens
-        id: parity-generate
+        id: deterministic-replay
         continue-on-error: true
         shell: bash
         run: |
           mkdir -p tmp/ci
           set +e
-          npm run generate:parity > tmp/ci/parity-generation.log 2>&1
+          npx vitest run src/combatsimulator/__tests__/deterministicSimulation.test.js > tmp/ci/deterministic-replay.log 2>&1
           status=$?
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit "$status"
 
-      - name: Upload parity generation diagnostics
-        if: steps.parity-generate.outcome == 'failure'
+      - name: Upload deterministic replay diagnostics
+        if: steps.deterministic-replay.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: complex-parity-generation-diagnostics
-          path: tmp/ci/parity-generation.log
+          name: deterministic-replay-diagnostics
+          path: tmp/ci/deterministic-replay.log
           if-no-files-found: error
           retention-days: 7
 
-      - name: Fail after parity generation diagnostics
-        if: steps.parity-generate.outcome == 'failure'
+      - name: Fail after deterministic replay diagnostics
+        if: steps.deterministic-replay.outcome == 'failure'
+        run: exit 1
+
+      - name: Test complex combat mechanics
+        id: complex-mechanics
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npx vitest run src/combatsimulator/__tests__/complexMechanicsSimulation.test.js > tmp/ci/complex-mechanics.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload complex combat diagnostics
+        if: steps.complex-mechanics.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: complex-combat-diagnostics
+          path: tmp/ci/complex-mechanics.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after complex combat diagnostics
+        if: steps.complex-mechanics.outcome == 'failure'
+        run: exit 1
+
+      - name: Run full test suite
+        run: npm test
+
+      - name: Inspect combat mechanics
+        run: |
+          mkdir -p tmp/ci
+          npm run inspect:combat-mechanics > tmp/ci/combat-mechanics.json
+
+      - name: Upload combat mechanics inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: combat-mechanics-inventory
+          path: tmp/ci/combat-mechanics.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Verify parity goldens
+        id: parity-check
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npm run check:parity > tmp/ci/parity-check.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload parity diagnostics
+        if: steps.parity-check.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-check-diagnostics
+          path: tmp/ci/parity-check.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after parity diagnostics
+        if: steps.parity-check.outcome == 'failure'
         run: exit 1
 
       - name: Smoke-test combat benchmark
-        run: npm run benchmark:combat -- --iterations 1 --warmup 0 --simulation-seconds 30
+        id: combat-benchmark
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npm run benchmark:combat -- --iterations 1 --warmup 0 --simulation-seconds 30 > tmp/ci/combat-benchmark.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload combat benchmark diagnostics
+        if: steps.combat-benchmark.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: combat-benchmark-diagnostics
+          path: tmp/ci/combat-benchmark.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after combat benchmark diagnostics
+        if: steps.combat-benchmark.outcome == 'failure'
+        run: exit 1
 
       - name: Build production bundle
         run: npm run build
-
-      - name: Commit generated complex parity goldens
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add fixtures/parity
-          if git diff --cached --quiet; then
-            echo "Parity goldens are already current."
-            exit 0
-          fi
-          git commit -m "test: commit complex combat parity goldens"
-          git push origin "HEAD:${GITHUB_HEAD_REF}"
