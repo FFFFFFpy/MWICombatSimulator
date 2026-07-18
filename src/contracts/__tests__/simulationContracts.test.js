@@ -35,6 +35,7 @@ function playerFixture() {
 describe("simulationContracts", () => {
     it("normalizes a versioned zone request", () => {
         const request = normalizeSimulationRequestV1({
+            contractVersion: SIMULATION_CONTRACT_VERSION,
             requestId: "zone-fixture",
             dataVersion: "data-2026-07-18",
             players: [playerFixture()],
@@ -98,6 +99,13 @@ describe("simulationContracts", () => {
 
     it("rejects invalid requests before they reach an engine", () => {
         expect(() => normalizeSimulationRequestV1({})).toThrow(/player/i);
+        expect(() => normalizeSimulationRequestV1({
+            contractVersion: 2,
+            requestId: "unsupported-version",
+            players: [playerFixture()],
+            target: { kind: "zone", zoneHrid: "/zone", difficultyTier: 0 },
+            simulationTimeLimit: 1,
+        })).toThrow(/contract version/i);
         expect(() => normalizeSimulationRequestV1({
             requestId: "bad-duration",
             players: [playerFixture()],
