@@ -3,7 +3,11 @@ import CombatSimulator from "../combatSimulator.js";
 import Player from "../player.js";
 import Zone from "../zone.js";
 import { attachCombatTrace } from "../../services/combatTrace.js";
-import { createSeededRandomSource, withPatchedMathRandom } from "../../shared/randomSource.js";
+import {
+    createSeededRandomSource,
+    createTracingRandomSource,
+    withPatchedMathRandom,
+} from "../../shared/randomSource.js";
 
 const ONE_SECOND = 1e9;
 
@@ -28,8 +32,15 @@ async function runFixture({ seed = "zone-solo-basic", trace = false } = {}) {
         { enableHpMpVisualization: false },
     );
     const traceController = trace ? attachCombatTrace(simulator, { maxEntries: 10_000 }) : null;
+    let randomSource = createSeededRandomSource(seed);
+    if (traceController) {
+        randomSource = createTracingRandomSource(
+            randomSource,
+            (draw) => traceController.recordRandomDraw(draw),
+        );
+    }
     const result = await withPatchedMathRandom(
-        createSeededRandomSource(seed),
+        randomSource,
         () => simulator.simulate(60 * ONE_SECOND),
     );
     const serializedResult = JSON.parse(JSON.stringify(result));
