@@ -55,7 +55,7 @@ Batch 基准必须分别报告单任务速度与总吞吐，避免通过过度�
 
 每次场景基准至少输出：
 
-- 场景 ID；
+- 场景 ID 和 fixture 路径；
 - 协议版本；
 - 数据版本；
 - 引擎及版本；
@@ -89,34 +89,60 @@ Batch 基准必须分别报告单任务速度与总吞吐，避免通过过度�
 6. 不以首次构建、模块下载或页面加载时间冒充核心模拟时间；
 7. Worker 启动成本单独报告；
 8. 比较不同引擎时先通过 parity 测试；
-9. 快速统计模式必须和完整模式分开报告。
+9. 快速统计模式必须和完整模式分开报告；
+10. 同一场景的重复轮次必须产生相同事件数、随机消费数和结果摘要。
+
+## 当前命令
+
+M0 提供第一个可执行场景基准：
+
+```bash
+npm run benchmark:combat
+```
+
+常用参数：
+
+```bash
+npm run benchmark:combat -- \
+  --iterations 10 \
+  --warmup 2 \
+  --simulation-seconds 600 \
+  --seed benchmark-zone-solo-basic \
+  --output tmp/benchmark-zone-solo-basic.json
+```
+
+当前场景读取：
+
+```text
+fixtures/parity/zone-solo-basic/request.json
+```
+
+脚本通过 Vite SSR 加载与网页相同的 JavaScript reference engine，不复制一套简化公式。每轮使用相同请求和 seed，并校验 workload fingerprint；如果处理事件数、随机消费数或结果摘要不一致，命令直接失败。
+
+当前事件计数通过轻量包装 `EventQueue.getNextEvent()` 获得，因此数字适合版本间相对比较，不应声称是完全零开销的绝对吞吐量。
 
 ## 输出格式
 
-基准命令最终应同时生成：
-
-- 简短终端摘要；
-- 机器可读 JSON；
-- 可选 Markdown 对比报告。
-
-建议 JSON 结构：
+命令输出机器可读 JSON，包含：
 
 ```json
 {
   "benchmarkVersion": 1,
   "generatedAt": "2026-07-18T00:00:00.000Z",
   "environment": {},
-  "results": [
-    {
-      "scenarioId": "zone-solo-basic",
-      "engine": "reference-js",
-      "statisticsMode": "full",
-      "iterations": 10,
-      "medianMs": 0,
-      "p90Ms": 0,
-      "eventsPerSecond": 0
-    }
-  ]
+  "scenario": {
+    "id": "zone-solo-basic",
+    "engine": "reference-js",
+    "statisticsMode": "full"
+  },
+  "summary": {
+    "iterations": 10,
+    "medianMs": 0,
+    "p90Ms": 0,
+    "medianEventsPerSecond": 0,
+    "workloadFingerprint": ""
+  },
+  "runs": []
 }
 ```
 
@@ -131,6 +157,8 @@ Batch 基准必须分别报告单任务速度与总吞吐，避免通过过度�
 - 事件数、随机消费数和结果摘要一致性；
 - 专用固定硬件上的趋势报告。
 
+CI 当前只执行一次 30 秒模拟作为命令可运行性检查，不把该耗时视为性能门槛。
+
 ## 预期优化顺序
 
 在迁移到 Rust 前，先用基准验证：
@@ -144,6 +172,6 @@ Batch 基准必须分别报告单任务速度与总吞吐，避免通过过度�
 
 Rust 重写应采用新的数据结构，而不是逐行翻译当前对象模型。
 
-## 当前状态
+## 后续场景
 
-M0 首批提交先建立随机源、trace 和协议。完整 `benchmark:combat` 命令需要在黄金场景就绪后接入，否则脚本只能测一个缺乏代表性的随机构造，数字看起来很精确，实际用途与星座运势相近。
+M0 后续继续补充五人 Zone、Dungeon、团灭重开和 Labyrinth fixture。每个新场景必须先通过确定性重放，再进入基准套件。否则基准数字精确到小数点后六位，也只是在认真测量不确定性。
