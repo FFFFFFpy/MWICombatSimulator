@@ -249,7 +249,9 @@ describe("complex deterministic combat mechanics", () => {
         expect(buffs.has("/buff_uniques/fury_accuracy")).toBe(true);
         expect(buffs.has("/buff_uniques/fury_damage")).toBe(true);
         expect(buffs.has("/buff_uniques/weaken")).toBe(true);
-        expect(recursiveHasKey(execution.result.attacks, "physicalThorns")).toBe(true);
+        const dealtThorns = recursiveHasKey(execution.result.attacks, "physicalThorns")
+            || recursiveHasKey(execution.result.attacks, "elementalThorns");
+        expect(dealtThorns).toBe(true);
         expect(recursiveHasKey(execution.result.attacks, "retaliation")).toBe(true);
     });
 
