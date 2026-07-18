@@ -89,6 +89,31 @@ jobs:
         if: steps.complex-mechanics.outcome == 'failure'
         run: exit 1
 
+      - name: Test advanced combat mechanics
+        id: advanced-mechanics
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npx vitest run src/combatsimulator/__tests__/advancedMechanicsSimulation.test.js > tmp/ci/advanced-mechanics.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload advanced combat diagnostics
+        if: steps.advanced-mechanics.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: advanced-combat-diagnostics
+          path: tmp/ci/advanced-mechanics.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after advanced combat diagnostics
+        if: steps.advanced-mechanics.outcome == 'failure'
+        run: exit 1
+
       - name: Run full test suite
         run: npm test
 
