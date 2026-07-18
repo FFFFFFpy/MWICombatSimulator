@@ -1,0 +1,32 @@
+name: M3B Format Once
+
+on:
+  push:
+    branches:
+      - agent/rust-auto-attack-capabilities
+
+permissions:
+  contents: write
+
+jobs:
+  format-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/rust-auto-attack-capabilities
+      - name: Install Rust formatter
+        run: |
+          rustup toolchain install 1.85.0 --profile minimal --component rustfmt
+          rustup default 1.85.0
+      - name: Format Rust sources
+        run: cargo fmt --all
+      - name: Remove one-time workflow
+        run: rm .github/workflows/m3b-format-once.yml
+      - name: Commit formatted sources
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates .github/workflows/m3b-format-once.yml
+          git commit -m "style: format M3B Rust sources"
+          git push origin HEAD:agent/rust-auto-attack-capabilities
