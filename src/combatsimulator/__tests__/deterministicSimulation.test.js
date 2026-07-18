@@ -11,6 +11,56 @@ import {
     withPatchedMathRandom,
 } from "../../shared/randomSource.js";
 
+function firstDifference(first, second, path = "result") {
+    if (Object.is(first, second)) return null;
+    if (typeof first !== typeof second || first == null || second == null) {
+        return { path, first, second };
+    }
+    if (typeof first !== "object") {
+        return { path, first, second };
+    }
+    if (Array.isArray(first) !== Array.isArray(second)) {
+        return { path, firstType: Array.isArray(first) ? "array" : "object", secondType: Array.isArray(second) ? "array" : "object" };
+    }
+    if (Array.isArray(first)) {
+        if (first.length !== second.length) {
+            return { path: `${path}.length`, first: first.length, second: second.length };
+        }
+        for (let index = 0; index < first.length; index++) {
+            const difference = firstDifference(first[index], second[index], `${path}[${index}]`);
+            if (difference) return difference;
+        }
+        return null;
+    }
+
+    const firstKeys = Object.keys(first).sort();
+    const secondKeys = Object.keys(second).sort();
+    if (JSON.stringify(firstKeys) !== JSON.stringify(secondKeys)) {
+        return { path: `${path}.__keys`, first: firstKeys, second: secondKeys };
+    }
+    for (const key of firstKeys) {
+        const difference = firstDifference(first[key], second[key], `${path}.${key}`);
+        if (difference) return difference;
+    }
+    return null;
+}
+
+function assertSameRun(first, second, label) {
+    const difference = firstDifference(first.result, second.result);
+    if (difference || first.randomDraws !== second.randomDraws) {
+        throw new Error(JSON.stringify({
+            label,
+            difference,
+            firstRandomDraws: first.randomDraws,
+            secondRandomDraws: second.randomDraws,
+            firstSimulatedTime: first.result.simulatedTime,
+            secondSimulatedTime: second.result.simulatedTime,
+            firstEncounters: first.result.encounters,
+            secondEncounters: second.result.encounters,
+        }, null, 2));
+    }
+}
+
 async function runFixture({ seed = requestFixture.random.seed, trace = false } = {}) {
     const request = normalizeSimulationRequestV1({
         ...requestFixture,
@@ -53,8 +103,7 @@ describe("deterministic reference simulation", () => {
         const first = await runFixture();
         const second = await runFixture();
 
-        expect(first.result).toEqual(second.result);
-        expect(first.randomDraws).toBe(second.randomDraws);
+        assertSameRun(first, second, "same request and seed");
         expect(first.randomDraws).toBeGreaterThan(0);
         expect(first.result.simulatedTime).toBeGreaterThanOrEqual(first.request.simulationTimeLimit);
     });
@@ -63,8 +112,7 @@ describe("deterministic reference simulation", () => {
         const withoutTrace = await runFixture({ seed: "trace-parity", trace: false });
         const withTrace = await runFixture({ seed: "trace-parity", trace: true });
 
-        expect(withTrace.result).toEqual(withoutTrace.result);
-        expect(withTrace.randomDraws).toBe(withoutTrace.randomDraws);
+        assertSameRun(withTrace, withoutTrace, "trace enabled versus disabled");
         expect(withTrace.trace.events.length).toBeGreaterThan(0);
         expect(withTrace.trace.events.some((entry) => entry.randomDraws.length > 0)).toBe(true);
         expect(withTrace.trace.truncatedEntries).toBe(0);
