@@ -7,8 +7,8 @@ pub mod rng;
 pub mod time;
 
 pub use contracts::{
-    LabyrinthCrates, RandomConfigV1, SimulationOptionsV1, SimulationRequestV1,
-    SimulationTargetV1, StatisticsMode, TraceConfigV1, TraceDetailLevel,
+    LabyrinthCrates, RandomConfigV1, SimulationOptionsV1, SimulationRequestV1, SimulationTargetV1,
+    StatisticsMode, TraceConfigV1, TraceDetailLevel,
 };
 pub use error::{Result, SimError};
 pub use event_queue::{EventHandle, EventKey, ScheduledEvent, StableEventQueue};
