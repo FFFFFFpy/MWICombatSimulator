@@ -36,6 +36,16 @@ function normalizeStatisticsMode(value) {
         : SIMULATION_STATISTICS_FULL;
 }
 
+function assertSupportedContractVersion(input) {
+    if (input.contractVersion == null) return;
+    const version = Number(input.contractVersion);
+    if (version !== SIMULATION_CONTRACT_VERSION) {
+        throw new Error(
+            `Unsupported simulation contract version: ${String(input.contractVersion)}; expected ${SIMULATION_CONTRACT_VERSION}.`,
+        );
+    }
+}
+
 export function normalizeSimulationTargetV1(target) {
     if (!isPlainObject(target)) {
         throw new Error("Simulation target is required.");
@@ -68,7 +78,7 @@ export function normalizeSimulationRandomV1(random) {
     if (random.type === "seeded") {
         return {
             type: "seeded",
-            seed: cloneJsonValue(random.seed, 0),
+            seed: cloneJsonValue(random.seed ?? 0, 0),
         };
     }
     if (random.type === "sequence") {
@@ -89,6 +99,7 @@ export function normalizeSimulationRequestV1(input) {
     if (!isPlainObject(input)) {
         throw new TypeError("Simulation request must be an object.");
     }
+    assertSupportedContractVersion(input);
 
     const players = Array.isArray(input.players) ? cloneJsonValue(input.players, []) : [];
     if (players.length === 0) {
