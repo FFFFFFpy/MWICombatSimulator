@@ -1,0 +1,11 @@
+[package]
+name = "mwi-sim-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+mwi-sim-core = { path = "../sim-core" }
+serde_json.workspace = true
