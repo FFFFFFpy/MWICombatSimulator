@@ -1,0 +1,17 @@
+{
+  "fixtureVersion": 1,
+  "scenarioId": "zone-solo-basic",
+  "description": "One level-20 player with no equipment, abilities, food, drinks, house rooms, guild buffs, or achievements fights the Fly zone for 60 simulated seconds.",
+  "contractVersion": 1,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "dataVersion": "repository-v1.0.28",
+  "expectedFiles": [
+    "request.json"
+  ],
+  "status": "request-baseline",
+  "notes": [
+    "The request is committed before the golden result and full event trace are generated.",
+    "Golden files must be generated explicitly and reviewed; ordinary tests must never overwrite them."
+  ]
+}
