@@ -1,0 +1,27 @@
+{
+  "fixtureVersion": 1,
+  "scenarioId": "cursed-bow-stacking",
+  "description": "Cursed Bow repeatedly hits Crystal Colossus, stacks the curse damage-taken Buff, cancels the previous expiry event, and schedules a replacement.",
+  "contractVersion": 1,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "dataVersion": "repository-v1.0.28",
+  "status": "request-baseline",
+  "assertions": {
+    "resultEquals": {
+      "numberOfPlayers": 1,
+      "isDungeon": false,
+      "isLabyrinth": true
+    },
+    "minimumRandomDraws": 20,
+    "minimumTraceEvents": 20,
+    "requiredTraceEventTypes": [
+      "autoAttack"
+    ]
+  },
+  "expectedFiles": ["request.json"],
+  "notes": [
+    "Continuous hits intentionally refresh the 15-second curse expiry, so the integration test protects stacking plus add/cancel replacement rather than natural expiry processing.",
+    "The detailed trace requires the curse Buff to reach at least two stacks."
+  ]
+}
