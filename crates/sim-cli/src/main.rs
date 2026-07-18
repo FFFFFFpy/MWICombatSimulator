@@ -9,8 +9,9 @@ use std::{
 };
 
 use mwi_sim_core::{
+    BASIC_COMBAT_COMPATIBILITY_LEVEL, BASIC_COMBAT_ENGINE_ID, BASIC_FLY_ZONE_HRID,
     CONTRACT_VERSION, ENGINE_ID, RandomConfigV1, RandomSource, SeededRandom, SimulationRequestV1,
-    SimulationTargetV1,
+    SimulationTargetV1, simulate_basic,
 };
 use serde_json::{Value, json};
 
@@ -49,6 +50,11 @@ fn run() -> Result<(), Box<dyn Error>> {
                 "requests": summaries,
             }))
         }
+        Some("simulate-basic") => {
+            let path = required_path(args.next(), "simulate-basic <request.json>")?;
+            let request = load_request(&path)?;
+            print_json(&serde_json::to_value(simulate_basic(&request)?)?)
+        }
         Some("rng-seeded") => {
             let seed = args.next().ok_or("usage: rng-seeded <seed> <count>")?;
             let count = args
@@ -75,12 +81,27 @@ fn run() -> Result<(), Box<dyn Error>> {
 
 fn capabilities() -> Value {
     json!({
-        "engine": ENGINE_ID,
+        "engine": BASIC_COMBAT_ENGINE_ID,
+        "foundationEngine": ENGINE_ID,
         "engineVersion": env!("CARGO_PKG_VERSION"),
         "contractVersion": CONTRACT_VERSION,
-        "implemented": ["contracts", "sequence-rng", "seeded-rng", "stable-event-queue"],
-        "combatSimulation": false,
-        "targets": [],
+        "implemented": [
+            "contracts",
+            "sequence-rng",
+            "seeded-rng-string",
+            "stable-event-queue",
+            "basic-auto-attack"
+        ],
+        "combatSimulation": true,
+        "fullSimulationResult": false,
+        "resultTypes": ["basic_combat_result"],
+        "compatibilityLevels": [BASIC_COMBAT_COMPATIBILITY_LEVEL],
+        "targets": [{
+            "kind": "zone",
+            "zoneHrids": [BASIC_FLY_ZONE_HRID],
+            "difficultyTiers": [0],
+            "players": { "minimum": 1, "maximum": 1 }
+        }],
         "statisticsModes": [],
         "eventTrace": false,
         "nativeBatch": false,
@@ -167,13 +188,14 @@ fn print_json(value: &Value) -> Result<(), Box<dyn Error>> {
 
 fn print_help() {
     println!(
-        "mwi-sim-cli foundation\n\n\
+        "mwi-sim-cli\n\n\
          Commands:\n\
            capabilities\n\
            validate-request <request.json>\n\
            validate-fixtures <fixtures/parity>\n\
+           simulate-basic <request.json>\n\
            rng-seeded <seed> <count>\n\n\
-         This M1 CLI validates contracts and foundation primitives only.\n\
-         It does not run combat simulations."
+         simulate-basic is deliberately restricted to the M2 single-player,\n\
+         tier-0 Fly auto-attack capability. It does not return SimulationResultV1."
     );
 }
