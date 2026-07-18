@@ -88,7 +88,8 @@ export async function runReferenceSimulation(requestInput, {
             trace: traceController?.getTrace() || null,
             randomDraws: randomSource?.drawCount || 0,
         };
-    } catch (error) {
+    } catch (failure) {
+        const error = failure instanceof Error ? failure : new Error(String(failure));
         if (traceController) {
             error.referenceSimulationTrace = traceController.getTrace();
         }
