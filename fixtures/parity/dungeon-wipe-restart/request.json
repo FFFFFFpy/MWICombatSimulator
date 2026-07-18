@@ -96,8 +96,8 @@
   ],
   "target": {
     "kind": "zone",
-    "zoneHrid": "/actions/combat/sorcerers_tower",
-    "difficultyTier": 4
+    "zoneHrid": "/actions/combat/chimerical_den",
+    "difficultyTier": 2
   },
   "simulationTimeLimit": 120000000000,
   "random": {
