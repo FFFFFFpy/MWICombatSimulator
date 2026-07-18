@@ -250,14 +250,14 @@ impl BasicUnit {
         })
     }
 
-    fn enemy(data: &BasicGameData) -> Self {
-        Self {
+    fn enemy(data: &BasicGameData) -> Result<Self> {
+        Ok(Self {
             hrid: data.monster.hrid.clone(),
             current_hitpoints: data.monster.max_hitpoints,
             max_hitpoints: data.monster.max_hitpoints,
             current_manapoints: data.monster.max_manapoints,
             max_manapoints: data.monster.max_manapoints,
-            attack_interval: data.monster.attack_interval,
+            attack_interval: data.monster.attack_interval()?,
             smash_accuracy_rating: data.monster.smash_accuracy_rating,
             smash_max_damage: data.monster.smash_max_damage,
             smash_evasion_rating: data.monster.smash_evasion_rating,
@@ -272,7 +272,7 @@ impl BasicUnit {
             mayhem: 0.0,
             hp_regen_per_10: 0.0,
             mp_regen_per_10: 0.0,
-        }
+        })
     }
 
     fn is_alive(&self) -> bool {
@@ -423,7 +423,7 @@ impl BasicCombatEngine {
 
     fn spawn_enemy(&mut self) -> Result<()> {
         let _random_weight = self.random.next()?;
-        self.enemy = Some(BasicUnit::enemy(&self.data));
+        self.enemy = Some(BasicUnit::enemy(&self.data)?);
         if self.player.is_alive() {
             self.schedule_attack(Side::Player)?;
             self.schedule_attack(Side::Enemy)?;

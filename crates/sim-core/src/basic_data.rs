@@ -117,9 +117,7 @@ impl BasicGameData {
             ("monster.autoAttackDamage", self.monster.auto_attack_damage),
         ] {
             if !value.is_finite() {
-                return Err(SimError::InvalidGameData(format!(
-                    "{name} must be finite"
-                )));
+                return Err(SimError::InvalidGameData(format!("{name} must be finite")));
             }
         }
         if self.monster.base_attack_interval == SimTime::ZERO {
