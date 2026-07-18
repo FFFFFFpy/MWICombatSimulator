@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - agent/rust-core-foundation
+      - agent/rust-basic-combat
 
 permissions:
   contents: read
@@ -92,16 +93,25 @@ jobs:
       - name: Validate committed request fixtures
         run: cargo run --locked -p mwi-sim-cli -- validate-fixtures fixtures/parity
 
+      - name: Run restricted basic combat fixture
+        run: |
+          cargo run --locked -p mwi-sim-cli -- simulate-basic fixtures/parity/zone-solo-basic/request.json \
+            > tmp/ci/basic-combat-result.json
+
       - name: Check WASM boundary
         run: cargo check --locked -p mwi-sim-wasm --target wasm32-unknown-unknown
 
-      - name: Verify honest capability report
+      - name: Verify restricted capability report
         shell: bash
         run: |
           cargo run --locked -p mwi-sim-cli -- capabilities > tmp/ci/rust-capabilities.json
           node -e '
             const fs = require("fs");
             const value = JSON.parse(fs.readFileSync("tmp/ci/rust-capabilities.json", "utf8"));
-            if (value.combatSimulation !== false) process.exit(1);
-            if (!Array.isArray(value.targets) || value.targets.length !== 0) process.exit(1);
+            if (value.combatSimulation !== true) process.exit(1);
+            if (value.fullSimulationResult !== false) process.exit(1);
+            if (value.resultTypes?.[0] !== "basic_combat_result") process.exit(1);
+            if (value.targets?.length !== 1) process.exit(1);
+            if (value.targets[0].zoneHrids?.[0] !== "/actions/combat/fly") process.exit(1);
+            if (value.targets[0].players?.maximum !== 1) process.exit(1);
           '
