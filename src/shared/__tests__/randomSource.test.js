@@ -91,4 +91,25 @@ describe("randomSource", () => {
 
         expect(Math.random).toBe(original);
     });
+
+    it("rejects overlapping deterministic simulations in one realm", async () => {
+        const original = Math.random;
+        let releaseFirst;
+        const firstRun = withPatchedMathRandom(
+            createSequenceRandomSource([0.1], { loop: true }),
+            () => new Promise((resolve) => {
+                releaseFirst = resolve;
+            }),
+        );
+
+        await Promise.resolve();
+        await expect(withPatchedMathRandom(
+            createSequenceRandomSource([0.2], { loop: true }),
+            async () => Math.random(),
+        )).rejects.toThrow(/separate Workers/i);
+
+        releaseFirst("done");
+        await expect(firstRun).resolves.toBe("done");
+        expect(Math.random).toBe(original);
+    });
 });
