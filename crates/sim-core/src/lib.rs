@@ -1,5 +1,6 @@
 #![forbid(unsafe_code)]
 
+pub mod auto_attack_capabilities;
 pub mod basic_combat;
 pub mod basic_data;
 pub mod combat_data;
@@ -9,6 +10,11 @@ pub mod event_queue;
 pub mod rng;
 pub mod time;
 
+pub use auto_attack_capabilities::{
+    AUTO_ATTACK_CAPABILITY_REPORT_VERSION, AutoAttackCapabilityCountsV1,
+    AutoAttackCapabilityIssueV1, AutoAttackCapabilityReportV1, AutoAttackZoneCandidateV1,
+    AutoAttackZoneRejectionV1, classify_auto_attack_zones,
+};
 pub use basic_combat::{
     BASIC_COMBAT_COMPATIBILITY_LEVEL, BASIC_COMBAT_ENGINE_ID, BasicCombatResultV1, simulate_basic,
     simulate_basic_json,
