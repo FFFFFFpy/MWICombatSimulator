@@ -1,33 +1,43 @@
 {
-  "fixtureVersion": 1,
-  "scenarioId": "zone-party-three",
-  "description": "Three level-300 unarmed players fight Sorcerer's Tower at difficulty 0 for 60 simulated seconds, exercising the legal maximum party size for non-dungeon group zones.",
-  "contractVersion": 1,
-  "referenceEngine": "reference-js",
-  "referenceEngineVersion": "1.0.28",
-  "dataVersion": "repository-v1.0.28",
-  "status": "request-baseline",
   "assertions": {
-    "resultEquals": {
-      "numberOfPlayers": 3,
-      "isDungeon": false,
-      "isLabyrinth": false,
-      "zoneName": "/actions/combat/sorcerers_tower"
-    },
-    "resultMinimums": {
-      "encounters": 1
-    },
     "minimumRandomDraws": 50,
     "minimumTraceEvents": 50,
     "requiredTraceEventTypes": [
       "combatStart",
       "autoAttack"
-    ]
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": false,
+      "numberOfPlayers": 3,
+      "zoneName": "/actions/combat/sorcerers_tower"
+    },
+    "resultMinimums": {
+      "encounters": 1
+    }
   },
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "Three level-300 unarmed players fight Sorcerer's Tower at difficulty 0 for 60 simulated seconds, exercising the legal maximum party size for non-dungeon group zones.",
   "expectedFiles": [
-    "request.json"
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
   ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "2b513d28e59b6643ccca5e8977565c4b38573811f1628ff6a60c624c1a28de3a",
+    "expectedTraceArchiveSha256": "8a9511b4a6ae72012909187228d9433c47d06f2242b32eb1cb31cf15c8b8fdcd",
+    "expectedTraceSha256": "3a2ccf0fb8641cb51ba19c14e505cea9c578b842a37747619c4b501fa615bc5d"
+  },
   "notes": [
     "The official data snapshot exposes a maximum party size of three for normal group zones; five-player parties are reserved for dungeons."
-  ]
+  ],
+  "randomDraws": 630,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "zone-party-three",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
 }

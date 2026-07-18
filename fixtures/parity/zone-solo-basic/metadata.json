@@ -22,5 +22,6 @@
   "referenceEngineVersion": "1.0.28",
   "scenarioId": "zone-solo-basic",
   "status": "golden",
+  "traceArchiveParts": 1,
   "traceEncoding": "gzip+base64"
 }

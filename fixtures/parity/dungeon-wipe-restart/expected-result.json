@@ -1,0 +1,4242 @@
+{
+  "attacks": {
+    "/monsters/alligator": {
+      "player1": {
+        "autoAttack": {
+          "58": 1
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "110": 1
+        }
+      },
+      "player4": {
+        "autoAttack": {
+          "110": 2
+        }
+      },
+      "player5": {
+        "autoAttack": {
+          "110": 1
+        }
+      }
+    },
+    "/monsters/aquahorse": {
+      "player1": {
+        "autoAttack": {
+          "54": 1,
+          "56": 1,
+          "110": 1
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "110": 1
+        }
+      },
+      "player3": {
+        "autoAttack": {
+          "110": 2
+        }
+      }
+    },
+    "/monsters/crab": {
+      "player1": {
+        "autoAttack": {
+          "110": 3
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "77": 1
+        }
+      },
+      "player3": {
+        "autoAttack": {
+          "7": 1,
+          "110": 1
+        }
+      },
+      "player4": {
+        "autoAttack": {
+          "110": 1
+        }
+      },
+      "player5": {
+        "autoAttack": {
+          "110": 1
+        }
+      }
+    },
+    "/monsters/frog": {
+      "player1": {
+        "autoAttack": {
+          "87": 1
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "110": 1
+        }
+      },
+      "player3": {
+        "autoAttack": {
+          "27": 1,
+          "110": 1
+        }
+      }
+    },
+    "/monsters/jungle_sprite": {
+      "player1": {
+        "/abilities/entangle": {
+          "54": 1,
+          "110": 2
+        }
+      },
+      "player2": {
+        "/abilities/entangle": {
+          "42": 1,
+          "110": 1
+        }
+      },
+      "player3": {
+        "/abilities/entangle": {
+          "8": 1,
+          "110": 1
+        }
+      },
+      "player4": {
+        "/abilities/entangle": {
+          "21": 1,
+          "37": 1,
+          "110": 2
+        }
+      },
+      "player5": {
+        "/abilities/entangle": {
+          "71": 1,
+          "110": 2
+        }
+      }
+    },
+    "/monsters/myconid": {
+      "player1": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "14": 2,
+          "96": 1
+        }
+      },
+      "player5": {
+        "autoAttack": {
+          "102": 1
+        }
+      }
+    },
+    "/monsters/porcupine": {
+      "player1": {
+        "autoAttack": {
+          "16": 1
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "7": 1
+        }
+      },
+      "player4": {
+        "autoAttack": {
+          "20": 1,
+          "90": 1,
+          "110": 1
+        }
+      },
+      "player5": {
+        "autoAttack": {
+          "38": 1,
+          "39": 1,
+          "72": 1,
+          "110": 1
+        }
+      }
+    },
+    "/monsters/rat": {
+      "player2": {
+        "autoAttack": {
+          "19": 1,
+          "96": 1,
+          "miss": 1
+        }
+      },
+      "player3": {
+        "autoAttack": {
+          "69": 1,
+          "83": 1
+        }
+      },
+      "player4": {
+        "autoAttack": {
+          "110": 2
+        }
+      },
+      "player5": {
+        "autoAttack": {
+          "8": 1,
+          "110": 1
+        }
+      }
+    },
+    "/monsters/sea_snail": {
+      "player2": {
+        "autoAttack": {
+          "2": 1,
+          "108": 1
+        }
+      },
+      "player3": {
+        "autoAttack": {
+          "25": 1,
+          "85": 1
+        }
+      }
+    },
+    "/monsters/skunk": {
+      "player1": {
+        "autoAttack": {
+          "110": 1
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "103": 1
+        }
+      },
+      "player3": {
+        "autoAttack": {
+          "49": 1,
+          "53": 1,
+          "110": 1
+        }
+      },
+      "player4": {
+        "autoAttack": {
+          "110": 2
+        }
+      },
+      "player5": {
+        "autoAttack": {
+          "110": 1
+        }
+      }
+    },
+    "/monsters/slimy": {
+      "player1": {
+        "/abilities/water_strike": {
+          "110": 2
+        }
+      },
+      "player2": {
+        "/abilities/water_strike": {
+          "25": 1,
+          "68": 1,
+          "85": 1
+        }
+      },
+      "player3": {
+        "/abilities/water_strike": {
+          "102": 1
+        }
+      },
+      "player5": {
+        "/abilities/water_strike": {
+          "110": 2
+        }
+      }
+    },
+    "/monsters/snake": {
+      "player1": {
+        "autoAttack": {
+          "36": 1
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "110": 1
+        }
+      },
+      "player3": {
+        "autoAttack": {
+          "34": 1,
+          "110": 1
+        }
+      },
+      "player4": {
+        "autoAttack": {
+          "89": 1
+        }
+      }
+    },
+    "/monsters/swampy": {
+      "player1": {
+        "autoAttack": {
+          "23": 1,
+          "56": 1
+        }
+      },
+      "player2": {
+        "autoAttack": {
+          "14": 1,
+          "110": 1
+        }
+      },
+      "player3": {
+        "autoAttack": {
+          "8": 1,
+          "110": 1
+        }
+      },
+      "player4": {
+        "autoAttack": {
+          "73": 1
+        }
+      },
+      "player5": {
+        "autoAttack": {
+          "110": 2
+        }
+      }
+    },
+    "player1": {
+      "/monsters/alligator": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/aquahorse": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/frog": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/myconid": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/porcupine": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/sea_snail": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/swampy": {
+        "autoAttack": {
+          "miss": 1
+        }
+      }
+    },
+    "player2": {
+      "/monsters/alligator": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/crab": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/frog": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/jungle_sprite": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/myconid": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/porcupine": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/slimy": {
+        "autoAttack": {
+          "miss": 2
+        }
+      }
+    },
+    "player3": {
+      "/monsters/crab": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/jungle_sprite": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/myconid": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/porcupine": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/rat": {
+        "autoAttack": {
+          "miss": 3
+        }
+      },
+      "/monsters/sea_snail": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/slimy": {
+        "autoAttack": {
+          "miss": 1
+        }
+      }
+    },
+    "player4": {
+      "/monsters/aquahorse": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/crab": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/jungle_sprite": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/rat": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/slimy": {
+        "autoAttack": {
+          "miss": 1
+        }
+      }
+    },
+    "player5": {
+      "/monsters/jungle_sprite": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/myconid": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/porcupine": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/rat": {
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "/monsters/sea_snail": {
+        "autoAttack": {
+          "miss": 1
+        }
+      }
+    }
+  },
+  "bossSpawns": [
+    "#5,/monsters/butterjerry",
+    "#10,/monsters/jackalope",
+    "#15,/monsters/jackalope,/monsters/butterjerry",
+    "#20,/monsters/dodocamel",
+    "#25,/monsters/dodocamel,/monsters/butterjerry",
+    "#30,/monsters/jackalope,/monsters/dodocamel",
+    "#35,/monsters/manticore",
+    "#40,/monsters/jackalope,/monsters/manticore",
+    "#45,/monsters/manticore,/monsters/dodocamel",
+    "#50,/monsters/griffin"
+  ],
+  "combatDropQuantity": {
+    "player1": 0,
+    "player2": 0,
+    "player3": 0,
+    "player4": 0,
+    "player5": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {
+    "player1": 13,
+    "player2": 13,
+    "player3": 13,
+    "player4": 13,
+    "player5": 14
+  },
+  "debuffOnLevelGap": {
+    "player1": 0,
+    "player2": 0,
+    "player3": 0,
+    "player4": 0,
+    "player5": 0
+  },
+  "difficultyTier": 2,
+  "dropRateMultiplier": {
+    "player1": 1,
+    "player2": 1,
+    "player3": 1,
+    "player4": 1,
+    "player5": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 13,
+  "encounters": 0,
+  "experienceGained": {},
+  "hitpointsGained": {},
+  "hitpointsSpent": {},
+  "isDungeon": true,
+  "isLabyrinth": false,
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 0,
+  "manaUsed": {
+    "player1": {},
+    "player2": {},
+    "player3": {},
+    "player4": {},
+    "player5": {}
+  },
+  "manapointsGained": {},
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 5,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {
+    "player1": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    },
+    "player2": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    },
+    "player3": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    },
+    "player4": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    },
+    "player5": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    }
+  },
+  "rareFindMultiplier": {
+    "player1": 1,
+    "player2": 1,
+    "player3": 1,
+    "player4": 1,
+    "player5": 1
+  },
+  "simulatedTime": 120257578172.75533,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 0,
+      "name": "#1",
+      "spawnedAt": 117698942778.29904,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/frog",
+      "spawnedAt": 117698942778.29904,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/crab",
+      "spawnedAt": 66094039804.55345,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/swampy",
+      "spawnedAt": 117698942778.29904,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/rat",
+      "spawnedAt": 117698942778.29904,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/skunk",
+      "spawnedAt": 117698942778.29904,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/slimy",
+      "spawnedAt": 92514245427.40366,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/snake",
+      "spawnedAt": 92514245427.40366,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/jungle_sprite",
+      "spawnedAt": 100664460019.67834,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/aquahorse",
+      "spawnedAt": 109698942778.29904,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/myconid",
+      "spawnedAt": 92514245427.40366,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/sea_snail",
+      "spawnedAt": 74244254396.82812,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/porcupine",
+      "spawnedAt": 100664460019.67834,
+      "timeSpentAlive": 0
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/alligator",
+      "spawnedAt": 109698942778.29904,
+      "timeSpentAlive": 0
+    }
+  ],
+  "wipeEvents": [
+    {
+      "logs": [
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/swampy",
+          "target": "player5",
+          "time": 2558635394.4562902,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/frog",
+          "target": "player3",
+          "time": 2737967914.438503,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/crab",
+          "target": "player4",
+          "time": 2962962962.962963,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 87,
+          "beforeHp": 110,
+          "damage": 23,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 87,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/swampy",
+          "target": "player1",
+          "time": 5117270788.9125805,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 87,
+          "damage": 87,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/frog",
+          "target": "player1",
+          "time": 5475935828.877006,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 33,
+          "beforeHp": 110,
+          "damage": 77,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 33,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/crab",
+          "target": "player2",
+          "time": 5925925925.925926,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 14,
+          "beforeHp": 33,
+          "damage": 19,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 14,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/rat",
+          "target": "player2",
+          "time": 6054054054.054054,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 14,
+          "damage": 14,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/swampy",
+          "target": "player2",
+          "time": 7675906183.368871,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 7675906183.368871,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "/abilities/water_strike",
+          "afterHp": 25,
+          "beforeHp": 110,
+          "damage": 85,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 25,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/slimy",
+          "target": "player2",
+          "time": 13251013479.506208,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 25,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/crab",
+          "target": "player1",
+          "time": 13638869146.331833,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 25,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/crab",
+          "target": "player5",
+          "time": 13638869146.331833,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 25,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/skunk",
+          "target": "player4",
+          "time": 13693147562.679214,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/water_strike",
+          "afterHp": 0,
+          "beforeHp": 25,
+          "damage": 25,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/slimy",
+          "target": "player2",
+          "time": 15826120775.643547,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/crab",
+          "target": "player3",
+          "time": 16601832109.294796,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 16601832109.294796,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player2",
+          "time": 22128147898.76848,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 21,
+          "beforeHp": 110,
+          "damage": 89,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 21,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/snake",
+          "target": "player4",
+          "time": 22342731466.896507,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 21,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/crab",
+          "target": "player1",
+          "time": 22564795072.25776,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 21,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/rat",
+          "target": "player5",
+          "time": 22628859136.321823,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 21,
+          "damage": 21,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player4",
+          "time": 24654463688.242165,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 76,
+          "beforeHp": 110,
+          "damage": 34,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 76,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/snake",
+          "target": "player3",
+          "time": 25083630824.498222,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 69,
+          "beforeHp": 76,
+          "damage": 7,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 69,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/crab",
+          "target": "player3",
+          "time": 25527758035.220722,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 69,
+          "damage": 69,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/rat",
+          "target": "player3",
+          "time": 25655886163.34885,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 25655886163.34885,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/aquahorse",
+          "target": "player2",
+          "time": 31155886163.34885,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/aquahorse",
+          "target": "player3",
+          "time": 31155886163.34885,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player5",
+          "time": 31182201952.822533,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/rat",
+          "target": "player4",
+          "time": 31682913190.375877,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 56,
+          "beforeHp": 110,
+          "damage": 54,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 56,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/aquahorse",
+          "target": "player1",
+          "time": 33655886163.34885,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 56,
+          "damage": 56,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/aquahorse",
+          "target": "player1",
+          "time": 33655886163.34885,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 33655886163.34885,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player4",
+          "time": 39182201952.82253,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 61,
+          "beforeHp": 110,
+          "damage": 49,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 61,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/skunk",
+          "target": "player3",
+          "time": 39673127542.659195,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 14,
+          "beforeHp": 110,
+          "damage": 96,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 14,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 61,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/rat",
+          "target": "player2",
+          "time": 39682913190.37587,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 14,
+          "damage": 14,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 61,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/myconid",
+          "target": "player2",
+          "time": 41655886163.34885,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 61,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player1",
+          "time": 41708517742.29622,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 8,
+          "beforeHp": 61,
+          "damage": 53,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 8,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/skunk",
+          "target": "player3",
+          "time": 42690368921.96954,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 102,
+          "beforeHp": 110,
+          "damage": 8,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 8,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 102,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/rat",
+          "target": "player5",
+          "time": 42709940217.40289,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 102,
+          "damage": 102,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 8,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/myconid",
+          "target": "player5",
+          "time": 44155886163.34885,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 8,
+          "damage": 8,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player3",
+          "time": 44234833531.769905,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 44234833531.769905,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "autoAttack",
+          "afterHp": 72,
+          "beforeHp": 110,
+          "damage": 38,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 72,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player5",
+          "time": 49815478693.06023,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 72,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/snake",
+          "target": "player2",
+          "time": 49975732889.37162,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 72,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/alligator",
+          "target": "player4",
+          "time": 50213556936.02522,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 25,
+          "beforeHp": 110,
+          "damage": 85,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 25,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 72,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/sea_snail",
+          "target": "player3",
+          "time": 50631861132.61916,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 72,
+          "damage": 72,
+          "isCrit": true,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 25,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player5",
+          "time": 52396123854.35055,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 74,
+          "beforeHp": 110,
+          "damage": 36,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 74,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 25,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/snake",
+          "target": "player1",
+          "time": 52716632246.973335,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 16,
+          "beforeHp": 74,
+          "damage": 58,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 16,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 25,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/alligator",
+          "target": "player1",
+          "time": 53192280340.28054,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 25,
+          "damage": 25,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 16,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/sea_snail",
+          "target": "player3",
+          "time": 54028888733.46842,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 16,
+          "damage": 16,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player1",
+          "time": 54976769015.64087,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 54976769015.64087,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player4",
+          "time": 60503084805.114555,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/swampy",
+          "target": "player2",
+          "time": 60535404410.09716,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/swampy",
+          "target": "player3",
+          "time": 60535404410.09716,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/alligator",
+          "target": "player5",
+          "time": 60955492419.89619,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 56,
+          "beforeHp": 110,
+          "damage": 54,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 56,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player1",
+          "time": 63029400594.58824,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 56,
+          "damage": 56,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/swampy",
+          "target": "player1",
+          "time": 63094039804.55345,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 63094039804.55345,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player3",
+          "time": 68620355594.02714,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/water_strike",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/slimy",
+          "target": "player5",
+          "time": 68669147100.69079,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/crab",
+          "target": "player1",
+          "time": 69057002767.51642,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/skunk",
+          "target": "player4",
+          "time": 69111281183.8638,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 68,
+          "beforeHp": 110,
+          "damage": 42,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 68,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player2",
+          "time": 71146671383.50082,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/water_strike",
+          "afterHp": 0,
+          "beforeHp": 68,
+          "damage": 68,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/slimy",
+          "target": "player2",
+          "time": 71244254396.82812,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 71244254396.82812,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player5",
+          "time": 76770570186.3018,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 102,
+          "beforeHp": 110,
+          "damage": 8,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 102,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/swampy",
+          "target": "player3",
+          "time": 76802889791.28441,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/water_strike",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 102,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/slimy",
+          "target": "player1",
+          "time": 76819361692.96547,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 108,
+          "beforeHp": 110,
+          "damage": 2,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 108,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 102,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/sea_snail",
+          "target": "player2",
+          "time": 77641281997.67738,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 73,
+          "beforeHp": 110,
+          "damage": 37,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 108,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 102,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 73,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player4",
+          "time": 79296885975.77548,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 73,
+          "damage": 73,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 108,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 102,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/swampy",
+          "target": "player4",
+          "time": 79361525185.74069,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/water_strike",
+          "afterHp": 0,
+          "beforeHp": 102,
+          "damage": 102,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 108,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/slimy",
+          "target": "player3",
+          "time": 79394468989.10281,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 108,
+          "damage": 108,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/sea_snail",
+          "target": "player2",
+          "time": 81038309598.52664,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 81038309598.52664,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player4",
+          "time": 86618954759.81697,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 83,
+          "beforeHp": 110,
+          "damage": 27,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 83,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/frog",
+          "target": "player3",
+          "time": 86776277512.96515,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 83,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/skunk",
+          "target": "player1",
+          "time": 87055550977.83699,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 83,
+          "damage": 83,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/rat",
+          "target": "player3",
+          "time": 87065336625.55367,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player5",
+          "time": 89199599921.1073,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/frog",
+          "target": "player2",
+          "time": 89514245427.40366,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 89514245427.40366,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "autoAttack",
+          "afterHp": 96,
+          "beforeHp": 110,
+          "damage": 14,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 96,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/myconid",
+          "target": "player2",
+          "time": 95014245427.40366,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/water_strike",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 96,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/slimy",
+          "target": "player5",
+          "time": 95089352723.541,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 96,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/snake",
+          "target": "player3",
+          "time": 95255144785.00537,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 96,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/alligator",
+          "target": "player4",
+          "time": 95492968831.65898,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 96,
+          "damage": 96,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 110,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/myconid",
+          "target": "player2",
+          "time": 97514245427.40366,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/water_strike",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/slimy",
+          "target": "player1",
+          "time": 97664460019.67834,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 97664460019.67834,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player1",
+          "time": 103190775809.15202,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 20,
+          "beforeHp": 110,
+          "damage": 90,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 20,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player4",
+          "time": 103245105180.96867,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 103,
+          "beforeHp": 110,
+          "damage": 7,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 103,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 20,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player2",
+          "time": 103245105180.96867,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 103,
+          "damage": 103,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 20,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/skunk",
+          "target": "player2",
+          "time": 103681701398.9887,
+          "wave": 1
+        },
+        {
+          "ability": "/abilities/entangle",
+          "afterHp": 39,
+          "beforeHp": 110,
+          "damage": 71,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 20,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 39,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/jungle_sprite",
+          "target": "player5",
+          "time": 105717091598.6257,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 39,
+          "damage": 39,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 20,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player5",
+          "time": 105825750342.259,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 20,
+          "damage": 20,
+          "isCrit": true,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/porcupine",
+          "target": "player4",
+          "time": 105825750342.259,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/skunk",
+          "target": "player3",
+          "time": 106698942778.29904,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 106698942778.29904,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    },
+    {
+      "logs": [
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/aquahorse",
+          "target": "player1",
+          "time": 112198942778.29904,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/alligator",
+          "target": "player2",
+          "time": 112677666182.55437,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/skunk",
+          "target": "player5",
+          "time": 112716184157.60939,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": false,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 110,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/rat",
+          "target": "player4",
+          "time": 112725969805.32607,
+          "wave": 1
+        },
+        {
+          "ability": "autoAttack",
+          "afterHp": 0,
+          "beforeHp": 110,
+          "damage": 110,
+          "isCrit": true,
+          "playersHp": [
+            {
+              "current": 0,
+              "hrid": "player1",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player2",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player3",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player4",
+              "max": 110
+            },
+            {
+              "current": 0,
+              "hrid": "player5",
+              "max": 110
+            }
+          ],
+          "source": "/monsters/aquahorse",
+          "target": "player3",
+          "time": 114698942778.29904,
+          "wave": 1
+        }
+      ],
+      "simulationTime": 114698942778.29904,
+      "timestamp": "<wall-clock-omitted>",
+      "wave": 1
+    }
+  ],
+  "zoneName": "/actions/combat/chimerical_den"
+}

@@ -1,33 +1,43 @@
 {
-  "fixtureVersion": 1,
-  "scenarioId": "dungeon-wipe-restart",
-  "description": "Five level-1 unarmed players enter Chimerical Den at difficulty 2 for 120 simulated seconds, requiring a recorded wipe and dungeon restart failure count.",
-  "contractVersion": 1,
-  "referenceEngine": "reference-js",
-  "referenceEngineVersion": "1.0.28",
-  "dataVersion": "repository-v1.0.28",
-  "status": "request-baseline",
   "assertions": {
-    "resultEquals": {
-      "numberOfPlayers": 5,
-      "isDungeon": true,
-      "isLabyrinth": false
-    },
-    "resultMinimums": {
-      "wipeEvents.length": 1,
-      "dungeonsFailed": 1
-    },
     "minimumRandomDraws": 20,
     "minimumTraceEvents": 20,
     "requiredTraceEventTypes": [
       "combatStart",
       "autoAttack"
-    ]
+    ],
+    "resultEquals": {
+      "isDungeon": true,
+      "isLabyrinth": false,
+      "numberOfPlayers": 5
+    },
+    "resultMinimums": {
+      "dungeonsFailed": 1,
+      "wipeEvents.length": 1
+    }
   },
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "Five level-1 unarmed players enter Chimerical Den at difficulty 2 for 120 simulated seconds, requiring a recorded wipe and dungeon restart failure count.",
   "expectedFiles": [
-    "request.json"
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
   ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "a66eebb1a63e67b5d942716a4c4b8de75e9280d210b6729805501ee6cf874d5b",
+    "expectedTraceArchiveSha256": "5157883c051c8cafc8c4c9fd77e3142eacfb5ede735434e1d022c3466f39a7da",
+    "expectedTraceSha256": "5c7221bcb619c858d93ab971485d606a2e53bf88d5f8cd292a9f96dea7268c53"
+  },
   "notes": [
     "This fixture protects the dungeon wipe log, selective event cancellation, three-second restart, and failed-run bookkeeping paths."
-  ]
+  ],
+  "randomDraws": 980,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "dungeon-wipe-restart",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
 }
