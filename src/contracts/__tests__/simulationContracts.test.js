@@ -3,6 +3,8 @@ import {
     SIMULATION_CONTRACT_VERSION,
     SIMULATION_ENGINE_REFERENCE_JS,
     SIMULATION_STATISTICS_FAST,
+    SIMULATION_TRACE_DETAIL_BASIC,
+    SIMULATION_TRACE_DETAIL_COMBAT,
     createEngineCapabilitiesV1,
     createGameDataManifestV1,
     createSimulationErrorV1,
@@ -49,7 +51,11 @@ describe("simulationContracts", () => {
             options: {
                 statisticsMode: SIMULATION_STATISTICS_FAST,
                 enableHpMpVisualization: true,
-                trace: { enabled: true, maxEntries: 500 },
+                trace: {
+                    enabled: true,
+                    maxEntries: 500,
+                    detailLevel: SIMULATION_TRACE_DETAIL_COMBAT,
+                },
                 extra: { mooPass: true },
             },
         });
@@ -67,10 +73,26 @@ describe("simulationContracts", () => {
             options: {
                 statisticsMode: SIMULATION_STATISTICS_FAST,
                 enableHpMpVisualization: true,
-                trace: { enabled: true, maxEntries: 500 },
+                trace: {
+                    enabled: true,
+                    maxEntries: 500,
+                    detailLevel: SIMULATION_TRACE_DETAIL_COMBAT,
+                },
                 extra: { mooPass: true },
             },
         });
+    });
+
+    it("defaults trace detail to basic", () => {
+        const request = normalizeSimulationRequestV1({
+            requestId: "basic-trace",
+            players: [playerFixture()],
+            target: { kind: "zone", zoneHrid: "/actions/combat/fly", difficultyTier: 0 },
+            simulationTimeLimit: 1,
+            options: { trace: { enabled: true } },
+        });
+
+        expect(request.options.trace.detailLevel).toBe(SIMULATION_TRACE_DETAIL_BASIC);
     });
 
     it("round-trips the legacy labyrinth worker message", () => {
@@ -86,7 +108,7 @@ describe("simulationContracts", () => {
             },
             simulationTimeLimit: 2e12,
             random: { type: "sequence", values: [0.1, 0.2], loop: true },
-            trace: { enabled: true, maxEntries: 1000 },
+            trace: { enabled: true, maxEntries: 1000, detailLevel: SIMULATION_TRACE_DETAIL_COMBAT },
             extra: { enableHpMpVisualization: false, comExp: 2 },
         };
 
@@ -119,6 +141,13 @@ describe("simulationContracts", () => {
             simulationTimeLimit: 1,
             random: { type: "sequence", values: [1] },
         })).toThrow(/sequence random/i);
+        expect(() => normalizeSimulationRequestV1({
+            requestId: "bad-trace-detail",
+            players: [playerFixture()],
+            target: { kind: "zone", zoneHrid: "/zone", difficultyTier: 0 },
+            simulationTimeLimit: 1,
+            options: { trace: { detailLevel: "verbose-ish" } },
+        })).toThrow(/trace detail/i);
     });
 
     it("creates JSON-safe progress, result, and error envelopes", () => {
