@@ -1,0 +1,95 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-equipment-passives-reflect-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 500,
+      "intelligenceLevel": 300,
+      "attackLevel": 50,
+      "meleeLevel": 50,
+      "defenseLevel": 500,
+      "rangedLevel": 50,
+      "magicLevel": 50,
+      "equipment": {
+        "/equipment_types/two_hand": {
+          "hrid": "/items/griffin_bulwark",
+          "enhancementLevel": 0
+        }
+      },
+      "food": [],
+      "drinks": [],
+      "abilities": [
+        { "hrid": "/abilities/spike_shell", "level": 1, "triggers": [] },
+        { "hrid": "/abilities/retribution", "level": 1, "triggers": [] }
+      ],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player2",
+      "staminaLevel": 500,
+      "intelligenceLevel": 300,
+      "attackLevel": 50,
+      "meleeLevel": 50,
+      "defenseLevel": 500,
+      "rangedLevel": 50,
+      "magicLevel": 50,
+      "equipment": {
+        "/equipment_types/main_hand": {
+          "hrid": "/items/furious_spear",
+          "enhancementLevel": 0
+        }
+      },
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player3",
+      "staminaLevel": 500,
+      "intelligenceLevel": 300,
+      "attackLevel": 50,
+      "meleeLevel": 50,
+      "defenseLevel": 500,
+      "rangedLevel": 50,
+      "magicLevel": 50,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "zone",
+    "zoneHrid": "/actions/combat/sorcerers_tower",
+    "difficultyTier": 0
+  },
+  "simulationTimeLimit": 45000000000,
+  "random": {
+    "type": "sequence",
+    "values": [0],
+    "loop": true
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 50000,
+      "detailLevel": "combat"
+    },
+    "extra": {}
+  }
+}
