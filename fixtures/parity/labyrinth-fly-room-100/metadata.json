@@ -1,0 +1,31 @@
+{
+  "fixtureVersion": 1,
+  "scenarioId": "labyrinth-fly-room-100",
+  "description": "One level-20 unarmed player fights a room-level-100 Fly in Labyrinth mode for 60 simulated seconds.",
+  "contractVersion": 1,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "dataVersion": "repository-v1.0.28",
+  "status": "request-baseline",
+  "assertions": {
+    "resultEquals": {
+      "numberOfPlayers": 1,
+      "isDungeon": false,
+      "isLabyrinth": true,
+      "labyrinthName": "/monsters/fly",
+      "roomLevel": 100
+    },
+    "minimumRandomDraws": 20,
+    "minimumTraceEvents": 20,
+    "requiredTraceEventTypes": [
+      "combatStart",
+      "autoAttack"
+    ]
+  },
+  "expectedFiles": [
+    "request.json"
+  ],
+  "notes": [
+    "This fixture locks the Labyrinth target DTO, room-level monster scaling, timeout bookkeeping, and Labyrinth-specific result fields."
+  ]
+}
