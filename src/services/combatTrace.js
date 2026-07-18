@@ -1,7 +1,149 @@
-function unitSnapshot(unit, index, group) {
+const TRACE_DETAIL_BASIC = "basic";
+const TRACE_DETAIL_COMBAT = "combat";
+
+const COMBAT_DETAIL_FIELDS = [
+    "staminaLevel",
+    "intelligenceLevel",
+    "attackLevel",
+    "meleeLevel",
+    "defenseLevel",
+    "rangedLevel",
+    "magicLevel",
+    "stabAccuracyRating",
+    "slashAccuracyRating",
+    "smashAccuracyRating",
+    "rangedAccuracyRating",
+    "magicAccuracyRating",
+    "stabMaxDamage",
+    "slashMaxDamage",
+    "smashMaxDamage",
+    "rangedMaxDamage",
+    "magicMaxDamage",
+    "stabEvasionRating",
+    "slashEvasionRating",
+    "smashEvasionRating",
+    "rangedEvasionRating",
+    "magicEvasionRating",
+    "defensiveMaxDamage",
+    "totalArmor",
+    "totalWaterResistance",
+    "totalNatureResistance",
+    "totalFireResistance",
+    "abilityHaste",
+    "tenacity",
+    "totalThreat",
+];
+
+const COMBAT_STAT_FIELDS = [
+    "combatStyleHrid",
+    "damageType",
+    "attackInterval",
+    "autoAttackDamage",
+    "abilityDamage",
+    "criticalRate",
+    "criticalDamage",
+    "physicalAmplify",
+    "waterAmplify",
+    "natureAmplify",
+    "fireAmplify",
+    "healingAmplify",
+    "physicalThorns",
+    "elementalThorns",
+    "lifeSteal",
+    "hpRegenPer10",
+    "mpRegenPer10",
+    "armorPenetration",
+    "waterPenetration",
+    "naturePenetration",
+    "firePenetration",
+    "manaLeech",
+    "castSpeed",
+    "threat",
+    "parry",
+    "mayhem",
+    "pierce",
+    "curse",
+    "ripple",
+    "bloom",
+    "blaze",
+    "weaken",
+    "fury",
+    "foodHaste",
+    "drinkConcentration",
+    "damageTaken",
+    "attackSpeed",
+    "retaliation",
+];
+
+function normalizeTraceDetailLevel(value) {
+    return value === TRACE_DETAIL_COMBAT ? TRACE_DETAIL_COMBAT : TRACE_DETAIL_BASIC;
+}
+
+function jsonScalar(value) {
+    if (value == null || typeof value === "string" || typeof value === "boolean") {
+        return value ?? null;
+    }
+    const number = Number(value);
+    return Number.isFinite(number) ? number : String(value);
+}
+
+function pickFields(source, fields) {
+    const result = {};
+    for (const field of fields) {
+        if (source?.[field] !== undefined) {
+            result[field] = jsonScalar(source[field]);
+        }
+    }
+    return result;
+}
+
+function buffSnapshots(unit) {
+    return Object.entries(unit?.combatBuffs || {})
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, buff]) => ({
+            key,
+            uniqueHrid: String(buff?.uniqueHrid || key),
+            typeHrid: String(buff?.typeHrid || ""),
+            ratioBoost: Number(buff?.ratioBoost || 0),
+            flatBoost: Number(buff?.flatBoost || 0),
+            startTime: jsonScalar(buff?.startTime),
+            duration: Number(buff?.duration || 0),
+        }));
+}
+
+function cooldownSnapshots(values) {
+    return (Array.isArray(values) ? values : [])
+        .map((value, index) => value ? {
+            index,
+            hrid: String(value.hrid || ""),
+            lastUsed: jsonScalar(value.lastUsed),
+            manaCost: value.manaCost == null ? null : Number(value.manaCost),
+        } : null)
+        .filter(Boolean);
+}
+
+function combatStateSnapshot(unit) {
+    const combatDetails = unit?.combatDetails || {};
+    return {
+        outOfMana: unit?.isOutOfMana === true,
+        controlExpireTimes: {
+            stun: jsonScalar(unit?.stunExpireTime),
+            blind: jsonScalar(unit?.blindExpireTime),
+            silence: jsonScalar(unit?.silenceExpireTime),
+        },
+        derived: pickFields(combatDetails, COMBAT_DETAIL_FIELDS),
+        stats: pickFields(combatDetails.combatStats || {}, COMBAT_STAT_FIELDS),
+        buffs: buffSnapshots(unit),
+        abilities: cooldownSnapshots(unit?.abilities),
+        food: cooldownSnapshots(unit?.food),
+        drinks: cooldownSnapshots(unit?.drinks),
+    };
+}
+
+function unitSnapshot(unit, index, group, detailLevel) {
     if (!unit) return null;
     const hrid = String(unit.hrid || "");
-    return {
+    const snapshot = {
         key: `${group}:${index}:${hrid}`,
         hrid,
         index,
@@ -14,6 +156,10 @@ function unitSnapshot(unit, index, group) {
         blinded: unit.isBlinded === true,
         silenced: unit.isSilenced === true,
     };
+    if (detailLevel === TRACE_DETAIL_COMBAT) {
+        snapshot.combatState = combatStateSnapshot(unit);
+    }
+    return snapshot;
 }
 
 function eventSnapshot(event) {
@@ -43,18 +189,23 @@ function eventQueueSize(simulator) {
     return heap?.toArray?.().length || 0;
 }
 
-function simulationSnapshot(simulator) {
+function simulationSnapshot(simulator, detailLevel) {
     const players = Array.isArray(simulator?.players) ? simulator.players : [];
     const enemies = Array.isArray(simulator?.enemies) ? simulator.enemies : [];
     return {
         simulationTime: Number(simulator?.simulationTime || 0),
-        players: players.map((unit, index) => unitSnapshot(unit, index, "player")),
-        enemies: enemies.map((unit, index) => unitSnapshot(unit, index, "enemy")),
+        players: players.map((unit, index) => unitSnapshot(unit, index, "player", detailLevel)),
+        enemies: enemies.map((unit, index) => unitSnapshot(unit, index, "enemy", detailLevel)),
         eventQueueSize: eventQueueSize(simulator),
         encountersKilled: Number(simulator?.zone?.encountersKilled || 0),
         dungeonsCompleted: Number(simulator?.zone?.dungeonsCompleted || 0),
         dungeonsFailed: Number(simulator?.zone?.dungeonsFailed || 0),
     };
+}
+
+function valuesEqual(left, right) {
+    if (Object.is(left, right)) return true;
+    return JSON.stringify(left) === JSON.stringify(right);
 }
 
 function diffUnits(beforeUnits, afterUnits) {
@@ -79,9 +230,10 @@ function diffUnits(beforeUnits, afterUnits) {
             "stunned",
             "blinded",
             "silenced",
+            "combatState",
         ]) {
-            if (before[field] !== after[field]) {
-                patch[field] = { before: before[field], after: after[field] };
+            if (!valuesEqual(before[field], after[field])) {
+                patch[field] = { before: before[field] ?? null, after: after[field] ?? null };
             }
         }
         if (Object.keys(patch).length > 0) {
@@ -111,7 +263,7 @@ function stateDiff(before, after) {
     };
 }
 
-export function attachCombatTrace(simulator, { maxEntries = 100_000 } = {}) {
+export function attachCombatTrace(simulator, { maxEntries = 100_000, detailLevel = TRACE_DETAIL_BASIC } = {}) {
     if (!simulator || typeof simulator.processEvent !== "function") {
         throw new TypeError("attachCombatTrace requires a combat simulator instance.");
     }
@@ -119,6 +271,7 @@ export function attachCombatTrace(simulator, { maxEntries = 100_000 } = {}) {
         return simulator.__combatTraceController;
     }
 
+    const normalizedDetailLevel = normalizeTraceDetailLevel(detailLevel);
     const events = [];
     const orphanRandomDraws = [];
     let truncatedEntries = 0;
@@ -156,7 +309,7 @@ export function attachCombatTrace(simulator, { maxEntries = 100_000 } = {}) {
     }
 
     simulator.processEvent = async (event) => {
-        const before = simulationSnapshot(simulator);
+        const before = simulationSnapshot(simulator, normalizedDetailLevel);
         const entry = {
             sequence: sequence++,
             event: eventSnapshot(event),
@@ -175,7 +328,7 @@ export function attachCombatTrace(simulator, { maxEntries = 100_000 } = {}) {
             entry.error = error?.message || String(error);
             throw error;
         } finally {
-            entry.after = simulationSnapshot(simulator);
+            entry.after = simulationSnapshot(simulator, normalizedDetailLevel);
             entry.changes = stateDiff(entry.before, entry.after);
             activeEntry = null;
             if (events.length < Math.max(1, Number(maxEntries) || 1)) {
@@ -188,6 +341,7 @@ export function attachCombatTrace(simulator, { maxEntries = 100_000 } = {}) {
 
     const controller = {
         version: 1,
+        detailLevel: normalizedDetailLevel,
         recordRandomDraw(draw) {
             const normalized = {
                 index: Number(draw?.index || 0),
@@ -197,12 +351,16 @@ export function attachCombatTrace(simulator, { maxEntries = 100_000 } = {}) {
             else orphanRandomDraws.push(normalized);
         },
         getTrace() {
-            return {
+            const trace = {
                 version: 1,
                 events,
                 orphanRandomDraws,
                 truncatedEntries,
             };
+            if (normalizedDetailLevel === TRACE_DETAIL_COMBAT) {
+                trace.detailLevel = TRACE_DETAIL_COMBAT;
+            }
+            return trace;
         },
         detach() {
             simulator.processEvent = originalProcessEvent;
