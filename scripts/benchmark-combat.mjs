@@ -3,6 +3,7 @@ import process from "node:process";
 import { createServer } from "vite";
 
 const ONE_SECOND = 1e9;
+const FIXTURE_URL = new URL("../fixtures/parity/zone-solo-basic/request.json", import.meta.url);
 
 function parseArguments(argv) {
     const options = {
@@ -47,19 +48,6 @@ function percentile(sortedValues, ratio) {
     return sortedValues[Math.max(0, index)];
 }
 
-function createPlayer(Player) {
-    const player = new Player();
-    player.hrid = "player1";
-    player.staminaLevel = 20;
-    player.intelligenceLevel = 20;
-    player.attackLevel = 20;
-    player.meleeLevel = 20;
-    player.defenseLevel = 20;
-    player.rangedLevel = 20;
-    player.magicLevel = 20;
-    return player;
-}
-
 async function loadModules() {
     const vite = await createServer({
         appType: "custom",
@@ -67,11 +55,12 @@ async function loadModules() {
         server: { middlewareMode: true },
     });
     try {
-        const [combatModule, playerModule, zoneModule, randomModule] = await Promise.all([
+        const [combatModule, playerModule, zoneModule, randomModule, contractModule] = await Promise.all([
             vite.ssrLoadModule("/src/combatsimulator/combatSimulator.js"),
             vite.ssrLoadModule("/src/combatsimulator/player.js"),
             vite.ssrLoadModule("/src/combatsimulator/zone.js"),
             vite.ssrLoadModule("/src/shared/randomSource.js"),
+            vite.ssrLoadModule("/src/contracts/simulationContracts.js"),
         ]);
         return {
             vite,
@@ -80,6 +69,7 @@ async function loadModules() {
             Zone: zoneModule.default,
             createSeededRandomSource: randomModule.createSeededRandomSource,
             withPatchedMathRandom: randomModule.withPatchedMathRandom,
+            normalizeSimulationRequestV1: contractModule.normalizeSimulationRequestV1,
         };
     } catch (error) {
         await vite.close();
@@ -87,12 +77,13 @@ async function loadModules() {
     }
 }
 
-async function runScenario(modules, options, iteration) {
+async function runScenario(modules, request, options, iteration) {
+    const players = request.players.map((player) => modules.Player.createFromDTO(structuredClone(player)));
     const simulator = new modules.CombatSimulator(
-        [createPlayer(modules.Player)],
-        new modules.Zone("/actions/combat/fly", 0),
+        players,
+        new modules.Zone(request.target.zoneHrid, request.target.difficultyTier),
         null,
-        { enableHpMpVisualization: false },
+        { enableHpMpVisualization: request.options.enableHpMpVisualization },
     );
 
     let processedEvents = 0;
@@ -120,6 +111,11 @@ async function runScenario(modules, options, iteration) {
         dungeonsCompleted: Number(result.dungeonsCompleted || 0),
         dungeonsFailed: Number(result.dungeonsFailed || 0),
     };
+    const workloadFingerprint = JSON.stringify({
+        processedEvents,
+        randomDraws: randomSource.drawCount,
+        resultSummary,
+    });
 
     return {
         iteration,
@@ -129,7 +125,7 @@ async function runScenario(modules, options, iteration) {
         eventsPerSecond: elapsedMs > 0 ? processedEvents / (elapsedMs / 1000) : 0,
         peakEventQueueLength,
         resultSummary,
-        resultFingerprint: JSON.stringify(resultSummary),
+        workloadFingerprint,
     };
 }
 
@@ -144,21 +140,30 @@ async function main() {
         return;
     }
 
-    const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+    const [packageJson, rawFixture] = await Promise.all([
+        readFile(new URL("../package.json", import.meta.url), "utf8").then(JSON.parse),
+        readFile(FIXTURE_URL, "utf8").then(JSON.parse),
+    ]);
     const modules = await loadModules();
     try {
+        const request = modules.normalizeSimulationRequestV1({
+            ...rawFixture,
+            random: { type: "seeded", seed: options.seed },
+            simulationTimeLimit: options.simulationSeconds * ONE_SECOND,
+        });
+
         for (let index = 0; index < options.warmup; index++) {
-            await runScenario(modules, options, `warmup-${index}`);
+            await runScenario(modules, request, options, `warmup-${index}`);
         }
 
         const runs = [];
         for (let index = 0; index < options.iterations; index++) {
-            runs.push(await runScenario(modules, options, index));
+            runs.push(await runScenario(modules, request, options, index));
         }
 
-        const fingerprints = new Set(runs.map((run) => run.resultFingerprint));
+        const fingerprints = new Set(runs.map((run) => run.workloadFingerprint));
         if (fingerprints.size !== 1) {
-            throw new Error("Benchmark iterations produced different deterministic result summaries.");
+            throw new Error("Benchmark iterations produced different deterministic workloads.");
         }
 
         const elapsedValues = runs.map((run) => run.elapsedMs).sort((left, right) => left - right);
@@ -173,16 +178,17 @@ async function main() {
             },
             scenario: {
                 id: "zone-solo-basic",
-                contractVersion: 1,
+                fixture: "fixtures/parity/zone-solo-basic/request.json",
+                contractVersion: request.contractVersion,
                 engine: "reference-js",
                 engineVersion: packageJson.version,
-                dataVersion: "unversioned",
-                target: { kind: "zone", zoneHrid: "/actions/combat/fly", difficultyTier: 0 },
+                dataVersion: request.dataVersion,
+                target: request.target,
                 simulationSeconds: options.simulationSeconds,
                 seed: options.seed,
-                statisticsMode: "full",
+                statisticsMode: request.options.statisticsMode,
                 trace: false,
-                hpMpVisualization: false,
+                hpMpVisualization: request.options.enableHpMpVisualization,
             },
             summary: {
                 iterations: options.iterations,
@@ -192,7 +198,7 @@ async function main() {
                 p90Ms: percentile(elapsedValues, 0.9),
                 medianEventsPerSecond: percentile(eventRates, 0.5),
                 p90EventsPerSecond: percentile(eventRates, 0.9),
-                resultFingerprint: runs[0]?.resultFingerprint || "",
+                workloadFingerprint: runs[0]?.workloadFingerprint || "",
             },
             runs,
         };
