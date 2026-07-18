@@ -102,7 +102,30 @@ jobs:
         run: exit 1
 
       - name: Run Clippy
-        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+        id: clippy
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          cargo clippy --workspace --all-targets --locked -- -D warnings > tmp/ci/clippy.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          cat tmp/ci/clippy.log
+          exit "$status"
+
+      - name: Upload Clippy diagnostics
+        if: steps.clippy.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: clippy-diagnostics
+          path: tmp/ci/clippy.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after Clippy diagnostics
+        if: steps.clippy.outcome == 'failure'
+        run: exit 1
 
       - name: Validate committed request fixtures
         run: cargo run --locked -p mwi-sim-cli -- validate-fixtures fixtures/parity
