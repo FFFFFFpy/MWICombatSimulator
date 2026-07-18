@@ -1,4 +1,4 @@
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
 import { createServer } from "vite";
 
@@ -107,28 +107,34 @@ async function runScenario(modules, options, iteration) {
         return event;
     };
 
+    const randomSource = modules.createSeededRandomSource(options.seed);
     const startedAt = performance.now();
     const result = await modules.withPatchedMathRandom(
-        modules.createSeededRandomSource(`${options.seed}:${iteration}`),
+        randomSource,
         () => simulator.simulate(options.simulationSeconds * ONE_SECOND),
     );
     const elapsedMs = performance.now() - startedAt;
-
-    return {
-        iteration,
-        elapsedMs,
-        processedEvents,
-        eventsPerSecond: elapsedMs > 0 ? processedEvents / (elapsedMs / 1000) : 0,
-        peakEventQueueLength,
+    const resultSummary = {
         simulatedTime: Number(result.simulatedTime || 0),
         encounters: Number(result.encounters || 0),
         dungeonsCompleted: Number(result.dungeonsCompleted || 0),
         dungeonsFailed: Number(result.dungeonsFailed || 0),
     };
+
+    return {
+        iteration,
+        elapsedMs,
+        processedEvents,
+        randomDraws: randomSource.drawCount,
+        eventsPerSecond: elapsedMs > 0 ? processedEvents / (elapsedMs / 1000) : 0,
+        peakEventQueueLength,
+        resultSummary,
+        resultFingerprint: JSON.stringify(resultSummary),
+    };
 }
 
 function printHelp() {
-    console.log(`Usage: npm run benchmark:combat -- [options]\n\nOptions:\n  --iterations <n>          Measured iterations (default: 5)\n  --warmup <n>              Warm-up iterations (default: 1)\n  --simulation-seconds <n>  Simulated combat seconds (default: 600)\n  --seed <value>            Deterministic seed prefix\n  --output <path>           Write the JSON report to a file\n  --help                    Show this help`);
+    console.log(`Usage: npm run benchmark:combat -- [options]\n\nOptions:\n  --iterations <n>          Measured iterations (default: 5)\n  --warmup <n>              Warm-up iterations (default: 1)\n  --simulation-seconds <n>  Simulated combat seconds (default: 600)\n  --seed <value>            Deterministic seed\n  --output <path>           Write the JSON report to a file\n  --help                    Show this help`);
 }
 
 async function main() {
@@ -138,6 +144,7 @@ async function main() {
         return;
     }
 
+    const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
     const modules = await loadModules();
     try {
         for (let index = 0; index < options.warmup; index++) {
@@ -147,6 +154,11 @@ async function main() {
         const runs = [];
         for (let index = 0; index < options.iterations; index++) {
             runs.push(await runScenario(modules, options, index));
+        }
+
+        const fingerprints = new Set(runs.map((run) => run.resultFingerprint));
+        if (fingerprints.size !== 1) {
+            throw new Error("Benchmark iterations produced different deterministic result summaries.");
         }
 
         const elapsedValues = runs.map((run) => run.elapsedMs).sort((left, right) => left - right);
@@ -161,10 +173,13 @@ async function main() {
             },
             scenario: {
                 id: "zone-solo-basic",
+                contractVersion: 1,
                 engine: "reference-js",
+                engineVersion: packageJson.version,
+                dataVersion: "unversioned",
                 target: { kind: "zone", zoneHrid: "/actions/combat/fly", difficultyTier: 0 },
                 simulationSeconds: options.simulationSeconds,
-                seedPrefix: options.seed,
+                seed: options.seed,
                 statisticsMode: "full",
                 trace: false,
                 hpMpVisualization: false,
@@ -177,6 +192,7 @@ async function main() {
                 p90Ms: percentile(elapsedValues, 0.9),
                 medianEventsPerSecond: percentile(eventRates, 0.5),
                 p90EventsPerSecond: percentile(eventRates, 0.9),
+                resultFingerprint: runs[0]?.resultFingerprint || "",
             },
             runs,
         };
