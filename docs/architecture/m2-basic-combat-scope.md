@@ -3,7 +3,7 @@
 ## 状态
 
 - 基线：`agent/rust-core-foundation`
-- 实施状态：代码已接通，受控验证将生成 `m2-validation-report.md` 并在提交报告后自删除临时工作流。
+- 实施状态：首轮验证仅发现派生攻击间隔的 1 ULP 数据表达差异；已改为保存基础间隔和攻击等级并按 reference 公式计算。
 - 目标：建立一个可执行、可拒绝越界输入、可与 JavaScript reference engine 对照的最小普通攻击闭环。
 - 非目标：完整 `SimResult`、技能、Buff、Trigger、消耗品、副本、迷宫和 UI 接入。
 
@@ -62,6 +62,17 @@ M2 只接受满足以下条件的请求：
 - CLI：`simulate-basic <request.json>`；
 - WASM：`simulateBasicJson`；
 - 机器可读能力报告只声明单人 tier-0 Fly 与 `basic_combat_result`。
+
+## 首轮验证结果
+
+除 Fly 数据切片的派生攻击间隔断言外，其余检查均已通过，包括：
+
+- `zone-solo-basic` 的 encounters、deaths、攻击直方图、时间字段和 145 次随机消费；
+- 确定性重放；
+- Clippy；
+- 14 个 Rust 请求 DTO；
+- WASM target；
+- JavaScript 全量测试、14 组黄金、基准与生产构建。
 
 ## 验证
 
