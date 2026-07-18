@@ -1,3 +1,5 @@
+let activeMathRandomPatch = null;
+
 function normalizeUnitRandom(value) {
     const normalized = Number(value);
     if (!Number.isFinite(normalized) || normalized < 0 || normalized >= 1) {
@@ -119,12 +121,22 @@ export async function withPatchedMathRandom(source, callback) {
     if (typeof source.next !== "function") {
         throw new TypeError("Random source must expose next().");
     }
+    if (activeMathRandomPatch) {
+        throw new Error(
+            "Concurrent deterministic simulations are not supported in the same JavaScript realm; use separate Workers.",
+        );
+    }
 
+    const patchToken = Symbol("math-random-patch");
     const previousRandom = Math.random;
+    activeMathRandomPatch = patchToken;
     Math.random = () => normalizeUnitRandom(source.next());
     try {
         return await callback();
     } finally {
-        Math.random = previousRandom;
+        if (activeMathRandomPatch === patchToken) {
+            Math.random = previousRandom;
+            activeMathRandomPatch = null;
+        }
     }
 }
