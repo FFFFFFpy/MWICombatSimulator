@@ -1,29 +1,42 @@
 {
-  "fixtureVersion": 1,
-  "scenarioId": "equipment-passives-reflect",
-  "description": "A three-player Sorcerer's Tower party combines Griffin Bulwark weaken, Furious Spear fury, Spike Shell thorns, and Retribution.",
-  "contractVersion": 1,
-  "referenceEngine": "reference-js",
-  "referenceEngineVersion": "1.0.28",
-  "dataVersion": "repository-v1.0.28",
-  "status": "request-baseline",
   "assertions": {
-    "resultEquals": {
-      "numberOfPlayers": 3,
-      "isDungeon": false,
-      "isLabyrinth": false
-    },
     "minimumRandomDraws": 50,
     "minimumTraceEvents": 40,
     "requiredTraceEventTypes": [
       "combatStart",
       "abilityCastEndEvent",
       "autoAttack"
-    ]
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": false,
+      "numberOfPlayers": 3
+    }
   },
-  "expectedFiles": ["request.json"],
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "A three-player Sorcerer's Tower party combines Griffin Bulwark weaken, Furious Spear fury, Spike Shell thorns, and Retribution.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64.part-000",
+    "expected-trace.json.gz.b64.part-001"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "851634835f4f64328654d940c9c7bd61db1d68fb5557b04f1d145738c1c71565",
+    "expectedTraceArchiveSha256": "1ad3c7b946f329debd26f09b68e1ea7a937972e16c05007a2b0b421673a8697d",
+    "expectedTraceSha256": "5f83c1889901c584bbe5188a42b295c68a45e23553b61fd1321bf795d5179c1c"
+  },
   "notes": [
     "Regal Sword is deliberately excluded because a successful parry redirects the hit and can prevent Griffin Bulwark weaken from applying.",
     "The detailed trace protects active buffs and derived passive stats; final attacks protect thorns and retaliation damage."
-  ]
+  ],
+  "randomDraws": 578,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "equipment-passives-reflect",
+  "status": "golden",
+  "traceArchiveParts": 2,
+  "traceEncoding": "gzip+base64"
 }

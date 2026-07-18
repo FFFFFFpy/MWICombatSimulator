@@ -1,0 +1,181 @@
+{
+  "attacks": {
+    "/monsters/novice_sorcerer": {
+      "player1": {
+        "/abilities/water_strike": {
+          "6": 12,
+          "28": 11,
+          "29": 12,
+          "30": 12
+        }
+      }
+    },
+    "player1": {
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "1": 9
+        },
+        "elementalThorns": {
+          "19": 1,
+          "30": 1,
+          "46": 1,
+          "118": 40
+        },
+        "retaliation": {
+          "16": 11,
+          "17": 8,
+          "39": 5,
+          "164": 1,
+          "174": 3,
+          "256": 12,
+          "miss": 3
+        }
+      }
+    },
+    "player2": {
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "1": 9,
+          "118": 1,
+          "122": 1,
+          "125": 1,
+          "129": 1
+        }
+      }
+    },
+    "player3": {
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "1": 9
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0,
+    "player2": 0,
+    "player3": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {
+    "/monsters/novice_sorcerer": 12
+  },
+  "debuffOnLevelGap": {
+    "player1": 0,
+    "player2": 0,
+    "player3": 0
+  },
+  "difficultyTier": 0,
+  "dropRateMultiplier": {
+    "player1": 1,
+    "player2": 1,
+    "player3": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 3,
+  "experienceGained": {
+    "player1": {
+      "attack": 59.531937734836276,
+      "defense": 205.81041331186256,
+      "intelligence": 59.531937734836276,
+      "magic": 0,
+      "melee": 59.531937734836276,
+      "ranged": 0,
+      "stamina": 59.531937734836276
+    },
+    "player2": {
+      "attack": 187.10037573805687,
+      "defense": 59.531937734836276,
+      "intelligence": 59.531937734836276,
+      "magic": 0,
+      "melee": 59.531937734836276,
+      "ranged": 0,
+      "stamina": 59.531937734836276
+    },
+    "player3": {
+      "attack": 59.531937734836276,
+      "defense": 59.531937734836276,
+      "intelligence": 59.531937734836276,
+      "magic": 0,
+      "melee": 187.10037573805687,
+      "ranged": 0,
+      "stamina": 59.531937734836276
+    }
+  },
+  "hitpointsGained": {
+    "player1": {
+      "regen": 204
+    },
+    "player2": {
+      "regen": 0
+    },
+    "player3": {
+      "regen": 0
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": false,
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 40782608695.65217,
+  "manaUsed": {
+    "player1": {
+      "/abilities/retribution": 130,
+      "/abilities/spike_shell": 130
+    },
+    "player2": {},
+    "player3": {}
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 124
+    },
+    "player2": {
+      "regen": 0
+    },
+    "player3": {
+      "regen": 0
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 3,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {
+    "player1": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    }
+  },
+  "rareFindMultiplier": {
+    "player1": 1,
+    "player2": 1,
+    "player3": 1
+  },
+  "simulatedTime": 46514316012.72534,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 12,
+      "name": "/monsters/novice_sorcerer",
+      "spawnedAt": 43782608695.65217,
+      "timeSpentAlive": 136231884057.971
+    }
+  ],
+  "wipeEvents": [],
+  "zoneName": "/actions/combat/sorcerers_tower"
+}

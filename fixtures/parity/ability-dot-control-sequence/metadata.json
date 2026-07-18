@@ -1,18 +1,5 @@
 {
-  "fixtureVersion": 1,
-  "scenarioId": "ability-dot-control-sequence",
-  "description": "A low-damage, high-survivability caster uses Firestorm, Nature's Veil, Silencing Shot, and Stunning Blow against Crystal Colossus with a looping zero random sequence.",
-  "contractVersion": 1,
-  "referenceEngine": "reference-js",
-  "referenceEngineVersion": "1.0.28",
-  "dataVersion": "repository-v1.0.28",
-  "status": "request-baseline",
   "assertions": {
-    "resultEquals": {
-      "numberOfPlayers": 1,
-      "isDungeon": false,
-      "isLabyrinth": true
-    },
     "minimumRandomDraws": 20,
     "minimumTraceEvents": 20,
     "requiredTraceEventTypes": [
@@ -21,11 +8,36 @@
       "blindExpiration",
       "silenceExpiration",
       "stunExpiration"
-    ]
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": true,
+      "numberOfPlayers": 1
+    }
   },
-  "expectedFiles": ["request.json"],
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "A low-damage, high-survivability caster uses Firestorm, Nature's Veil, Silencing Shot, and Stunning Blow against Crystal Colossus with a looping zero random sequence.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "e0a601e48b6e6f351e71c7419b5107ccf9f702513e13e3622693886b679585a8",
+    "expectedTraceArchiveSha256": "c5802fa4a7da30e5ae3bcf323a051def00799c5bce2c0ac4947c33cb02b9b217",
+    "expectedTraceSha256": "2c191996d403470eda85545629a2829e6e74973adabef600dfce59587a164dac"
+  },
   "notes": [
     "The looping zero sequence makes every positive status chance succeed and provides a cross-language deterministic fixture.",
     "Combat-detail trace is required to preserve control states, buffs, cooldowns, and derived stats."
-  ]
+  ],
+  "randomDraws": 131,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "ability-dot-control-sequence",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
 }

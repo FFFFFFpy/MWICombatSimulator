@@ -1,29 +1,41 @@
 {
-  "fixtureVersion": 1,
-  "scenarioId": "oom-yogurt-recovery",
-  "description": "A 120-MP player exhausts mana with two abilities, triggers Yogurt at 50 missing MP, recovers mana over time, and resumes casting.",
-  "contractVersion": 1,
-  "referenceEngine": "reference-js",
-  "referenceEngineVersion": "1.0.28",
-  "dataVersion": "repository-v1.0.28",
-  "status": "request-baseline",
   "assertions": {
-    "resultEquals": {
-      "numberOfPlayers": 1,
-      "isDungeon": false,
-      "isLabyrinth": true,
-      "playerRanOutOfMana.player1": true
-    },
     "minimumRandomDraws": 20,
     "minimumTraceEvents": 20,
     "requiredTraceEventTypes": [
       "abilityCastEndEvent",
       "consumableTick"
-    ]
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": true,
+      "numberOfPlayers": 1,
+      "playerRanOutOfMana.player1": true
+    }
   },
-  "expectedFiles": ["request.json"],
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "A 120-MP player exhausts mana with two abilities, triggers Yogurt at 50 missing MP, recovers mana over time, and resumes casting.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "b1c515a8fbcf1d81dd97a1235c42a5fe89c911fbb9b57e4655928a88057d243e",
+    "expectedTraceArchiveSha256": "5dc47bd8b0efd8979708a8e19eb2029118fecb1b14af1beb8fa0f1cde0cc69ae",
+    "expectedTraceSha256": "e15b8666f896bf2f588ae3ee028632ef0767753f4f285fb3c487e898f361c9bb"
+  },
   "notes": [
     "This protects OOM accounting, missing-MP triggers, recovery-over-time ticks, and later ability reuse.",
     "Yogurt is intentionally chosen instead of an instant restore to cover ConsumableTick scheduling."
-  ]
+  ],
+  "randomDraws": 226,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "oom-yogurt-recovery",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
 }

@@ -1,0 +1,80 @@
+{
+  "attacks": {
+    "player1": {
+      "/monsters/crystal_colossus": {
+        "autoAttack": {
+          "1": 10
+        },
+        "parry": {
+          "1": 2
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {},
+  "debuffOnLevelGap": {
+    "player1": 0
+  },
+  "dropRateMultiplier": {
+    "player1": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 0,
+  "experienceGained": {},
+  "hitpointsGained": {
+    "player1": {
+      "regen": 0
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": true,
+  "labyrinthName": "/monsters/crystal_colossus",
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 0,
+  "manaUsed": {
+    "player1": {}
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 0
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 1,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {},
+  "rareFindMultiplier": {
+    "player1": 1
+  },
+  "roomLevel": 100,
+  "simulatedTime": 15877192982.456137,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/crystal_colossus",
+      "spawnedAt": 0,
+      "timeSpentAlive": 0
+    }
+  ],
+  "wipeEvents": []
+}
