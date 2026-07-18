@@ -40,6 +40,15 @@ pub enum SimError {
     #[error("event handle is stale or already cancelled")]
     StaleEventHandle,
 
+    #[error("invalid embedded game data: {0}")]
+    InvalidGameData(String),
+
+    #[error("request is outside the M2 basic combat capability: {0}")]
+    UnsupportedBasicCombat(String),
+
+    #[error("basic combat event queue became empty before the simulation completed")]
+    SimulationQueueExhausted,
+
     #[error("invalid JSON request: {0}")]
     InvalidRequestJson(#[from] serde_json::Error),
 
