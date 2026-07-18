@@ -4,6 +4,8 @@ export const SIMULATION_ENGINE_RUST_WASM = "rust-wasm";
 export const SIMULATION_ENGINE_RUST_NATIVE = "rust-native";
 export const SIMULATION_STATISTICS_FULL = "full";
 export const SIMULATION_STATISTICS_FAST = "fast";
+export const SIMULATION_TRACE_DETAIL_BASIC = "basic";
+export const SIMULATION_TRACE_DETAIL_COMBAT = "combat";
 
 function isPlainObject(value) {
     return value != null && typeof value === "object" && !Array.isArray(value);
@@ -34,6 +36,16 @@ function normalizeStatisticsMode(value) {
     return value === SIMULATION_STATISTICS_FAST
         ? SIMULATION_STATISTICS_FAST
         : SIMULATION_STATISTICS_FULL;
+}
+
+function normalizeTraceDetailLevel(value) {
+    if (value == null || value === SIMULATION_TRACE_DETAIL_BASIC) {
+        return SIMULATION_TRACE_DETAIL_BASIC;
+    }
+    if (value === SIMULATION_TRACE_DETAIL_COMBAT) {
+        return SIMULATION_TRACE_DETAIL_COMBAT;
+    }
+    throw new Error(`Unsupported trace detail level: ${String(value)}`);
 }
 
 function assertSupportedContractVersion(input) {
@@ -126,6 +138,7 @@ export function normalizeSimulationRequestV1(input) {
             trace: {
                 enabled: traceInput.enabled === true,
                 maxEntries: Math.max(1, Math.trunc(finiteNumber(traceInput.maxEntries, 100_000))),
+                detailLevel: normalizeTraceDetailLevel(traceInput.detailLevel),
             },
             extra: cloneJsonValue(input.options?.extra, {}),
         },
