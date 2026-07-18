@@ -15,11 +15,12 @@
     "hrid": "/monsters/fly",
     "maxHitpoints": 50,
     "maxManapoints": 100,
-    "attackInterval": 3990024937,
+    "attackInterval": 3990024937.6558604,
     "smashAccuracyRating": 7.5,
     "smashMaxDamage": 7.5,
     "smashEvasionRating": 11,
     "totalArmor": 0.2,
+    "autoAttackDamage": -0.5,
     "experience": 10,
     "enrageTime": 180000000000
   }
