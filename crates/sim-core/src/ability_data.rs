@@ -285,7 +285,10 @@ fn validate_effect(hrid: &str, index: usize, effect: &AbilityEffectDataV1) -> Re
     }
     for (name, value) in [
         ("baseDamageFlat", effect.base_damage_flat),
-        ("baseDamageFlatLevelBonus", effect.base_damage_flat_level_bonus),
+        (
+            "baseDamageFlatLevelBonus",
+            effect.base_damage_flat_level_bonus,
+        ),
         ("baseDamageRatio", effect.base_damage_ratio),
         (
             "baseDamageRatioLevelBonus",
@@ -323,9 +326,7 @@ fn validate_effect(hrid: &str, index: usize, effect: &AbilityEffectDataV1) -> Re
     }
     if let Some(buffs) = &effect.buffs {
         if buffs.iter().any(|buff| !buff.is_object()) {
-            return Err(invalid(format!(
-                "{location}.buffs must contain objects"
-            )));
+            return Err(invalid(format!("{location}.buffs must contain objects")));
         }
     }
     Ok(())
@@ -408,18 +409,8 @@ fn direct_damage_issues(ability: &AbilityDataV1) -> Vec<DirectDamageAbilityIssue
         effect.hp_drain_ratio,
         "hpDrainRatio",
     );
-    reject_non_zero(
-        &mut issues,
-        "pierce",
-        effect.pierce_chance,
-        "pierceChance",
-    );
-    reject_non_zero(
-        &mut issues,
-        "blind",
-        effect.blind_chance,
-        "blindChance",
-    );
+    reject_non_zero(&mut issues, "pierce", effect.pierce_chance, "pierceChance");
+    reject_non_zero(&mut issues, "blind", effect.blind_chance, "blindChance");
     if effect.blind_duration != SimTime::ZERO {
         push_issue(&mut issues, "blind", "blindDuration is non-zero".into());
     }
@@ -430,18 +421,9 @@ fn direct_damage_issues(ability: &AbilityDataV1) -> Vec<DirectDamageAbilityIssue
         "silenceChance",
     );
     if effect.silence_duration != SimTime::ZERO {
-        push_issue(
-            &mut issues,
-            "silence",
-            "silenceDuration is non-zero".into(),
-        );
+        push_issue(&mut issues, "silence", "silenceDuration is non-zero".into());
     }
-    reject_non_zero(
-        &mut issues,
-        "stun",
-        effect.stun_chance,
-        "stunChance",
-    );
+    reject_non_zero(&mut issues, "stun", effect.stun_chance, "stunChance");
     if effect.stun_duration != SimTime::ZERO {
         push_issue(&mut issues, "stun", "stunDuration is non-zero".into());
     }
@@ -525,7 +507,12 @@ mod tests {
             report.counts.total_abilities
         );
         assert!(report.candidates.contains_key(AQUA_ARROW_HRID));
-        assert!(report.rejected.values().all(|entry| !entry.issues.is_empty()));
+        assert!(
+            report
+                .rejected
+                .values()
+                .all(|entry| !entry.issues.is_empty())
+        );
     }
 
     #[test]
@@ -547,10 +534,14 @@ mod tests {
         let snapshot = AbilityDataSnapshotV1::embedded().unwrap();
         let mut ability = snapshot.ability(AQUA_ARROW_HRID).unwrap().clone();
         let effect = &mut ability.ability_effects[0];
-        effect.extensions.insert("futureZero".into(), Value::from(0));
+        effect
+            .extensions
+            .insert("futureZero".into(), Value::from(0));
         assert!(direct_damage_issues(&ability).is_empty());
 
-        effect.extensions.insert("futureFeature".into(), Value::from(1));
+        effect
+            .extensions
+            .insert("futureFeature".into(), Value::from(1));
         assert!(
             direct_damage_issues(&ability)
                 .iter()
