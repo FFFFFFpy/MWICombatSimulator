@@ -8,6 +8,7 @@ on:
       - agent/rust-core-foundation
       - agent/rust-basic-combat
       - agent/rust-combat-data-snapshot
+      - agent/rust-auto-attack-capabilities
 
 permissions:
   contents: read
@@ -129,6 +130,29 @@ jobs:
 
       - name: Validate committed request fixtures
         run: cargo run --locked -p mwi-sim-cli -- validate-fixtures fixtures/parity
+
+      - name: Inspect data-derived auto-attack candidates
+        shell: bash
+        run: |
+          cargo run --locked -p mwi-sim-cli -- inspect-auto-attack-zones \
+            > tmp/ci/auto-attack-capabilities.json
+          node -e '
+            const fs = require("fs");
+            const value = JSON.parse(fs.readFileSync("tmp/ci/auto-attack-capabilities.json", "utf8"));
+            if (value.counts?.totalZones !== 55) process.exit(1);
+            if ((value.counts?.candidates ?? 0) < 1) process.exit(1);
+            if (!value.candidates?.["/actions/combat/fly"]) process.exit(1);
+            if ((value.counts?.candidates ?? 0) + (value.counts?.rejected ?? 0) !== value.counts.totalZones) process.exit(1);
+            if (Object.values(value.rejected ?? {}).some(entry => !Array.isArray(entry.issues) || entry.issues.length === 0)) process.exit(1);
+          '
+
+      - name: Upload auto-attack candidate report
+        uses: actions/upload-artifact@v4
+        with:
+          name: auto-attack-capability-report
+          path: tmp/ci/auto-attack-capabilities.json
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Run restricted basic combat fixture
         run: |
