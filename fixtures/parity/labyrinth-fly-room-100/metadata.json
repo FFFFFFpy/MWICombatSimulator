@@ -1,0 +1,41 @@
+{
+  "assertions": {
+    "minimumRandomDraws": 20,
+    "minimumTraceEvents": 20,
+    "requiredTraceEventTypes": [
+      "combatStart",
+      "autoAttack"
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": true,
+      "labyrinthName": "/monsters/fly",
+      "numberOfPlayers": 1,
+      "roomLevel": 100
+    }
+  },
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "One level-20 unarmed player fights a room-level-100 Fly in Labyrinth mode for 60 simulated seconds.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "5c12b9b8bb6375323c8c006024da456aa712ee8ea3530486b9bb18d2b8d84e6e",
+    "expectedTraceArchiveSha256": "29414f7446f49bb6c1356485e52808ec5ae486555aa042c4d2420d99ac4ed369",
+    "expectedTraceSha256": "748ccc187ab59b86ca70420a6136c2a388114bf1812286d5a6af2675ff29d994"
+  },
+  "notes": [
+    "This fixture locks the Labyrinth target DTO, room-level monster scaling, timeout bookkeeping, and Labyrinth-specific result fields."
+  ],
+  "randomDraws": 189,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "labyrinth-fly-room-100",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
+}

@@ -1,0 +1,27 @@
+{
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "One level-20 player with no equipment, abilities, food, drinks, house rooms, guild buffs, or achievements fights the Fly zone for 60 simulated seconds.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "99a229e9b0f124f9a6935c6fa94daf533eee539f76a5aba7f71d52c6f11da388",
+    "expectedTraceArchiveSha256": "81dd95387d67e641951bc4a41b49aabf77c088e14fa879386317598f90cf6201",
+    "expectedTraceSha256": "e9eee90e3542af764055deba8a1bcf4606c0d34d885afca22392f41896018d9b"
+  },
+  "notes": [
+    "The golden result and full event trace were generated explicitly from the reference JavaScript engine.",
+    "Ordinary tests and CI verify these files without overwriting them."
+  ],
+  "randomDraws": 145,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "zone-solo-basic",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
+}

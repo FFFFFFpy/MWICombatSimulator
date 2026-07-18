@@ -1,0 +1,116 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-dungeon-party-complete-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 2000,
+      "attackLevel": 2000,
+      "meleeLevel": 2000,
+      "defenseLevel": 2000,
+      "rangedLevel": 2000,
+      "magicLevel": 2000,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player2",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 2000,
+      "attackLevel": 2000,
+      "meleeLevel": 2000,
+      "defenseLevel": 2000,
+      "rangedLevel": 2000,
+      "magicLevel": 2000,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player3",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 2000,
+      "attackLevel": 2000,
+      "meleeLevel": 2000,
+      "defenseLevel": 2000,
+      "rangedLevel": 2000,
+      "magicLevel": 2000,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player4",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 2000,
+      "attackLevel": 2000,
+      "meleeLevel": 2000,
+      "defenseLevel": 2000,
+      "rangedLevel": 2000,
+      "magicLevel": 2000,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player5",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 2000,
+      "attackLevel": 2000,
+      "meleeLevel": 2000,
+      "defenseLevel": 2000,
+      "rangedLevel": 2000,
+      "magicLevel": 2000,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "zone",
+    "zoneHrid": "/actions/combat/chimerical_den",
+    "difficultyTier": 0
+  },
+  "simulationTimeLimit": 720000000000,
+  "random": {
+    "type": "seeded",
+    "seed": "dungeon-party-complete-v1"
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 200000
+    },
+    "extra": {}
+  }
+}

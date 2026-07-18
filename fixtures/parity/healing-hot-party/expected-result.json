@@ -1,0 +1,138 @@
+{
+  "attacks": {
+    "/monsters/novice_sorcerer": {
+      "player1": {
+        "/abilities/water_strike": {
+          "67": 80
+        }
+      }
+    },
+    "player1": {
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "1": 20
+        }
+      }
+    },
+    "player2": {
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "1": 20
+        }
+      }
+    },
+    "player3": {
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "1": 19
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0,
+    "player2": 0,
+    "player3": 0
+  },
+  "consumablesUsed": {
+    "player1": {
+      "/items/blueberry_cake": 1
+    }
+  },
+  "deaths": {},
+  "debuffOnLevelGap": {
+    "player1": 0,
+    "player2": 0,
+    "player3": 0
+  },
+  "difficultyTier": 0,
+  "dropRateMultiplier": {
+    "player1": 1,
+    "player2": 1,
+    "player3": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 0,
+  "experienceGained": {},
+  "hitpointsGained": {
+    "player1": {
+      "/abilities/quick_aid": 164,
+      "/abilities/rejuvenate": 93,
+      "/items/blueberry_cake": 100,
+      "regen": 606
+    },
+    "player2": {
+      "/abilities/rejuvenate": 0,
+      "regen": 0
+    },
+    "player3": {
+      "/abilities/rejuvenate": 0,
+      "regen": 0
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": false,
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 0,
+  "manaUsed": {
+    "player1": {},
+    "player2": {},
+    "player3": {
+      "/abilities/quick_aid": 240,
+      "/abilities/rejuvenate": 270
+    }
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 0
+    },
+    "player2": {
+      "regen": 0
+    },
+    "player3": {
+      "regen": 453
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 3,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {
+    "player3": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    }
+  },
+  "rareFindMultiplier": {
+    "player1": 1,
+    "player2": 1,
+    "player3": 1
+  },
+  "simulatedTime": 60000000000,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/novice_sorcerer",
+      "spawnedAt": 0,
+      "timeSpentAlive": 0
+    }
+  ],
+  "wipeEvents": [],
+  "zoneName": "/actions/combat/sorcerers_tower"
+}

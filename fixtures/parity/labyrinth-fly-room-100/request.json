@@ -1,0 +1,45 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-labyrinth-fly-room-100-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 20,
+      "intelligenceLevel": 20,
+      "attackLevel": 20,
+      "meleeLevel": 20,
+      "defenseLevel": 20,
+      "rangedLevel": 20,
+      "magicLevel": 20,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "labyrinth",
+    "labyrinthHrid": "/monsters/fly",
+    "roomLevel": 100,
+    "crates": []
+  },
+  "simulationTimeLimit": 60000000000,
+  "random": {
+    "type": "seeded",
+    "seed": "labyrinth-fly-room-100-v1"
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 30000
+    },
+    "extra": {}
+  }
+}

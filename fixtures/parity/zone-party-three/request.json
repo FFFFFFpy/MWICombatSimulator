@@ -1,0 +1,80 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-zone-party-three-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 300,
+      "intelligenceLevel": 300,
+      "attackLevel": 300,
+      "meleeLevel": 300,
+      "defenseLevel": 300,
+      "rangedLevel": 300,
+      "magicLevel": 300,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player2",
+      "staminaLevel": 300,
+      "intelligenceLevel": 300,
+      "attackLevel": 300,
+      "meleeLevel": 300,
+      "defenseLevel": 300,
+      "rangedLevel": 300,
+      "magicLevel": 300,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player3",
+      "staminaLevel": 300,
+      "intelligenceLevel": 300,
+      "attackLevel": 300,
+      "meleeLevel": 300,
+      "defenseLevel": 300,
+      "rangedLevel": 300,
+      "magicLevel": 300,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "zone",
+    "zoneHrid": "/actions/combat/sorcerers_tower",
+    "difficultyTier": 0
+  },
+  "simulationTimeLimit": 60000000000,
+  "random": {
+    "type": "seeded",
+    "seed": "zone-party-three-v1"
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 50000
+    },
+    "extra": {}
+  }
+}

@@ -1,0 +1,308 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const dataRoot = path.join(repositoryRoot, "src", "combatsimulator", "data");
+
+async function readJson(name) {
+    return JSON.parse(await readFile(path.join(dataRoot, name), "utf8"));
+}
+
+function nonZero(value) {
+    return Number.isFinite(Number(value)) && Number(value) !== 0;
+}
+
+function compactObject(value) {
+    return Object.fromEntries(
+        Object.entries(value).filter(([, entry]) => {
+            if (entry == null) return false;
+            if (Array.isArray(entry)) return entry.length > 0;
+            if (typeof entry === "object") return Object.keys(entry).length > 0;
+            if (typeof entry === "string") return entry.length > 0;
+            return true;
+        }),
+    );
+}
+
+function summarizeTrigger(trigger) {
+    if (!trigger) return null;
+    return compactObject({
+        dependencyHrid: trigger.dependencyHrid,
+        conditionHrid: trigger.conditionHrid,
+        comparatorHrid: trigger.comparatorHrid,
+        value: trigger.value,
+    });
+}
+
+function summarizeBuff(buff) {
+    if (!buff) return null;
+    return compactObject({
+        uniqueHrid: buff.uniqueHrid,
+        typeHrid: buff.typeHrid,
+        ratioBoost: buff.ratioBoost,
+        ratioBoostLevelBonus: buff.ratioBoostLevelBonus,
+        flatBoost: buff.flatBoost,
+        flatBoostLevelBonus: buff.flatBoostLevelBonus,
+        duration: buff.duration,
+    });
+}
+
+function summarizeEffect(effect) {
+    return compactObject({
+        targetType: effect.targetType,
+        effectType: effect.effectType,
+        combatStyleHrid: effect.combatStyleHrid,
+        damageType: effect.damageType,
+        baseDamageFlat: effect.baseDamageFlat,
+        baseDamageFlatLevelBonus: effect.baseDamageFlatLevelBonus,
+        baseDamageRatio: effect.baseDamageRatio,
+        baseDamageRatioLevelBonus: effect.baseDamageRatioLevelBonus,
+        bonusAccuracyRatio: effect.bonusAccuracyRatio,
+        bonusAccuracyRatioLevelBonus: effect.bonusAccuracyRatioLevelBonus,
+        damageOverTimeRatio: effect.damageOverTimeRatio,
+        damageOverTimeDuration: effect.damageOverTimeDuration,
+        armorDamageRatio: effect.armorDamageRatio,
+        armorDamageRatioLevelBonus: effect.armorDamageRatioLevelBonus,
+        hpDrainRatio: effect.hpDrainRatio,
+        pierceChance: effect.pierceChance,
+        blindChance: effect.blindChance,
+        blindDuration: effect.blindDuration,
+        silenceChance: effect.silenceChance,
+        silenceDuration: effect.silenceDuration,
+        stunChance: effect.stunChance,
+        stunDuration: effect.stunDuration,
+        spendHpRatio: effect.spendHpRatio,
+        buffs: (effect.buffs || []).map(summarizeBuff),
+    });
+}
+
+function summarizeAbility(ability) {
+    const rawEffects = Array.isArray(ability.abilityEffects) ? ability.abilityEffects : [];
+    const effects = rawEffects.map(summarizeEffect);
+    const effectTypes = [...new Set(rawEffects.map((effect) => effect.effectType).filter(Boolean))];
+    const targetTypes = [...new Set(rawEffects.map((effect) => effect.targetType).filter(Boolean))];
+    const buffs = rawEffects.flatMap((effect) => Array.isArray(effect.buffs) ? effect.buffs : []).map(summarizeBuff);
+    const features = [];
+
+    if (rawEffects.some((effect) => nonZero(effect.damageOverTimeRatio) || nonZero(effect.damageOverTimeDuration))) features.push("dot");
+    if (rawEffects.some((effect) => String(effect.effectType || "").includes("heal"))) features.push("heal");
+    if (rawEffects.some((effect) => nonZero(effect.blindChance) || nonZero(effect.blindDuration))) features.push("blind");
+    if (rawEffects.some((effect) => nonZero(effect.silenceChance) || nonZero(effect.silenceDuration))) features.push("silence");
+    if (rawEffects.some((effect) => nonZero(effect.stunChance) || nonZero(effect.stunDuration))) features.push("stun");
+    if (rawEffects.some((effect) => nonZero(effect.pierceChance))) features.push("pierce");
+    if (rawEffects.some((effect) => nonZero(effect.armorDamageRatio))) features.push("armor_damage");
+    if (rawEffects.some((effect) => nonZero(effect.hpDrainRatio))) features.push("hp_drain");
+    if (rawEffects.some((effect) => nonZero(effect.spendHpRatio))) features.push("spend_hp");
+    if (buffs.length > 0) features.push("buff");
+    if (Number(ability.manaCost || 0) > 0) features.push("mana");
+    if (targetTypes.some((target) => String(target).toLowerCase().includes("all"))) features.push("multi_target");
+
+    return {
+        ...compactObject({
+            hrid: ability.hrid,
+            name: ability.name,
+            description: ability.description,
+            manaCost: ability.manaCost,
+            cooldownDuration: ability.cooldownDuration,
+            castDuration: ability.castDuration,
+            isSpecialAbility: ability.isSpecialAbility === true,
+            effectTypes,
+            targetTypes,
+            effects,
+            buffs,
+            defaultCombatTriggers: (ability.defaultCombatTriggers || []).map(summarizeTrigger),
+        }),
+        features,
+    };
+}
+
+function summarizeConsumable(item) {
+    const detail = item.consumableDetail || {};
+    const features = [];
+    if (nonZero(detail.hitpointRestore)) features.push("hp_restore");
+    if (nonZero(detail.manapointRestore)) features.push("mp_restore");
+    if (nonZero(detail.recoveryDuration)) features.push("recovery");
+    if (Array.isArray(detail.buffs) && detail.buffs.length > 0) features.push("buff");
+
+    return {
+        ...compactObject({
+            hrid: item.hrid,
+            name: item.name,
+            categoryHrid: item.categoryHrid,
+            cooldownDuration: detail.cooldownDuration,
+            hitpointRestore: detail.hitpointRestore,
+            manapointRestore: detail.manapointRestore,
+            recoveryDuration: detail.recoveryDuration,
+            buffs: (detail.buffs || []).map(summarizeBuff),
+            defaultCombatTriggers: (detail.defaultCombatTriggers || []).map(summarizeTrigger),
+        }),
+        features,
+    };
+}
+
+function directLocationFields(item, detail) {
+    const fields = {};
+    for (const [prefix, source] of [["item", item], ["equipment", detail]]) {
+        for (const [key, value] of Object.entries(source || {})) {
+            if (!/(type|slot|location)/i.test(key)) continue;
+            if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+                fields[`${prefix}.${key}`] = value;
+            } else if (Array.isArray(value) && value.every((entry) => ["string", "number", "boolean"].includes(typeof entry))) {
+                fields[`${prefix}.${key}`] = value;
+            }
+        }
+    }
+    return fields;
+}
+
+function summarizeEquipment(item) {
+    const detail = item.equipmentDetail || {};
+    const stats = detail.combatStats || {};
+    const nonZeroStats = Object.fromEntries(
+        Object.entries(stats).filter(([, value]) => {
+            if (Array.isArray(value)) return value.length > 0;
+            if (typeof value === "string") return value.length > 0;
+            return nonZero(value);
+        }),
+    );
+    const interestingStatNames = [
+        "physicalThorns",
+        "elementalThorns",
+        "parry",
+        "retaliation",
+        "pierce",
+        "curse",
+        "fury",
+        "weaken",
+        "ripple",
+        "bloom",
+        "blaze",
+        "manaLeech",
+        "lifeSteal",
+        "criticalRate",
+        "criticalDamage",
+        "abilityHaste",
+        "castSpeed",
+        "foodHaste",
+        "drinkConcentration",
+        "maxManapoints",
+        "mpRegenPer10",
+    ];
+    const features = interestingStatNames.filter((name) => nonZero(stats[name]));
+
+    return {
+        ...compactObject({
+            hrid: item.hrid,
+            name: item.name,
+            categoryHrid: item.categoryHrid,
+            locationFields: directLocationFields(item, detail),
+            combatStats: nonZeroStats,
+        }),
+        features,
+    };
+}
+
+function groupAbilities(abilities) {
+    const featureNames = [
+        "dot",
+        "heal",
+        "blind",
+        "silence",
+        "stun",
+        "pierce",
+        "armor_damage",
+        "hp_drain",
+        "spend_hp",
+        "buff",
+        "mana",
+        "multi_target",
+    ];
+    return Object.fromEntries(
+        featureNames.map((feature) => [feature, abilities.filter((ability) => (ability.features || []).includes(feature))]),
+    );
+}
+
+function groupEquipment(equipment) {
+    const featureNames = [...new Set(equipment.flatMap((item) => item.features || []))].sort();
+    return Object.fromEntries(
+        featureNames.map((feature) => [feature, equipment.filter((item) => (item.features || []).includes(feature))]),
+    );
+}
+
+function collectTriggerVocabulary(abilities, consumables) {
+    const triggers = [
+        ...abilities.flatMap((ability) => ability.defaultCombatTriggers || []),
+        ...consumables.flatMap((item) => item.defaultCombatTriggers || []),
+    ];
+    return {
+        dependencies: [...new Set(triggers.map((trigger) => trigger.dependencyHrid).filter(Boolean))].sort(),
+        conditions: [...new Set(triggers.map((trigger) => trigger.conditionHrid).filter(Boolean))].sort(),
+        comparators: [...new Set(triggers.map((trigger) => trigger.comparatorHrid).filter(Boolean))].sort(),
+    };
+}
+
+function validateReport(report) {
+    if (report.counts.abilities <= 0 || report.counts.consumables <= 0 || report.counts.equipment <= 0) {
+        throw new Error(`Combat mechanics inventory is unexpectedly empty: ${JSON.stringify(report.counts)}`);
+    }
+    for (const [feature, abilities] of Object.entries(report.abilitiesByFeature)) {
+        if (!Array.isArray(abilities)) {
+            throw new Error(`Ability feature group ${feature} is not an array.`);
+        }
+    }
+    for (const [feature, equipment] of Object.entries(report.equipmentByFeature)) {
+        if (!feature || !Array.isArray(equipment)) {
+            throw new Error(`Equipment feature group ${String(feature)} is invalid.`);
+        }
+    }
+}
+
+async function main() {
+    const [abilityMap, itemMap] = await Promise.all([
+        readJson("abilityDetailMap.json"),
+        readJson("itemDetailMap.json"),
+    ]);
+
+    const abilities = Object.values(abilityMap).map(summarizeAbility).sort((left, right) => left.hrid.localeCompare(right.hrid));
+    const items = Object.values(itemMap);
+    const rawConsumables = items.filter((item) => item?.consumableDetail);
+    const rawEquipment = items.filter((item) => item?.equipmentDetail);
+    const consumables = rawConsumables
+        .map(summarizeConsumable)
+        .sort((left, right) => left.hrid.localeCompare(right.hrid));
+    const equipment = rawEquipment
+        .map(summarizeEquipment)
+        .sort((left, right) => left.hrid.localeCompare(right.hrid));
+
+    const report = {
+        generatedFrom: {
+            abilities: "src/combatsimulator/data/abilityDetailMap.json",
+            items: "src/combatsimulator/data/itemDetailMap.json",
+        },
+        counts: {
+            abilities: abilities.length,
+            consumables: consumables.length,
+            equipment: equipment.length,
+        },
+        schemaSamples: {
+            abilityKeys: Object.keys(Object.values(abilityMap)[0] || {}).sort(),
+            abilityEffectKeys: Object.keys(Object.values(abilityMap)[0]?.abilityEffects?.[0] || {}).sort(),
+            itemKeys: Object.keys(items[0] || {}).sort(),
+            consumableDetailKeys: Object.keys(rawConsumables[0]?.consumableDetail || {}).sort(),
+            equipmentDetailKeys: Object.keys(rawEquipment[0]?.equipmentDetail || {}).sort(),
+        },
+        triggerVocabulary: collectTriggerVocabulary(abilities, consumables),
+        abilitiesByFeature: groupAbilities(abilities),
+        consumables,
+        equipmentByFeature: groupEquipment(equipment),
+    };
+
+    validateReport(report);
+    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+}
+
+main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+});

@@ -1,0 +1,78 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-revive-dead-ally-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 1,
+      "intelligenceLevel": 1,
+      "attackLevel": 20,
+      "meleeLevel": 20,
+      "defenseLevel": 1,
+      "rangedLevel": 20,
+      "magicLevel": 20,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player2",
+      "staminaLevel": 4000,
+      "intelligenceLevel": 2000,
+      "attackLevel": 20,
+      "meleeLevel": 20,
+      "defenseLevel": 4000,
+      "rangedLevel": 20,
+      "magicLevel": 20,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [
+        {
+          "hrid": "/abilities/revive",
+          "level": 1,
+          "triggers": [
+            {
+              "dependencyHrid": "/combat_trigger_dependencies/all_allies",
+              "conditionHrid": "/combat_trigger_conditions/number_of_dead_units",
+              "comparatorHrid": "/combat_trigger_comparators/greater_than_equal",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "labyrinth",
+    "labyrinthHrid": "/monsters/crystal_colossus",
+    "roomLevel": 100,
+    "crates": []
+  },
+  "simulationTimeLimit": 35000000000,
+  "random": {
+    "type": "sequence",
+    "values": [0],
+    "loop": true
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 100000,
+      "detailLevel": "combat"
+    },
+    "extra": {}
+  }
+}

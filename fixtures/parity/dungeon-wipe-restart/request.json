@@ -1,0 +1,116 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-dungeon-wipe-restart-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 1,
+      "intelligenceLevel": 1,
+      "attackLevel": 1,
+      "meleeLevel": 1,
+      "defenseLevel": 1,
+      "rangedLevel": 1,
+      "magicLevel": 1,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player2",
+      "staminaLevel": 1,
+      "intelligenceLevel": 1,
+      "attackLevel": 1,
+      "meleeLevel": 1,
+      "defenseLevel": 1,
+      "rangedLevel": 1,
+      "magicLevel": 1,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player3",
+      "staminaLevel": 1,
+      "intelligenceLevel": 1,
+      "attackLevel": 1,
+      "meleeLevel": 1,
+      "defenseLevel": 1,
+      "rangedLevel": 1,
+      "magicLevel": 1,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player4",
+      "staminaLevel": 1,
+      "intelligenceLevel": 1,
+      "attackLevel": 1,
+      "meleeLevel": 1,
+      "defenseLevel": 1,
+      "rangedLevel": 1,
+      "magicLevel": 1,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    },
+    {
+      "hrid": "player5",
+      "staminaLevel": 1,
+      "intelligenceLevel": 1,
+      "attackLevel": 1,
+      "meleeLevel": 1,
+      "defenseLevel": 1,
+      "rangedLevel": 1,
+      "magicLevel": 1,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "zone",
+    "zoneHrid": "/actions/combat/chimerical_den",
+    "difficultyTier": 2
+  },
+  "simulationTimeLimit": 120000000000,
+  "random": {
+    "type": "seeded",
+    "seed": "dungeon-wipe-restart-v1"
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 200000
+    },
+    "extra": {}
+  }
+}

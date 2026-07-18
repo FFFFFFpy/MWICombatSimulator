@@ -1,0 +1,99 @@
+{
+  "attacks": {
+    "/monsters/novice_sorcerer": {
+      "player1": {
+        "/abilities/water_strike": {
+          "14": 32
+        }
+      }
+    },
+    "player1": {
+      "/monsters/novice_sorcerer": {
+        "/abilities/penetrating_shot": {
+          "44": 8
+        },
+        "/abilities/sweep": {
+          "20": 8
+        },
+        "autoAttack": {
+          "1": 8
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {},
+  "debuffOnLevelGap": {
+    "player1": 0
+  },
+  "difficultyTier": 0,
+  "dropRateMultiplier": {
+    "player1": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 0,
+  "experienceGained": {},
+  "hitpointsGained": {
+    "player1": {
+      "regen": 336
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": false,
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 0,
+  "manaUsed": {
+    "player1": {
+      "/abilities/penetrating_shot": 110,
+      "/abilities/sweep": 70
+    }
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 90
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 1,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {
+    "player1": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    }
+  },
+  "rareFindMultiplier": {
+    "player1": 1
+  },
+  "simulatedTime": 25472636815.920403,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/novice_sorcerer",
+      "spawnedAt": 0,
+      "timeSpentAlive": 0
+    }
+  ],
+  "wipeEvents": [],
+  "zoneName": "/actions/combat/sorcerers_tower"
+}

@@ -1,0 +1,110 @@
+{
+  "attacks": {
+    "/monsters/fly": {
+      "player1": {
+        "autoAttack": {
+          "1": 1,
+          "miss": 12
+        }
+      }
+    },
+    "player1": {
+      "/monsters/fly": {
+        "autoAttack": {
+          "1": 1,
+          "4": 3,
+          "6": 1,
+          "10": 2,
+          "13": 2,
+          "14": 1,
+          "17": 1,
+          "18": 1,
+          "19": 1,
+          "21": 1,
+          "24": 1,
+          "25": 2,
+          "26": 1,
+          "miss": 3
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {
+    "/monsters/fly": 5
+  },
+  "debuffOnLevelGap": {
+    "player1": 0
+  },
+  "dropRateMultiplier": {
+    "player1": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 5,
+  "experienceGained": {
+    "player1": {
+      "attack": 7.462046204620462,
+      "defense": 7.462046204620462,
+      "intelligence": 7.462046204620462,
+      "magic": 0,
+      "melee": 23.45214521452145,
+      "ranged": 0,
+      "stamina": 7.462046204620462
+    }
+  },
+  "hitpointsGained": {
+    "player1": {
+      "regen": 1
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": true,
+  "labyrinthName": "/monsters/fly",
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 59405940594.05943,
+  "manaUsed": {
+    "player1": {}
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 0
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 1,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {},
+  "rareFindMultiplier": {
+    "player1": 1
+  },
+  "roomLevel": 100,
+  "simulatedTime": 62376237623.762405,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 5,
+      "name": "/monsters/fly",
+      "spawnedAt": 59405940594.05943,
+      "timeSpentAlive": 59405940594.05943
+    }
+  ],
+  "wipeEvents": []
+}

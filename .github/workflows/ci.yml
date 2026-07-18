@@ -1,0 +1,184 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test random sources
+        run: npx vitest run src/shared/__tests__/randomSource.test.js
+
+      - name: Test simulation contracts
+        run: npx vitest run src/contracts/__tests__/simulationContracts.test.js
+
+      - name: Test combat trace
+        run: npx vitest run src/services/__tests__/combatTrace.test.js
+
+      - name: Test deterministic replay
+        id: deterministic-replay
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npx vitest run src/combatsimulator/__tests__/deterministicSimulation.test.js > tmp/ci/deterministic-replay.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload deterministic replay diagnostics
+        if: steps.deterministic-replay.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: deterministic-replay-diagnostics
+          path: tmp/ci/deterministic-replay.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after deterministic replay diagnostics
+        if: steps.deterministic-replay.outcome == 'failure'
+        run: exit 1
+
+      - name: Test complex combat mechanics
+        id: complex-mechanics
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npx vitest run src/combatsimulator/__tests__/complexMechanicsSimulation.test.js > tmp/ci/complex-mechanics.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload complex combat diagnostics
+        if: steps.complex-mechanics.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: complex-combat-diagnostics
+          path: tmp/ci/complex-mechanics.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after complex combat diagnostics
+        if: steps.complex-mechanics.outcome == 'failure'
+        run: exit 1
+
+      - name: Test advanced combat mechanics
+        id: advanced-mechanics
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npx vitest run src/combatsimulator/__tests__/advancedMechanicsSimulation.test.js > tmp/ci/advanced-mechanics.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload advanced combat diagnostics
+        if: steps.advanced-mechanics.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: advanced-combat-diagnostics
+          path: tmp/ci/advanced-mechanics.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after advanced combat diagnostics
+        if: steps.advanced-mechanics.outcome == 'failure'
+        run: exit 1
+
+      - name: Run full test suite
+        run: npm test
+
+      - name: Inspect combat mechanics
+        run: |
+          mkdir -p tmp/ci
+          npm run inspect:combat-mechanics > tmp/ci/combat-mechanics.json
+
+      - name: Upload combat mechanics inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: combat-mechanics-inventory
+          path: tmp/ci/combat-mechanics.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Verify parity goldens
+        id: parity-check
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npm run check:parity > tmp/ci/parity-check.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload parity diagnostics
+        if: steps.parity-check.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-check-diagnostics
+          path: tmp/ci/parity-check.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after parity diagnostics
+        if: steps.parity-check.outcome == 'failure'
+        run: exit 1
+
+      - name: Smoke-test combat benchmark
+        id: combat-benchmark
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          set +e
+          npm run benchmark:combat -- --iterations 1 --warmup 0 --simulation-seconds 30 > tmp/ci/combat-benchmark.log 2>&1
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Upload combat benchmark diagnostics
+        if: steps.combat-benchmark.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: combat-benchmark-diagnostics
+          path: tmp/ci/combat-benchmark.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Fail after combat benchmark diagnostics
+        if: steps.combat-benchmark.outcome == 'failure'
+        run: exit 1
+
+      - name: Build production bundle
+        run: npm run build

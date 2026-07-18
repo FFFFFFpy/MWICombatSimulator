@@ -1,0 +1,120 @@
+{
+  "attacks": {
+    "/monsters/crystal_colossus": {
+      "player1": {
+        "/abilities/impale": {
+          "100": 2
+        },
+        "/abilities/puncture": {
+          "86": 2
+        },
+        "autoAttack": {
+          "1": 15
+        },
+        "elementalThorns": {
+          "10": 1
+        },
+        "physicalThorns": {
+          "9": 4,
+          "10": 4,
+          "12": 3
+        }
+      }
+    },
+    "player1": {
+      "/monsters/crystal_colossus": {
+        "/abilities/firestorm": {
+          "11": 1,
+          "13": 1
+        },
+        "autoAttack": {
+          "1": 15
+        },
+        "damageOverTime": {
+          "5": 1,
+          "6": 2,
+          "7": 1
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0
+  },
+  "consumablesUsed": {
+    "player1": {
+      "/items/yogurt": 1
+    }
+  },
+  "deaths": {},
+  "debuffOnLevelGap": {
+    "player1": 0
+  },
+  "dropRateMultiplier": {
+    "player1": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 0,
+  "experienceGained": {},
+  "hitpointsGained": {
+    "player1": {
+      "regen": 509
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": true,
+  "labyrinthName": "/monsters/crystal_colossus",
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 0,
+  "manaUsed": {
+    "player1": {
+      "/abilities/firestorm": 150
+    }
+  },
+  "manapointsGained": {
+    "player1": {
+      "/items/yogurt": 50,
+      "regen": 5
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 1,
+  "playerRanOutOfMana": {
+    "player1": true,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {
+    "player1": {
+      "isOutOfMana": true,
+      "startTimeForOutOfMana": 24875621890.54727,
+      "totalTimeForOutOfMana": 20895522388.059708
+    }
+  },
+  "rareFindMultiplier": {
+    "player1": 1
+  },
+  "roomLevel": 100,
+  "simulatedTime": 50000000000,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/crystal_colossus",
+      "spawnedAt": 0,
+      "timeSpentAlive": 0
+    }
+  ],
+  "wipeEvents": []
+}

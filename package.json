@@ -1,10 +1,15 @@
 {
     "name": "mwicombatsimulator",
     "version": "1.0.28",
-    "description": "",
+    "description": "Independent simulation and planning platform for Milky Way Idle.",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
+        "benchmark:combat": "node scripts/benchmark-combat.mjs",
+        "generate:parity": "node scripts/parity-fixtures.mjs --mode generate",
+        "check:parity": "node scripts/parity-fixtures.mjs --mode check",
+        "inspect:combat-targets": "node scripts/inspect-combat-targets.mjs",
+        "inspect:combat-mechanics": "node scripts/inspect-combat-mechanics.mjs",
         "build-game-data-index": "node scripts/build-game-data-index.mjs",
         "sync-official-translations": "node scripts/sync-official-translations.mjs",
         "check-official-translations": "node scripts/sync-official-translations.mjs --check",
@@ -17,15 +22,20 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/AmVoidGuy/MWICombatSimulator.git"
+        "url": "git+https://github.com/FFFFFFpy/MWICombatSimulator.git"
     },
-    "keywords": [],
+    "keywords": [
+        "milky-way-idle",
+        "combat-simulator",
+        "simulation",
+        "planning"
+    ],
     "author": "",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/AmVoidGuy/MWICombatSimulator/issues"
+        "url": "https://github.com/FFFFFFpy/MWICombatSimulator/issues"
     },
-    "homepage": "https://github.com/AmVoidGuy/MWICombatSimulator#readme",
+    "homepage": "https://github.com/FFFFFFpy/MWICombatSimulator#readme",
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.2.4",
         "acorn": "^8.12.1",

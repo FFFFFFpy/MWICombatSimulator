@@ -1,0 +1,48 @@
+{
+  "assertions": {
+    "minimumRandomDraws": 100,
+    "minimumTraceEvents": 100,
+    "requiredTraceEventTypes": [
+      "combatStart",
+      "autoAttack",
+      "enemyRespawn"
+    ],
+    "resultEquals": {
+      "isDungeon": true,
+      "isLabyrinth": false,
+      "numberOfPlayers": 5
+    },
+    "resultMinimums": {
+      "dungeonsCompleted": 1,
+      "encounters": 1
+    }
+  },
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "Five level-2000 unarmed players run Chimerical Den at difficulty 0 for 720 simulated seconds, requiring at least one completed dungeon.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64.part-000",
+    "expected-trace.json.gz.b64.part-001",
+    "expected-trace.json.gz.b64.part-002",
+    "expected-trace.json.gz.b64.part-003",
+    "expected-trace.json.gz.b64.part-004"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "7bbaa96c893f955812da8102887e50b45e0f12ed5124e067db143373855249c2",
+    "expectedTraceArchiveSha256": "7bc70d1fc721a027672b6d1756fcb886a65d23525389f6f38b674767fb6ba812",
+    "expectedTraceSha256": "b03c4b711fdc9ee9c30f49033927543955ef6ab55bdcef7fdb72f5e94304db03"
+  },
+  "notes": [
+    "The deliberately over-levelled party isolates dungeon wave progression and completion bookkeeping from equipment balance."
+  ],
+  "randomDraws": 12542,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "dungeon-party-complete",
+  "status": "golden",
+  "traceArchiveParts": 5,
+  "traceEncoding": "gzip+base64"
+}

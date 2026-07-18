@@ -1,0 +1,353 @@
+{
+  "attacks": {
+    "/monsters/elementalist": {
+      "player1": {
+        "/abilities/flame_blast": {
+          "74": 1
+        },
+        "/abilities/ice_spear": {
+          "miss": 1
+        },
+        "autoAttack": {
+          "miss": 2
+        }
+      },
+      "player2": {
+        "/abilities/flame_blast": {
+          "miss": 1
+        },
+        "autoAttack": {
+          "12": 1,
+          "44": 1,
+          "miss": 3
+        }
+      },
+      "player3": {
+        "/abilities/flame_blast": {
+          "miss": 1
+        },
+        "autoAttack": {
+          "34": 1,
+          "miss": 2
+        }
+      }
+    },
+    "/monsters/flame_sorcerer": {
+      "player1": {
+        "/abilities/fireball": {
+          "miss": 1
+        },
+        "/abilities/flame_blast": {
+          "miss": 1
+        }
+      },
+      "player2": {
+        "/abilities/fireball": {
+          "miss": 4
+        },
+        "/abilities/flame_blast": {
+          "miss": 1
+        }
+      },
+      "player3": {
+        "/abilities/fireball": {
+          "miss": 5
+        },
+        "/abilities/flame_blast": {
+          "miss": 1
+        }
+      }
+    },
+    "/monsters/ice_sorcerer": {
+      "player1": {
+        "/abilities/water_strike": {
+          "27": 1,
+          "39": 1,
+          "miss": 2
+        }
+      },
+      "player2": {
+        "/abilities/water_strike": {
+          "miss": 3
+        }
+      },
+      "player3": {
+        "/abilities/ice_spear": {
+          "52": 1
+        },
+        "/abilities/water_strike": {
+          "25": 1
+        }
+      }
+    },
+    "/monsters/novice_sorcerer": {
+      "player1": {
+        "/abilities/water_strike": {
+          "miss": 4
+        }
+      },
+      "player2": {
+        "/abilities/water_strike": {
+          "miss": 4
+        }
+      },
+      "player3": {
+        "/abilities/water_strike": {
+          "miss": 2
+        }
+      }
+    },
+    "player1": {
+      "/monsters/elementalist": {
+        "autoAttack": {
+          "19": 1,
+          "22": 1,
+          "89": 1,
+          "124": 1,
+          "132": 1,
+          "139": 1,
+          "163": 1,
+          "164": 1
+        }
+      },
+      "/monsters/flame_sorcerer": {
+        "autoAttack": {
+          "12": 1,
+          "49": 1,
+          "68": 1,
+          "106": 1,
+          "125": 1,
+          "139": 1,
+          "155": 1,
+          "167": 1,
+          "172": 1
+        }
+      },
+      "/monsters/ice_sorcerer": {
+        "autoAttack": {
+          "186": 1
+        }
+      },
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "23": 1,
+          "31": 1,
+          "195": 1
+        }
+      }
+    },
+    "player2": {
+      "/monsters/elementalist": {
+        "autoAttack": {
+          "34": 1,
+          "130": 1,
+          "149": 1,
+          "157": 1,
+          "170": 1,
+          "171": 1,
+          "174": 1,
+          "204": 1,
+          "248": 1,
+          "256": 1,
+          "miss": 1
+        }
+      },
+      "/monsters/flame_sorcerer": {
+        "autoAttack": {
+          "15": 1,
+          "30": 1,
+          "122": 1,
+          "123": 1,
+          "170": 1,
+          "miss": 1
+        }
+      },
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "17": 1,
+          "60": 1,
+          "140": 1,
+          "143": 1
+        }
+      }
+    },
+    "player3": {
+      "/monsters/elementalist": {
+        "autoAttack": {
+          "12": 1,
+          "58": 1,
+          "69": 1,
+          "70": 1,
+          "206": 1,
+          "219": 1,
+          "221": 1,
+          "miss": 2
+        }
+      },
+      "/monsters/flame_sorcerer": {
+        "autoAttack": {
+          "6": 1,
+          "25": 1,
+          "72": 1,
+          "150": 1,
+          "212": 1,
+          "225": 1,
+          "257": 1
+        }
+      },
+      "/monsters/ice_sorcerer": {
+        "autoAttack": {
+          "miss": 1
+        }
+      },
+      "/monsters/novice_sorcerer": {
+        "autoAttack": {
+          "21": 1,
+          "53": 1,
+          "117": 1
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0,
+    "player2": 0,
+    "player3": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {
+    "/monsters/elementalist": 2,
+    "/monsters/flame_sorcerer": 2,
+    "/monsters/novice_sorcerer": 1
+  },
+  "debuffOnLevelGap": {
+    "player1": 0,
+    "player2": 0,
+    "player3": 0
+  },
+  "difficultyTier": 0,
+  "dropRateMultiplier": {
+    "player1": 1,
+    "player2": 1,
+    "player3": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 1,
+  "experienceGained": {
+    "player1": {
+      "attack": 23.90144927536232,
+      "defense": 23.90144927536232,
+      "intelligence": 23.90144927536232,
+      "magic": 0,
+      "melee": 75.11884057971015,
+      "ranged": 0,
+      "stamina": 23.90144927536232
+    },
+    "player2": {
+      "attack": 23.90144927536232,
+      "defense": 23.90144927536232,
+      "intelligence": 23.90144927536232,
+      "magic": 0,
+      "melee": 75.11884057971015,
+      "ranged": 0,
+      "stamina": 23.90144927536232
+    },
+    "player3": {
+      "attack": 23.90144927536232,
+      "defense": 23.90144927536232,
+      "intelligence": 23.90144927536232,
+      "magic": 0,
+      "melee": 75.11884057971015,
+      "ranged": 0,
+      "stamina": 23.90144927536232
+    }
+  },
+  "hitpointsGained": {
+    "player1": {
+      "regen": 62
+    },
+    "player2": {
+      "regen": 56
+    },
+    "player3": {
+      "regen": 96
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": false,
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 31304347826.086956,
+  "manaUsed": {
+    "player1": {},
+    "player2": {},
+    "player3": {}
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 0
+    },
+    "player2": {
+      "regen": 0
+    },
+    "player3": {
+      "regen": 0
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 3,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {},
+  "rareFindMultiplier": {
+    "player1": 1,
+    "player2": 1,
+    "player3": 1
+  },
+  "simulatedTime": 60000000000,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": false,
+      "count": 2,
+      "name": "/monsters/elementalist",
+      "spawnedAt": 34304347826.086956,
+      "timeSpentAlive": 36521739130.434784
+    },
+    {
+      "alive": false,
+      "count": 2,
+      "name": "/monsters/flame_sorcerer",
+      "spawnedAt": 34304347826.086956,
+      "timeSpentAlive": 33913043478.26087
+    },
+    {
+      "alive": false,
+      "count": 1,
+      "name": "/monsters/novice_sorcerer",
+      "spawnedAt": 0,
+      "timeSpentAlive": 31304347826.086956
+    },
+    {
+      "alive": true,
+      "count": 0,
+      "name": "/monsters/ice_sorcerer",
+      "spawnedAt": 34304347826.086956,
+      "timeSpentAlive": 0
+    }
+  ],
+  "wipeEvents": [],
+  "zoneName": "/actions/combat/sorcerers_tower"
+}

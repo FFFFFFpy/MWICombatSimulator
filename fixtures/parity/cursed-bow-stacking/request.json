@@ -1,0 +1,52 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-cursed-bow-stacking-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 500,
+      "attackLevel": 10,
+      "meleeLevel": 20,
+      "defenseLevel": 2000,
+      "rangedLevel": 10,
+      "magicLevel": 20,
+      "equipment": {
+        "/equipment_types/two_hand": {
+          "hrid": "/items/cursed_bow",
+          "enhancementLevel": 0
+        }
+      },
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "labyrinth",
+    "labyrinthHrid": "/monsters/crystal_colossus",
+    "roomLevel": 100,
+    "crates": []
+  },
+  "simulationTimeLimit": 25000000000,
+  "random": {
+    "type": "sequence",
+    "values": [0],
+    "loop": true
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 100000,
+      "detailLevel": "combat"
+    },
+    "extra": {}
+  }
+}

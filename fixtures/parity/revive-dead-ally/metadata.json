@@ -1,0 +1,42 @@
+{
+  "assertions": {
+    "minimumRandomDraws": 20,
+    "minimumTraceEvents": 20,
+    "requiredTraceEventTypes": [
+      "abilityCastEndEvent"
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": true,
+      "numberOfPlayers": 2
+    },
+    "resultMinimums": {
+      "deaths.player1": 1
+    }
+  },
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "A fragile first player dies to Crystal Colossus while a durable second player uses Revive before any normal Zone respawn path can apply.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
+  ],
+  "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "18918acdb25277005fe51bb5821aa81ae6b02f06f6a36485cd2e21799030b3a8",
+    "expectedTraceArchiveSha256": "bec6667b80457adba1e8bc73a5ca8e29626808f117eeca4ebbe3b1ddc314d7f4",
+    "expectedTraceSha256": "a54dedbe65f683b5d35ed62a5e277e7c329d4107192549a9f4409a0f1d8f5f80"
+  },
+  "notes": [
+    "Labyrinth is used deliberately because the ordinary non-dungeon PlayerRespawnEvent path is only scheduled for Zone simulations.",
+    "The integration test requires one Revive event to change player1 from exactly zero HP to a positive value."
+  ],
+  "randomDraws": 231,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "revive-dead-ally",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
+}

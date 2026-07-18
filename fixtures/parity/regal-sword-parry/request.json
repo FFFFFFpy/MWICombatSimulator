@@ -1,0 +1,52 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-regal-sword-parry-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 300,
+      "attackLevel": 10,
+      "meleeLevel": 10,
+      "defenseLevel": 2000,
+      "rangedLevel": 10,
+      "magicLevel": 10,
+      "equipment": {
+        "/equipment_types/main_hand": {
+          "hrid": "/items/regal_sword",
+          "enhancementLevel": 0
+        }
+      },
+      "food": [],
+      "drinks": [],
+      "abilities": [],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "labyrinth",
+    "labyrinthHrid": "/monsters/crystal_colossus",
+    "roomLevel": 100,
+    "crates": []
+  },
+  "simulationTimeLimit": 15000000000,
+  "random": {
+    "type": "sequence",
+    "values": [0],
+    "loop": true
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 20000,
+      "detailLevel": "combat"
+    },
+    "extra": {}
+  }
+}
