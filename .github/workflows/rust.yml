@@ -7,6 +7,7 @@ on:
       - main
       - agent/rust-core-foundation
       - agent/rust-basic-combat
+      - agent/rust-combat-data-snapshot
 
 permissions:
   contents: read
@@ -22,6 +23,19 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Verify deterministic Combat Zone snapshot
+        shell: bash
+        run: |
+          mkdir -p tmp/ci
+          npm run check-rust-combat-data
+          cp crates/sim-core/data/combat-zone-data-v1.json tmp/ci/combat-zone-data-committed.json
+          npm run build-rust-combat-data
+          cmp tmp/ci/combat-zone-data-committed.json crates/sim-core/data/combat-zone-data-v1.json
+          first=$(sha256sum crates/sim-core/data/combat-zone-data-v1.json | cut -d' ' -f1)
+          npm run build-rust-combat-data
+          second=$(sha256sum crates/sim-core/data/combat-zone-data-v1.json | cut -d' ' -f1)
+          test "$first" = "$second"
 
       - name: Install Rust toolchain and WASM target
         shell: bash
