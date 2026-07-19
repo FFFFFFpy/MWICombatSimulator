@@ -1,0 +1,26 @@
+{
+  "assertions": {
+    "minimumRandomDraws": 20,
+    "minimumTraceEvents": 20,
+    "requiredTraceEventTypes": [
+      "abilityCastEndEvent"
+    ],
+    "resultEquals": {
+      "isDungeon": false,
+      "isLabyrinth": false,
+      "numberOfPlayers": 1,
+      "zoneName": "/actions/combat/fly"
+    },
+    "resultMinimums": {
+      "encounters": 1
+    }
+  },
+  "contractVersion": 1,
+  "dataVersion": "repository-v1.0.28",
+  "description": "One durable level-20 player repeatedly casts level-1 Aqua Arrow against the tier-0 Fly zone for 60 simulated seconds using a looping 0.5 random sequence.",
+  "fixtureVersion": 1,
+  "notes": [
+    "The 0.5 sequence avoids ranged critical hits while keeping attacks deterministic.",
+    "This fixture locks cast completion, mana deduction, cooldown timing, action scheduling, direct-damage resolution, and random consumption before the Rust ability runtime is implemented."
+  ]
+}
