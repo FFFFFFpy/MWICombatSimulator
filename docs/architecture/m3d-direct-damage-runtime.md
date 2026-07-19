@@ -3,7 +3,7 @@
 ## 状态
 
 - 基线：`agent/rust-ability-data`
-- 当前阶段：生成并审查 Aqua Arrow reference golden。
+- 当前阶段：Aqua Arrow reference golden 已生成，正在提取并审查施法事件轨迹。
 - 正式引擎能力暂不扩大。
 
 ## 目标
@@ -42,9 +42,11 @@
 - 循环随机序列 `[0.5]`；
 - 高生存玩家；
 - level-1 Aqua Arrow；
-- combat-detail trace。
-
-该 fixture 必须先由 JavaScript reference engine 生成并锁定，Rust 才开始实现。
+- combat-detail trace；
+- 5 次击杀；
+- Aqua Arrow 施放 3 次，每次 34 伤害；
+- 技能耗蓝 105；
+- 总随机消费 135。
 
 ## 停止标准
 
