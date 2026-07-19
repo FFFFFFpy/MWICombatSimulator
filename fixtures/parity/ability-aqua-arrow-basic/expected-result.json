@@ -1,0 +1,108 @@
+{
+  "attacks": {
+    "/monsters/fly": {
+      "player1": {
+        "autoAttack": {
+          "miss": 6
+        }
+      }
+    },
+    "player1": {
+      "/monsters/fly": {
+        "/abilities/aqua_arrow": {
+          "34": 3
+        },
+        "autoAttack": {
+          "2": 2,
+          "16": 12
+        }
+      }
+    }
+  },
+  "bossSpawns": [],
+  "combatDropQuantity": {
+    "player1": 0
+  },
+  "consumablesUsed": {},
+  "deaths": {
+    "/monsters/fly": 5
+  },
+  "debuffOnLevelGap": {
+    "player1": 0
+  },
+  "difficultyTier": 0,
+  "dropRateMultiplier": {
+    "player1": 1
+  },
+  "dungeonsCompleted": 0,
+  "dungeonsFailed": 0,
+  "encounters": 5,
+  "experienceGained": {
+    "player1": {
+      "attack": 7.265676567656764,
+      "defense": 7.265676567656764,
+      "intelligence": 7.265676567656764,
+      "magic": 0,
+      "melee": 22.83498349834983,
+      "ranged": 0,
+      "stamina": 7.265676567656764
+    }
+  },
+  "hitpointsGained": {
+    "player1": {
+      "regen": 0
+    }
+  },
+  "hitpointsSpent": {},
+  "isDungeon": false,
+  "isLabyrinth": false,
+  "lastDungeonFinishTime": 0,
+  "lastEncounterFinishTime": 46158415841.58417,
+  "manaUsed": {
+    "player1": {
+      "/abilities/aqua_arrow": 105
+    }
+  },
+  "manapointsGained": {
+    "player1": {
+      "regen": 18
+    }
+  },
+  "maxEnrageStack": 0,
+  "maxWaveReached": 0,
+  "minDungenonTime": 0,
+  "numberOfPlayers": 1,
+  "playerRanOutOfMana": {
+    "player1": false,
+    "player2": false,
+    "player3": false,
+    "player4": false,
+    "player5": false
+  },
+  "playerRanOutOfManaTime": {
+    "player1": {
+      "isOutOfMana": false,
+      "startTimeForOutOfMana": 0,
+      "totalTimeForOutOfMana": 0
+    }
+  },
+  "rareFindMultiplier": {
+    "player1": 1
+  },
+  "simulatedTime": 60000000000,
+  "timeSeriesData": {
+    "players": {},
+    "timestamps": []
+  },
+  "timeSpentAlive": [
+    {
+      "alive": true,
+      "count": 5,
+      "name": "/monsters/fly",
+      "spawnedAt": 49158415841.58417,
+      "timeSpentAlive": 34158415841.584167
+    }
+  ],
+  "wipeEvents": [],
+  "zoneName": "/actions/combat/fly"
+}

@@ -10,6 +10,7 @@ on:
       - agent/rust-combat-data-snapshot
       - agent/rust-auto-attack-capabilities
       - agent/rust-ability-data
+      - agent/rust-direct-damage-runtime
 
 permissions:
   contents: read
@@ -195,6 +196,19 @@ jobs:
           cargo run --locked -p mwi-sim-cli -- simulate-basic fixtures/parity/zone-solo-basic/request.json \
             > tmp/ci/basic-combat-result.json
 
+      - name: Run promoted Aqua Arrow fixture
+        run: |
+          cargo run --locked -p mwi-sim-cli -- simulate-direct-damage fixtures/parity/ability-aqua-arrow-basic/request.json \
+            > tmp/ci/direct-damage-result.json
+          node -e '
+            const fs = require("fs");
+            const value = JSON.parse(fs.readFileSync("tmp/ci/direct-damage-result.json", "utf8"));
+            if (value.type !== "direct_damage_combat_result") process.exit(1);
+            if (value.compatibilityLevel !== "direct-damage-cast-v1") process.exit(1);
+            if (value.manaUsed?.player1?.["/abilities/aqua_arrow"] !== 105) process.exit(1);
+            if (value.randomDraws !== 135) process.exit(1);
+          '
+
       - name: Check WASM boundary
         run: cargo check --locked -p mwi-sim-wasm --target wasm32-unknown-unknown
 
@@ -207,8 +221,15 @@ jobs:
             const value = JSON.parse(fs.readFileSync("tmp/ci/rust-capabilities.json", "utf8"));
             if (value.combatSimulation !== true) process.exit(1);
             if (value.fullSimulationResult !== false) process.exit(1);
-            if (value.resultTypes?.[0] !== "basic_combat_result") process.exit(1);
+            if (!value.resultTypes?.includes("basic_combat_result")) process.exit(1);
+            if (!value.resultTypes?.includes("direct_damage_combat_result")) process.exit(1);
             if (value.targets?.length !== 1) process.exit(1);
             if (value.targets[0].zoneHrids?.[0] !== "/actions/combat/fly") process.exit(1);
             if (value.targets[0].players?.maximum !== 1) process.exit(1);
+            if (value.abilityCapabilities?.length !== 1) process.exit(1);
+            const ability = value.abilityCapabilities[0];
+            if (ability.hrid !== "/abilities/aqua_arrow") process.exit(1);
+            if (ability.levels?.length !== 1 || ability.levels[0] !== 1) process.exit(1);
+            if (ability.customTriggers !== false) process.exit(1);
+            if (ability.resultType !== "direct_damage_combat_result") process.exit(1);
           '

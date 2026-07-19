@@ -6,6 +6,7 @@ pub mod basic_combat;
 pub mod basic_data;
 pub mod combat_data;
 pub mod contracts;
+pub mod direct_damage_runtime;
 pub mod error;
 pub mod event_queue;
 pub mod rng;
@@ -39,6 +40,10 @@ pub use combat_data::{
 pub use contracts::{
     LabyrinthCrates, RandomConfigV1, SimulationOptionsV1, SimulationRequestV1, SimulationTargetV1,
     StatisticsMode, TraceConfigV1, TraceDetailLevel,
+};
+pub use direct_damage_runtime::{
+    DIRECT_DAMAGE_COMPATIBILITY_LEVEL, DIRECT_DAMAGE_ENGINE_ID, DirectDamageCombatResultV1,
+    ManaUsage, simulate_direct_damage, simulate_direct_damage_json,
 };
 pub use error::{Result, SimError};
 pub use event_queue::{EventHandle, EventKey, ScheduledEvent, StableEventQueue};
