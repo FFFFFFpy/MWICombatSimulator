@@ -109,10 +109,7 @@ mod tests {
             capabilities["abilityCapabilities"][0]["hrid"],
             AQUA_ARROW_HRID
         );
-        assert_eq!(
-            capabilities["abilityCapabilities"][0]["levels"][0],
-            1
-        );
+        assert_eq!(capabilities["abilityCapabilities"][0]["levels"][0], 1);
     }
 
     #[test]
