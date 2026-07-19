@@ -1,0 +1,52 @@
+{
+  "contractVersion": 1,
+  "requestId": "parity-ability-aqua-arrow-basic-v1",
+  "dataVersion": "repository-v1.0.28",
+  "players": [
+    {
+      "hrid": "player1",
+      "staminaLevel": 2000,
+      "intelligenceLevel": 20,
+      "attackLevel": 20,
+      "meleeLevel": 20,
+      "defenseLevel": 2000,
+      "rangedLevel": 20,
+      "magicLevel": 20,
+      "equipment": {},
+      "food": [],
+      "drinks": [],
+      "abilities": [
+        {
+          "hrid": "/abilities/aqua_arrow",
+          "level": 1,
+          "triggers": []
+        }
+      ],
+      "houseRooms": {},
+      "guildBuffs": {},
+      "achievements": {},
+      "debuffOnLevelGap": 0
+    }
+  ],
+  "target": {
+    "kind": "zone",
+    "zoneHrid": "/actions/combat/fly",
+    "difficultyTier": 0
+  },
+  "simulationTimeLimit": 60000000000,
+  "random": {
+    "type": "sequence",
+    "values": [0.5],
+    "loop": true
+  },
+  "options": {
+    "statisticsMode": "full",
+    "enableHpMpVisualization": false,
+    "trace": {
+      "enabled": false,
+      "maxEntries": 20000,
+      "detailLevel": "combat"
+    },
+    "extra": {}
+  }
+}
