@@ -9,12 +9,15 @@ use std::{
 };
 
 use mwi_sim_core::{
-    AbilityDataSnapshotV1, BASIC_COMBAT_COMPATIBILITY_LEVEL, BASIC_COMBAT_ENGINE_ID,
-    BASIC_FLY_ZONE_HRID, CONTRACT_VERSION, CombatZoneDataSnapshotV1, ENGINE_ID, RandomConfigV1,
-    RandomSource, SeededRandom, SimulationRequestV1, SimulationTargetV1,
-    classify_auto_attack_zones, classify_direct_damage_abilities, simulate_basic,
+    AQUA_ARROW_HRID, AbilityDataSnapshotV1, BASIC_COMBAT_COMPATIBILITY_LEVEL,
+    BASIC_FLY_ZONE_HRID, CONTRACT_VERSION, CombatZoneDataSnapshotV1,
+    DIRECT_DAMAGE_COMPATIBILITY_LEVEL, ENGINE_ID, RandomConfigV1, RandomSource, SeededRandom,
+    SimulationRequestV1, SimulationTargetV1, classify_auto_attack_zones,
+    classify_direct_damage_abilities, simulate_basic, simulate_direct_damage,
 };
 use serde_json::{Value, json};
+
+const RESTRICTED_COMBAT_ENGINE_ID: &str = "rust-restricted-combat";
 
 fn main() -> ExitCode {
     match run() {
@@ -68,6 +71,11 @@ fn run() -> Result<(), Box<dyn Error>> {
             let request = load_request(&path)?;
             print_json(&serde_json::to_value(simulate_basic(&request)?)?)
         }
+        Some("simulate-direct-damage") => {
+            let path = required_path(args.next(), "simulate-direct-damage <request.json>")?;
+            let request = load_request(&path)?;
+            print_json(&serde_json::to_value(simulate_direct_damage(&request)?)?)
+        }
         Some("rng-seeded") => {
             let seed = args.next().ok_or("usage: rng-seeded <seed> <count>")?;
             let count = args
@@ -94,7 +102,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 
 fn capabilities() -> Value {
     json!({
-        "engine": BASIC_COMBAT_ENGINE_ID,
+        "engine": RESTRICTED_COMBAT_ENGINE_ID,
         "foundationEngine": ENGINE_ID,
         "engineVersion": env!("CARGO_PKG_VERSION"),
         "contractVersion": CONTRACT_VERSION,
@@ -103,17 +111,31 @@ fn capabilities() -> Value {
             "sequence-rng",
             "seeded-rng-string",
             "stable-event-queue",
-            "basic-auto-attack"
+            "basic-auto-attack",
+            "single-target-direct-damage-cast"
         ],
         "combatSimulation": true,
         "fullSimulationResult": false,
-        "resultTypes": ["basic_combat_result"],
-        "compatibilityLevels": [BASIC_COMBAT_COMPATIBILITY_LEVEL],
+        "resultTypes": [
+            "basic_combat_result",
+            "direct_damage_combat_result"
+        ],
+        "compatibilityLevels": [
+            BASIC_COMBAT_COMPATIBILITY_LEVEL,
+            DIRECT_DAMAGE_COMPATIBILITY_LEVEL
+        ],
         "targets": [{
             "kind": "zone",
             "zoneHrids": [BASIC_FLY_ZONE_HRID],
             "difficultyTiers": [0],
             "players": { "minimum": 1, "maximum": 1 }
+        }],
+        "abilityCapabilities": [{
+            "hrid": AQUA_ARROW_HRID,
+            "levels": [1],
+            "customTriggers": false,
+            "resultType": "direct_damage_combat_result",
+            "compatibilityLevel": DIRECT_DAMAGE_COMPATIBILITY_LEVEL
         }],
         "statisticsModes": [],
         "eventTrace": false,
@@ -209,10 +231,13 @@ fn print_help() {
            validate-request <request.json>\n\
            validate-fixtures <fixtures/parity>\n\
            simulate-basic <request.json>\n\
+           simulate-direct-damage <request.json>\n\
            rng-seeded <seed> <count>\n\n\
          inspect commands report data-derived candidates only.\n\
          They do not expand the formal capabilities target list.\n\n\
-         simulate-basic remains restricted to the M2 single-player, tier-0 Fly\n\
-         auto-attack capability and does not return SimulationResultV1."
+         simulate-basic is restricted to the M2 single-player tier-0 Fly\n\
+         auto-attack capability. simulate-direct-damage is restricted to\n\
+         level-1 Aqua Arrow with empty custom Triggers. Neither returns\n\
+         SimulationResultV1."
     );
 }
