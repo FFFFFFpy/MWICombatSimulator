@@ -49,6 +49,12 @@ pub enum SimError {
     #[error("basic combat event queue became empty before the simulation completed")]
     SimulationQueueExhausted,
 
+    #[error("request is outside the M3D direct-damage capability: {0}")]
+    UnsupportedDirectDamageCombat(String),
+
+    #[error("direct-damage combat event queue became empty before the simulation completed")]
+    DirectDamageQueueExhausted,
+
     #[error("invalid JSON request: {0}")]
     InvalidRequestJson(#[from] serde_json::Error),
 
