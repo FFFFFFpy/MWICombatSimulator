@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::{
+    EventHandle, RandomConfigV1, RandomSource, Result, SeededRandom, SequenceRandom, SimError,
+    SimTime, SimulationRequestV1, SimulationTargetV1, StableEventQueue, StatisticsMode,
     ability_data::{
         AQUA_ARROW_HRID, AbilityDataSnapshotV1, AbilityEffectDataV1,
         classify_direct_damage_abilities,
@@ -11,8 +13,6 @@ use crate::{
     basic_combat::AttackHistogram,
     basic_data::{BASIC_DATA_VERSION, BASIC_FLY_MONSTER_HRID, BASIC_FLY_ZONE_HRID, BasicGameData},
     combat_data::{CombatMonsterDataV1, CombatZoneDataSnapshotV1},
-    EventHandle, RandomConfigV1, RandomSource, Result, SeededRandom, SequenceRandom, SimError,
-    SimTime, SimulationRequestV1, SimulationTargetV1, StableEventQueue, StatisticsMode,
 };
 
 pub const DIRECT_DAMAGE_ENGINE_ID: &str = "rust-direct-damage";
@@ -215,7 +215,11 @@ impl DirectPlayerDto {
         if !self.extensions.is_empty() {
             return Err(unsupported(format!(
                 "unsupported player fields: {}",
-                self.extensions.keys().cloned().collect::<Vec<_>>().join(", ")
+                self.extensions
+                    .keys()
+                    .cloned()
+                    .collect::<Vec<_>>()
+                    .join(", ")
             )));
         }
         Ok(())
@@ -268,7 +272,9 @@ impl DamageValues {
             "/damage_types/water" => Ok(self.water),
             "/damage_types/nature" => Ok(self.nature),
             "/damage_types/fire" => Ok(self.fire),
-            _ => Err(unsupported(format!("unsupported damage type {damage_type}"))),
+            _ => Err(unsupported(format!(
+                "unsupported damage type {damage_type}"
+            ))),
         }
     }
 }
@@ -529,7 +535,8 @@ fn resolve_effect(effect: &AbilityEffectDataV1, level: u32) -> DirectAbilityEffe
         combat_style_hrid: effect.combat_style_hrid.clone(),
         damage_type: effect.damage_type.clone(),
         damage_flat: effect.base_damage_flat + level_offset * effect.base_damage_flat_level_bonus,
-        damage_ratio: effect.base_damage_ratio + level_offset * effect.base_damage_ratio_level_bonus,
+        damage_ratio: effect.base_damage_ratio
+            + level_offset * effect.base_damage_ratio_level_bonus,
         bonus_accuracy_ratio: effect.bonus_accuracy_ratio
             + level_offset * effect.bonus_accuracy_ratio_level_bonus,
         armor_damage_ratio: effect.armor_damage_ratio
@@ -875,8 +882,7 @@ impl DirectDamageEngine {
         let player_hrid = self.player.hrid.clone();
         self.result.record_death(&player_hrid);
         self.cancel_action_handles();
-        let handle =
-            self.schedule_event_after(PLAYER_RESPAWN_INTERVAL, DirectEvent::PlayerRespawn);
+        let handle = self.schedule_event_after(PLAYER_RESPAWN_INTERVAL, DirectEvent::PlayerRespawn);
         self.player_respawn = Some(handle);
         Ok(())
     }
@@ -939,8 +945,8 @@ fn process_attack(
     }
     let source_max_damage = source.max_damage.get(combat_style)?;
     let target_evasion = target.evasion.get(combat_style)?;
-    let hit_chance = source_accuracy.powf(1.4)
-        / (source_accuracy.powf(1.4) + target_evasion.powf(1.4));
+    let hit_chance =
+        source_accuracy.powf(1.4) / (source_accuracy.powf(1.4) + target_evasion.powf(1.4));
     let mut crit_chance = source.critical_rate;
     if combat_style == "/combat_styles/ranged" {
         crit_chance += 0.3 * hit_chance;
@@ -1064,7 +1070,9 @@ fn validate_request_scope(request: &SimulationRequestV1, data: &BasicGameData) -
         return Err(unsupported("HP/MP visualization is not supported in M3D"));
     }
     if request.options.trace.enabled {
-        return Err(unsupported("event trace is not supported in the Rust M3D runtime"));
+        return Err(unsupported(
+            "event trace is not supported in the Rust M3D runtime",
+        ));
     }
     if !is_empty_json_collection(&request.options.extra)
         || !request.options.extensions.is_empty()
@@ -1081,15 +1089,15 @@ fn unsupported(message: impl Into<String>) -> SimError {
     SimError::UnsupportedDirectDamageCombat(message.into())
 }
 
-pub fn simulate_direct_damage(
-    request: &SimulationRequestV1,
-) -> Result<DirectDamageCombatResultV1> {
+pub fn simulate_direct_damage(request: &SimulationRequestV1) -> Result<DirectDamageCombatResultV1> {
     DirectDamageEngine::new(request.clone())?.run()
 }
 
 pub fn simulate_direct_damage_json(input: &str) -> Result<String> {
     let request = SimulationRequestV1::from_json(input)?;
-    Ok(serde_json::to_string_pretty(&simulate_direct_damage(&request)?)?)
+    Ok(serde_json::to_string_pretty(&simulate_direct_damage(
+        &request,
+    )?)?)
 }
 
 #[cfg(test)]
