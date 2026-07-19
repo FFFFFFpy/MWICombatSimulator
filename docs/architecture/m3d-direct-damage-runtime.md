@@ -3,8 +3,8 @@
 ## 状态
 
 - 基线：`agent/rust-ability-data`
-- 当前阶段：Aqua Arrow reference golden 与事件时间线已锁定，Rust 通用施法核心已提交，正在执行格式化和首次编译差分。
-- 正式引擎能力暂不扩大。
+- 当前阶段：核心 reference 差分已通过，CLI、WASM 与正式 capability 已接通，正在执行最终格式化和全链路验证。
+- 正式能力仅升格 level-1 Aqua Arrow 与空自定义 Trigger。
 
 ## 目标
 
@@ -21,7 +21,7 @@
 - 不启用 trace 与 HP/MP 可视化；
 - 输出受限结果，不冒充完整 `SimulationResultV1`。
 
-## 需要对齐的 reference 语义
+## 对齐的 reference 语义
 
 1. 单位同一时间只保留一个 AutoAttack 或 AbilityCastEnd 事件；
 2. 技能满足 Trigger、冷却和法力条件时，优先于普通攻击；
@@ -55,11 +55,19 @@
 - 同时设置 `lastUsed`，并安排玩家下一次普通攻击于 `3.4653465346534657s`；
 - 冷却从施法完成时刻开始计算。
 
+## 已接通边界
+
+- `mwi_sim_core::simulate_direct_damage`；
+- CLI：`simulate-direct-damage <request.json>`；
+- WASM：`simulateDirectDamageJson`；
+- `direct_damage_combat_result`；
+- capability 只声明 Aqua Arrow level 1、空 Trigger、单人 tier-0 Fly。
+
 ## 停止标准
 
 1. Aqua Arrow golden 生成且完整 trace 未截断；
 2. Rust 施法结束、法力、冷却与直接伤害事件顺序对齐；
-3. encounters、deaths、完整 attacks histogram、时间字段和 randomDraws 与 golden 一致；
+3. encounters、deaths、完整 attacks histogram、manaUsed、时间字段和 randomDraws 与 golden 一致；
 4. 同请求重复运行完全一致；
 5. 旧 M2 Fly 自动攻击 fixture 保持精确一致；
 6. Rust fmt、tests、Clippy、WASM 与全部 JavaScript goldens 通过；
