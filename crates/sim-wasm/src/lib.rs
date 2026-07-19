@@ -1,13 +1,16 @@
 #![forbid(unsafe_code)]
 
 use mwi_sim_core::{
-    BASIC_COMBAT_COMPATIBILITY_LEVEL, BASIC_COMBAT_ENGINE_ID, BASIC_FLY_ZONE_HRID,
-    CONTRACT_VERSION, ENGINE_ID, SimulationRequestV1, simulate_basic_json,
+    AQUA_ARROW_HRID, BASIC_COMBAT_COMPATIBILITY_LEVEL, BASIC_FLY_ZONE_HRID, CONTRACT_VERSION,
+    DIRECT_DAMAGE_COMPATIBILITY_LEVEL, ENGINE_ID, SimulationRequestV1, simulate_basic_json,
+    simulate_direct_damage_json,
 };
+
+const RESTRICTED_COMBAT_ENGINE_ID: &str = "rust-restricted-combat";
 
 pub fn capabilities_json() -> String {
     serde_json::json!({
-        "engine": BASIC_COMBAT_ENGINE_ID,
+        "engine": RESTRICTED_COMBAT_ENGINE_ID,
         "foundationEngine": ENGINE_ID,
         "engineVersion": env!("CARGO_PKG_VERSION"),
         "contractVersion": CONTRACT_VERSION,
@@ -16,17 +19,31 @@ pub fn capabilities_json() -> String {
             "sequence-rng",
             "seeded-rng-string",
             "stable-event-queue",
-            "basic-auto-attack"
+            "basic-auto-attack",
+            "single-target-direct-damage-cast"
         ],
         "combatSimulation": true,
         "fullSimulationResult": false,
-        "resultTypes": ["basic_combat_result"],
-        "compatibilityLevels": [BASIC_COMBAT_COMPATIBILITY_LEVEL],
+        "resultTypes": [
+            "basic_combat_result",
+            "direct_damage_combat_result"
+        ],
+        "compatibilityLevels": [
+            BASIC_COMBAT_COMPATIBILITY_LEVEL,
+            DIRECT_DAMAGE_COMPATIBILITY_LEVEL
+        ],
         "targets": [{
             "kind": "zone",
             "zoneHrids": [BASIC_FLY_ZONE_HRID],
             "difficultyTiers": [0],
             "players": { "minimum": 1, "maximum": 1 }
+        }],
+        "abilityCapabilities": [{
+            "hrid": AQUA_ARROW_HRID,
+            "levels": [1],
+            "customTriggers": false,
+            "resultType": "direct_damage_combat_result",
+            "compatibilityLevel": DIRECT_DAMAGE_COMPATIBILITY_LEVEL
         }],
         "statisticsModes": [],
         "eventTrace": false,
@@ -42,6 +59,10 @@ pub fn validate_request_json(input: &str) -> Result<String, String> {
 
 pub fn simulate_basic_request_json(input: &str) -> Result<String, String> {
     simulate_basic_json(input).map_err(|error| error.to_string())
+}
+
+pub fn simulate_direct_damage_request_json(input: &str) -> Result<String, String> {
+    simulate_direct_damage_json(input).map_err(|error| error.to_string())
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -62,6 +83,12 @@ mod wasm_exports {
     pub fn simulate_basic_json(input: &str) -> Result<String, JsValue> {
         super::simulate_basic_request_json(input).map_err(|message| JsValue::from_str(&message))
     }
+
+    #[wasm_bindgen(js_name = simulateDirectDamageJson)]
+    pub fn simulate_direct_damage_json(input: &str) -> Result<String, JsValue> {
+        super::simulate_direct_damage_request_json(input)
+            .map_err(|message| JsValue::from_str(&message))
+    }
 }
 
 #[cfg(test)]
@@ -69,7 +96,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn reports_only_the_restricted_basic_combat_capability() {
+    fn reports_only_the_promoted_restricted_capabilities() {
         let capabilities: serde_json::Value = serde_json::from_str(&capabilities_json()).unwrap();
         assert_eq!(capabilities["combatSimulation"], true);
         assert_eq!(capabilities["fullSimulationResult"], false);
@@ -77,6 +104,14 @@ mod tests {
         assert_eq!(
             capabilities["targets"][0]["zoneHrids"][0],
             BASIC_FLY_ZONE_HRID
+        );
+        assert_eq!(
+            capabilities["abilityCapabilities"][0]["hrid"],
+            AQUA_ARROW_HRID
+        );
+        assert_eq!(
+            capabilities["abilityCapabilities"][0]["levels"][0],
+            1
         );
     }
 
@@ -94,5 +129,19 @@ mod tests {
             value["compatibilityLevel"],
             BASIC_COMBAT_COMPATIBILITY_LEVEL
         );
+    }
+
+    #[test]
+    fn simulates_the_promoted_aqua_arrow_fixture() {
+        let request =
+            include_str!("../../../fixtures/parity/ability-aqua-arrow-basic/request.json");
+        let result = simulate_direct_damage_request_json(request).unwrap();
+        let value: serde_json::Value = serde_json::from_str(&result).unwrap();
+        assert_eq!(value["type"], "direct_damage_combat_result");
+        assert_eq!(
+            value["compatibilityLevel"],
+            DIRECT_DAMAGE_COMPATIBILITY_LEVEL
+        );
+        assert_eq!(value["manaUsed"]["player1"][AQUA_ARROW_HRID], 105);
     }
 }
