@@ -18,9 +18,26 @@
   "contractVersion": 1,
   "dataVersion": "repository-v1.0.28",
   "description": "One durable level-20 player repeatedly casts level-1 Aqua Arrow against the tier-0 Fly zone for 60 simulated seconds using a looping 0.5 random sequence.",
+  "expectedFiles": [
+    "request.json",
+    "expected-result.json",
+    "expected-trace.json.gz.b64"
+  ],
   "fixtureVersion": 1,
+  "hashes": {
+    "expectedResultSha256": "e7bbe9330a4e40d3f5a555e3699506abe0a2ae3dd51323319919a9e28588ccc5",
+    "expectedTraceArchiveSha256": "bc95ace6ef713e797c02d9775b47daf6b8365e8b1d05de4c1dccec69e29f31a1",
+    "expectedTraceSha256": "91dcd7c9a9ed584e6461eab136625db46b51725ebb2bc0135f299f40fbe89b17"
+  },
   "notes": [
     "The 0.5 sequence avoids ranged critical hits while keeping attacks deterministic.",
     "This fixture locks cast completion, mana deduction, cooldown timing, action scheduling, direct-damage resolution, and random consumption before the Rust ability runtime is implemented."
-  ]
+  ],
+  "randomDraws": 135,
+  "referenceEngine": "reference-js",
+  "referenceEngineVersion": "1.0.28",
+  "scenarioId": "ability-aqua-arrow-basic",
+  "status": "golden",
+  "traceArchiveParts": 1,
+  "traceEncoding": "gzip+base64"
 }
