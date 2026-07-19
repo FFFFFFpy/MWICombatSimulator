@@ -12,6 +12,8 @@
         "inspect:combat-mechanics": "node scripts/inspect-combat-mechanics.mjs",
         "build-rust-combat-data": "node scripts/build-rust-combat-data.mjs",
         "check-rust-combat-data": "node scripts/build-rust-combat-data.mjs --check",
+        "build-rust-ability-data": "node scripts/build-rust-ability-data.mjs",
+        "check-rust-ability-data": "node scripts/build-rust-ability-data.mjs --check",
         "build-game-data-index": "node scripts/build-game-data-index.mjs",
         "sync-official-translations": "node scripts/sync-official-translations.mjs",
         "check-official-translations": "node scripts/sync-official-translations.mjs --check",

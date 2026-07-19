@@ -9,10 +9,10 @@ use std::{
 };
 
 use mwi_sim_core::{
-    BASIC_COMBAT_COMPATIBILITY_LEVEL, BASIC_COMBAT_ENGINE_ID, BASIC_FLY_ZONE_HRID,
-    CONTRACT_VERSION, CombatZoneDataSnapshotV1, ENGINE_ID, RandomConfigV1, RandomSource,
-    SeededRandom, SimulationRequestV1, SimulationTargetV1, classify_auto_attack_zones,
-    simulate_basic,
+    AbilityDataSnapshotV1, BASIC_COMBAT_COMPATIBILITY_LEVEL, BASIC_COMBAT_ENGINE_ID,
+    BASIC_FLY_ZONE_HRID, CONTRACT_VERSION, CombatZoneDataSnapshotV1, ENGINE_ID, RandomConfigV1,
+    RandomSource, SeededRandom, SimulationRequestV1, SimulationTargetV1,
+    classify_auto_attack_zones, classify_direct_damage_abilities, simulate_basic,
 };
 use serde_json::{Value, json};
 
@@ -33,6 +33,12 @@ fn run() -> Result<(), Box<dyn Error>> {
         Some("inspect-auto-attack-zones") => {
             let snapshot = CombatZoneDataSnapshotV1::embedded()?;
             print_json(&serde_json::to_value(classify_auto_attack_zones(
+                &snapshot,
+            )?)?)
+        }
+        Some("inspect-direct-damage-abilities") => {
+            let snapshot = AbilityDataSnapshotV1::embedded()?;
+            print_json(&serde_json::to_value(classify_direct_damage_abilities(
                 &snapshot,
             )?)?)
         }
@@ -199,12 +205,13 @@ fn print_help() {
          Commands:\n\
            capabilities\n\
            inspect-auto-attack-zones\n\
+           inspect-direct-damage-abilities\n\
            validate-request <request.json>\n\
            validate-fixtures <fixtures/parity>\n\
            simulate-basic <request.json>\n\
            rng-seeded <seed> <count>\n\n\
-         inspect-auto-attack-zones reports data-derived candidates only.\n\
-         It does not expand the formal capabilities target list.\n\n\
+         inspect commands report data-derived candidates only.\n\
+         They do not expand the formal capabilities target list.\n\n\
          simulate-basic remains restricted to the M2 single-player, tier-0 Fly\n\
          auto-attack capability and does not return SimulationResultV1."
     );
